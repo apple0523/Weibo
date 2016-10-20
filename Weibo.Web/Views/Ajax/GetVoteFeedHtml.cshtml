@@ -1,0 +1,161 @@
+﻿@model Weibo.Web.Models.AjaxGetVoteFeedModel
+@{    
+   bool isExpire=Model.Vote.ExpireTime<DateTime.Now;
+   VoteJoin join=VoteJoins.GetVoteJoinByUID(Model.CurUser.ID,Model.Vote.ID);
+   bool isJoined=join!=null;
+   int VoteNum = 0;
+   foreach(VoteOption option in Model.Options)
+   {
+       VoteNum += option.VoteCount;
+   }       
+   string optionType=Model.Vote.Type==1?"radio":"checkbox";
+   string[] selItems=null;
+   if(join!=null)
+   {
+  selItems =join.SelVoteItemIDs.Split(',');
+   }
+<div class="onvote_infocont indexVote_cont"   voteDiv="@Model.Vote.ID" isJoined="@isJoined" isExpire="@isExpire" maxSel="@{@Model.Vote.OnceSelCount}" optionCount="@{@Model.Vote.OptionCount}">
+    <h3>
+        <img title="投票" class="small_icon voteicon" src="/Content/Image/transparent.gif"><a
+            href="javascript:void(0);" target="_blank">@{@Model.Vote.Title;}
+        </a>
+        @{
+                if(Model.Vote.Type==1)
+                {
+            <em>单选</em>
+                }
+                else
+                {
+            <em>(最多选择@{@Model.Vote.OnceSelCount;}
+                项)</em>
+                }
+        }
+    </h3>
+    <div class="indexVote_fqr MIB_linkbl">
+        <a href="/@{@Model.PublishUser.ID}" target="_blank">
+            @{@Model.PublishUser.NickName}
+        </a>发起<span>|</span>@{@Model.Vote.JoinCount;}
+        人参与<span>|</span>@{@DateSpan.Get(Model.Vote.ExpireTime)}过期</div>
+    @{
+        if(!string.IsNullOrEmpty(Model.Vote.Remark))
+        {
+            <h4>
+            @{@MvcHtmlString.Create(Votes.TransformContent(Model.Vote.Remark));}
+            </h4>
+        }
+        }
+    @{
+        if(Model.Vote.PID>0)
+        {
+            Pic pic = Pics.GetPicByID(Model.Vote.PID);
+            if(pic!=null)
+            {
+        <div class="onvote_pic">
+            <img src="@{@pic.MidPicUrl;}"></div>
+        }
+        }
+    }
+    @{
+            if(Model.Vote.ResultVisible==2&&!isJoined&&!isExpire)
+            {
+        <div class="onvote_infotip">
+            投票后才能查看结果</div>
+            }
+    }
+    <form>
+    <fieldset>
+        <ul class="indexVote_info">
+            @{
+                if(Model.Vote.ResultVisible==1||isExpire||isJoined)
+                {
+                    for (int i = 1; i <=Model.Options.Count;i++ )
+                    {
+                        string check = "";
+                        if (selItems!=null)
+                        {
+                        for(int j=0;j<selItems.Length;j++)
+                        {
+                            
+                            if(!string.IsNullOrEmpty(selItems[j]))
+                            {
+                                if(selItems[j]==Model.Options[i-1].ID.ToString())
+                                {
+                                    check="checked=\"checked\"";
+                                }
+                            }
+                        }
+                        }
+                                    
+            <li>
+                <label for="checked_@{@Model.Vote.ID}_@{@i}">
+                    <span class="indexVote_left">
+                        <input @check type="@{@optionType;}" @{@(isJoined||isExpire?"disabled=\"disabled\"":"")} name="item_id" value="@{@Model.Options[i - 1].ID}" id="checked_@{@Model.Vote.ID}_@{@i}">
+                    </span><span class="indexVote_right"><span class="title">@{@Model.Options[i-1].Name;}</span> <span class="votebar_graybg">
+                        <span class="oi_numline@{@((i-1)%5+1)}" style="width: @{@((int)((VoteNum == 0 ? 0 : (double)Model.Options[i - 1].VoteCount / (double)VoteNum)*100))}%"><em></em></span></span><span class="votevar_num">
+                            @{@Model.Options[i-1].VoteCount}<em>(@{@((int)((VoteNum == 0 ? 0 : (double)Model.Options[i - 1].VoteCount / (double)VoteNum)*100))}%)</em></span> </span>
+                </label>
+            </li>
+
+                }
+                }
+                
+                else
+                {
+                    for (int i = 1; i <=Model.Options.Count;i++ )
+                    {
+                       
+                     <li>
+                <label for="checked_@{@Model.Vote.ID}_@{@i}">
+                    <span class="indexVote_left">
+                        <input type="checkbox" name="item_id" value="@{@Model.Options[i - 1].ID}" id="checked_@{@Model.Vote.ID}_@{@i}" >
+                    </span><span class="indexVote_right"><span class="title">@{@Model.Options[i-1].Name;}</span> </span>
+                </label>
+            </li>
+                }
+                }
+                }
+
+        </ul>
+        
+        <div class="indexVote_btn">
+        @{
+            string str="投票";
+            if(isJoined)
+            {
+                str="已投票";
+            }
+            if(isExpire)
+            {
+                str="已过期";
+            }
+            }
+            <a onclick="return false" style="position: relative;" component-data="enabledClass=onvote_btn01&amp;disabledClass=onvote_btn02"
+                component="widget.component.submit" class="onvote_btn02" href="####"><em>@{@str;}</em></a>
+           @{
+               if(!isJoined&&!isExpire)
+               {
+            <p class="checkboxs">
+                <input type="checkbox" checked="checked" value="1" name="share" id="share"><label
+                    for="share">转发到微博</label><input type="checkbox" value="1" name="anonymous" id="niming"><label
+                        for="niming">匿名</label></p>
+               }
+               }
+        </div>
+    </fieldset>
+    </form>
+    <ul class="indexVote_voted">
+       @{
+           VoteJoin QuoJoin=VoteJoins.GetVoteJoinByUID(Model.QuoUser.ID,Model.Vote.ID);
+           if(QuoJoin!=null&&QuoJoin.IsAnonymous!=1)
+           {
+               <li><a href="/@QuoJoin.UID" target="_blank">@Model.QuoUser.NickName</a>投给了
+												<span>					                
+												                                     
+												@QuoJoin.SelVoteItemNames　
+						                								                								                		</span>
+						                		@DateSpan.Get(QuoJoin.CreateTime)</li>
+           }
+           }
+    </ul>
+</div>
+           }

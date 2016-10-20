@@ -1,0 +1,49 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('°×Ñò','[°×Ñò]',3009,'/Expression/xingzuo/byz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÉäÊÖ','[ÉäÊÖ]',3009,'/Expression/xingzuo/ssz2_thumb.gif')
+
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë«Óã','[Ë«Óã]',3009,'/Expression/xingzuo/syz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë«×Ó','[Ë«×Ó]',3009,'/Expression/xingzuo/szz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ìì³Ó','[Ìì³Ó]',3009,'/Expression/xingzuo/tpz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÌìÐ«','[ÌìÐ«]',3009,'/Expression/xingzuo/txz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë®Æ¿','[Ë®Æ¿]',3009,'/Expression/xingzuo/spz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('´¦Å®','[´¦Å®]',3009,'/Expression/xingzuo/cnz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('½ðÅ£','[½ðÅ£]',3009,'/Expression/xingzuo/jnz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¾ÞÐ·','[¾ÞÐ·]',3009,'/Expression/xingzuo/jxz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ê¨×Ó','[Ê¨×Ó]',3009,'/Expression/xingzuo/leo2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ä¦ôÉ','[Ä¦ôÉ]',3009,'/Expression/xingzuo/mjz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÌìÐ«×ù','[ÌìÐ«×ù]',3009,'/Expression/xingzuo/txz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ìì³Ó×ù','[Ìì³Ó×ù]',3009,'/Expression/xingzuo/tpz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë«×Ó×ù','[Ë«×Ó×ù]',3009,'/Expression/xingzuo/szz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë«Óã×ù','[Ë«Óã×ù]',3009,'/Expression/xingzuo/syz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÉäÊÖ×ù','[ÉäÊÖ×ù]',3009,'/Expression/xingzuo/ssz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë®Æ¿×ù','[Ë®Æ¿×ù]',3009,'/Expression/xingzuo/spz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ä¦ôÉ×ù','[Ä¦ôÉ×ù]',3009,'/Expression/xingzuo/mjz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ê¨×Ó×ù','[Ê¨×Ó×ù]',3009,'/Expression/xingzuo/leo_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¾ÞÐ·×ù','[¾ÞÐ·×ù]',3009,'/Expression/xingzuo/jxz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('½ðÅ£×ù','[½ðÅ£×ù]',3009,'/Expression/xingzuo/jnz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('´¦Å®×ù','[´¦Å®×ù]',3009,'/Expression/xingzuo/cnz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('°×Ñò×ù','[°×Ñò×ù]',3009,'/Expression/xingzuo/byz_thumb.gif')
+

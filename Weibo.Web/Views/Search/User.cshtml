@@ -1,0 +1,628 @@
+﻿@model Weibo.Web.Models.SchUserModel
+ @{
+     Layout = "~/Views/Shared/_schLayout.cshtml";
+ }
+ @{
+     ViewBag.Title = "用户搜索 XX微博-随时随地分享身边的新鲜事儿";
+ }
+
+ @section  cssInsert{
+        <link rel="stylesheet" type="text/css" href="/Content/CSS/srch_mbl.css" />
+        }
+ @section  jsInsert{
+	<script type="text/javascript">
+	    var schManage = {};
+	    var schManage = {
+	        curGetLink: null,
+	        curAutoCompleteTxtBox: null,
+	        curAutoCompleteCallBack: null,
+	        OriKey: "",
+	        autoIsKeyUp: false,
+	        autoCompleteTimerEvent: function () {
+	            if (!schManage.autoIsKeyUp)
+	                return;
+	            if (!schManage.curGetLink)
+	                return;
+	            if (!schManage.curAutoCompleteTxtBox)
+	                return;
+	            if ($.trim(schManage.curAutoCompleteTxtBox.val()) == "")
+	                return;
+	            if (schManage.curAutoCompleteTxtBox.val() == schManage.OriKey)
+	                return;
+	            schManage.OriKey = schManage.curAutoCompleteTxtBox.val();
+	            var layer = $("#myDropdown");
+	            schManage.autoIsKeyUp = false;
+	            $.ajax({
+	                dataType: "json",
+	                data: { key: schManage.OriKey },
+	                url: "/Ajax/" + schManage.curGetLink + "/",
+	                cache: false,
+	                type: "post",
+	                success: function (o) {
+	                    if (o.Code == "A00017") {
+	                        layer.hide();
+	                        return;
+	                    }
+	                    if (o.Code == "A00001") {
+	                        App.showLoginDial();
+	                        return;
+	                    }
+	                    if (o.Code == "A00003") {
+	                        App.alert(CodeList[o.Code]);
+	                        return;
+	                    }
+	                    var str = "";
+	                    for (var i = 0; i < o.Data.length; i++) {
+	                        if (i == 0)
+	                            str += "<tr id=\"" + o.Data[i].ID + "\" val='" + o.Data[i].NickName + "' class=\"cur\"><td>" + o.Data[i].Title.replace(new RegExp("(" + schManage.OriKey + ")", "gi"), "<b>$1</b>") + "</td><td class=\"gray9\">&nbsp;</td></tr>"
+	                        else
+	                            str += ("<tr id=\"" + o.Data[i].ID + "\" val='" + o.Data[i].NickName + "'><td>" + o.Data[i].Title.replace(new RegExp("(" + schManage.OriKey + ")", "gi"), "<b>$1</b>") + "</td><td class=\"gray9\">&nbsp;</td></tr>");
+	                    }
+
+	                    layer.show();
+	                    var offset = schManage.curAutoCompleteTxtBox.offset();
+	                    layer.css("left", offset.left).css("top", offset.top + schManage.curAutoCompleteTxtBox.height() + 5);
+
+	                    layer.find("tbody").html(str).find("tr").hover(function () {
+	                        layer.find("tr").removeClass("cur");
+	                        $(this).addClass("cur");
+	                    }).click(function () {
+	                        layer.hide();
+	                        schManage.OriKey = "";
+	                        if (schManage.curAutoCompleteCallBack) {
+	                            schManage.curAutoCompleteCallBack($(this).attr("id"), $(this).attr("val"));
+	                        }
+	                    });
+	                }
+	            });
+	        },
+	        autoCompleteLayer: "<div class=\"srch_ass font_14\" id=\"myDropdown\" style=\"position: absolute; z-index: 1601; display: none;\"><table><tbody></tbody></table></div>",
+	        autoComplete: function (ctrl, callBack) {
+	            var layer = $("#myDropdown");
+	            if (App.appendToBody(layer, this.autoCompleteLayer)) {
+	                layer = $("#myDropdown");
+	                layer.JQP_ClickOther(function () { layer.hide(); schManage.OriKey = ""; });
+	            }
+	            $(ctrl).keydown(function (e) {
+	                schManage.autoIsKeyUp = true;
+	                var curLi = layer.find(".cur");
+	                var index = layer.find("tr").index(curLi);
+	                var length = layer.find("tr").length;
+	                var lis = layer.find("tr").removeClass("cur");
+	                switch (e.which) {
+	                    case 38:
+	                        if (index == 0) {
+	                            $(lis[length - 1]).addClass("cur");
+
+	                        }
+	                        else
+	                            $(lis[index - 1]).addClass("cur");
+	                        e.preventDefault();
+	                        break;
+	                    case 40:
+	                        if (index == length - 1) {
+	                            $(lis[0]).addClass("cur");
+
+	                        }
+	                        else
+	                            $(lis[index + 1]).addClass("cur");
+	                        e.preventDefault();
+	                        break;
+	                    case 13:
+	                        schManage.OriKey = "";
+	                        if (callBack) {
+	                            if (curLi.attr("val"))
+	                                callBack(curLi.attr("id"), curLi.attr("val"));
+	                        }
+	                        e.preventDefault();
+	                        layer.hide();
+	                        schManage.autoIsKeyUp = false;
+	                        break;
+
+	                }
+	            }).focus(function () {
+	                schManage.curAutoCompleteTxtBox = $(this);
+	                if (callBack)
+	                    schManage.curAutoCompleteCallBack = callBack;
+	            });
+	        }
+
+	    };
+	    schManage.followOne = function (id,name,alink) {
+	        if (alink.locked)
+	            return false;
+	        alink.locked = true;
+	        App.FollowOne(id,name, function (Id,Name,o) {
+	            $("<a href='javascript:void(0);' class='concernBtn_Yet'><span class='add_yet'></span>已关注</a>").insertAfter($(alink));
+	            $(alink).remove();
+	        }, function () {
+	            alink.locked = false;
+	        });
+	    };
+	    schManage.initPage = function () {
+	        $("#sInput").add($("#sInput_bottom")).keyup(function (e) {
+	            if (e.which == 13) {
+	                window.location.href = "/Search/User?Key=" + encodeURIComponent(this.value);
+	            }
+	        });
+	        $("#search").click(function () {
+	            window.location.href = "/Search/User?Key=" + encodeURIComponent($("#sInput").val());
+	        });
+	        $("#search_bottom").click(function () {
+	            window.location.href = "/Search/User?Key=" + encodeURIComponent($("#sInput_bottom").val());
+	        });
+	        var province = $("#province");
+	        var city = $("#city");
+	        App.BindCityCtrl(province, "province", 1, function () {
+	            App.BindCityCtrl(city, "City", province.val(), function () {
+	            }, "/Ajax/GetCity/");
+	            province.hide();
+	            city.hide();
+	            province.show();
+	            city.show();
+	        }, "/Ajax/GetCity/");
+	        province.change(function () {
+	            App.BindCityCtrl(city, "City", province.val(), null, "/Ajax/GetCity/");
+	        }, "/Ajax/GetCity/");
+	        $("#sear_region").click(function () {
+	            if (parseInt(province.val()) > 0 || parseInt(city.val()) > 0) {
+	                if (parseInt(city.val()) > 0)
+	                    window.location.href = App.AddQueryToUrl(window.location.href, "Location", city.val());
+	                else
+	                    window.location.href = App.AddQueryToUrl(window.location.href, "Location", province.val());
+	            }
+	            else {
+	                App.alert("请选择城市");
+	            }
+	            return false;
+	        });
+
+	        App.autoComplete($("#company"), function (id, name) { $("#company").val(name); },"autoCompleteCompany");
+            App.autoComplete($("#school_left"), function (id, name) { $("#school_left").val(name); },"autoCompleteSchool");
+	        schManage.autoComplete($("#sInput"), function (id, name) { $("#sInput").val(name); });
+	        schManage.autoComplete($("#sInput_bottom"), function (id, name) { $("#sInput_bottom").val(name); });
+	        schManage.curGetLink = "@(!string.IsNullOrEmpty(Model.School) ? "autoCompleteSchool" : (!string.IsNullOrEmpty(Model.Career) ? "autoCompleteCompany" : (!string.IsNullOrEmpty(Model.Tag) ? "autoCompleteTag" : "autoCompleteUser")))";
+	        App.TimerFunArray.push(App.autoCompleteTimerEvent);
+	        App.TimerFunArray.push(schManage.autoCompleteTimerEvent);
+	        App.StartTimer();
+	        App.bindGoTop();
+            $("#sear_school").click(function(){
+                if($("#school_left").val())
+                window.location.href ="/Search/User?School=" + encodeURIComponent($("#school_left").val());
+            });
+           $("#sear_company").click(function(){
+               if($("#school_left").val())
+                window.location.href ="/Search/User?Career=" + encodeURIComponent($("#company").val());
+            });
+            $("#company").keyup(function(e){
+               if(e.which==13){
+                 window.location.href ="/Search/User?Career=" + encodeURIComponent(this.value);
+               }
+            });
+            $("#school_left").keyup(function(e){
+               if(e.which==13){
+                 window.location.href ="/Search/User?School=" + encodeURIComponent(this.value);
+               }
+            });
+	    };
+	    schManage.showCustom = function (id) {
+	        App.E(id).style.display = "block";
+	    };
+        schManage.radioClick=function(radiobtn,txtctl){
+        var key=$("#"+txtctl).val();
+            if(key)
+            window.location.href ="/Search/User?"+$(radiobtn).attr("parms")+"=" + encodeURIComponent(key);
+        }
+	    $(function () {
+	        schManage.initPage();
+            App.initNameCard($("#feed_list"));
+	    });
+	</script>
+    }
+
+
+
+            <div class="MIB_blogbody">
+                <div class="MIB_column">
+                    <!--搜索-->
+                    <div class="srch_con">
+                        <div class="srch_kind">
+                            <a href="/k/@Model.Key">微博</a> <strong>找人</strong>
+                            <a href="/k/@Model.Key?IsHavePic=1">图片</a> <a href="/k/@Model.Key?IsHaveVideo=1">
+                                视频</a> <a href="/k/@Model.Key?IsHaveMusic=1">音乐</a>
+                            <a href="/k/@Model.Key?IsHaveLink=1">短链</a> <a href="/k/@Model.Key?IsHaveVote=1">投票</a>
+                        </div>
+                        <div class="srch_form lf">
+                            <div class="srch_form_r rt">
+                            </div>
+                            <div class="srch_form_l lf">
+                            </div>
+                            <div class="srch_form_c lf">
+                                <div class="srch_arrow">
+                                    <div class="srch_form_cr rt">
+                                    </div>
+                                    <div class="srch_form_cl lf">
+                                    </div>
+                                    <input class="font_14 txt_srch" id="sInput" value="@(string.IsNullOrEmpty(Model.Key) ? (string.IsNullOrEmpty(Model.School) ? (string.IsNullOrEmpty(Model.Tag) ? (string.IsNullOrEmpty(Model.Career) ? "" : Model.Career) : Model.Tag) : Model.School) : Model.Key)" maxlength="40" autocomplete="off"
+                                        type="text">
+                                </div>
+                            </div>
+                            <a id="search" class="srch_btn lf" href="###">搜索</a>
+                        </div>
+                        <div class="srch_link">
+                            <p class="line_01">
+                                <img src="/Content/Image/transparent.gif" alt="" class="sech_icons invt_frd"><a
+                                    href="http://weibo.com/invite/invite.php?Refer=SUer_invite" target="_blank">邀请好友关注我</a></p>
+                        </div>
+                        <div class="srch_btm">
+                            <div class="kw_category" id="category_cont">
+                                <label for="name">@{if (Model.Tag == null && Model.School == null && Model.Career == null)
+                                                    {<input name="srch" parms="key"  onclick=" schManage.radioClick(this,'sInput');" id="name" checked="checked" type="radio" />}
+                                                    else
+                                                    {<input parms="key"  onclick=" schManage.radioClick(this,'sInput');"  name="srch" id="name"  type="radio" />}}名称</label>
+                                <label for="work">@{if (Model.Career != null)
+                                                    {<input name="srch" parms="career"  onclick=" schManage.radioClick(this,'sInput');"  checked="checked" id="work" type="radio" />}
+                                                    else
+                                                    {<input parms="career"  onclick=" schManage.radioClick(this,'sInput');" name="srch"  id="work" type="radio" />}}单位</label>
+                                <label for="school">@{if (Model.School != null)
+                                                      {<input name="srch" parms="school"  onclick=" schManage.radioClick(this,'sInput');"  id="school" checked="checked" type="radio" />}
+                                                      else
+                                                      {<input parms="school"  onclick=" schManage.radioClick(this,'sInput');"  name="srch" id="school" type="radio" />}}学校</label>
+                                <label for="tag">@{if (Model.Tag != null)
+                                                   {<input name="srch" parms="tag" id="tag" onclick=" schManage.radioClick(this,'sInput');" checked="checked" type="radio" />}
+                                                   else
+                                                   {<input name="srch" parms="tag" onclick=" schManage.radioClick(this,'sInput');"   id="tag" type="radio" />}}标签</label>
+                            </div>
+                            <div class="srch_tag">
+                                <span id="errKeyword"></span>
+                                <p class="srch_rs_total">
+                                    有@{@Model.RecordCount}位用户</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/搜索-->
+                    <div class="MIB_main_cont lf_vline">
+                        <div class="srch_bar_l lf">
+                            <!-- 搜人登录 -->
+                            <div class="filter_hr">
+                            </div>
+                            <!-- /搜人登录 -->
+                            <!-- 搜人登录 -->
+                            <dl class="srch_filter">
+                               @{
+                                   if (Model.Location <= 0)
+                                   {
+                                <dt>所有地点</dt>
+                                   }
+                                   else
+                                   {
+								<dt><a href="@Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "Location")">所有地点</a></dt>
+                                   }
+                                   if (Model.Location > 0)
+                                   {
+                                <dd>@Types.GetCityTypesFullName(Model.Location)</dd>
+                                   }
+                                   else
+                                   {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Location", Model.CurUser.Location.ToString())">@Types.GetCityTypesFullName(Model.CurUser.Location)</a></dd>
+                                   }
+                                <dd>
+                                    <a href="javascript:void(0);" onclick="schManage.showCustom('region_custom');return false;">自定义</a>
+                                    <div id="region_custom" class="filter_def" style="display: none;">
+                                        <div>
+                                            <select id="province"  name="province">
+                                               
+                                            </select></div>
+                                        <div>
+                                            <select id="city" name="city">
+                                               
+                                            </select></div>
+                                        <a href="javascript:void(0);" class="btn_normal btnxs" id="sear_region"><em>
+                                            确定</em></a>
+                                    </div>
+                                </dd>
+			                  }
+                            </dl>
+                            <div class="filter_hr">
+                            </div>
+                            <!-- /搜人登录 -->
+                            <!-- 搜人登录 -->
+                            <dl class="srch_filter">
+                            @{
+                                if (Model.Sex == 0)
+                                {
+                                <dt>不限性别</dt>
+                                }
+                                else
+                                {
+								<dt><a href="@Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "Sex")">不限性别</a></dt>
+                                }
+                                if (Model.Sex == TypeConfigs.GetSexMale)
+                                {
+                                <dd>男</dd>
+                                }
+                                else
+                                {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Sex", TypeConfigs.GetSexMale.ToString())">男</a></dd>
+                                }
+                                if (Model.Sex == TypeConfigs.GetSexFemale)
+                                {
+                                <dd>女</dd>
+                                }
+                                else
+                                {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Sex", TypeConfigs.GetSexFemale.ToString())">女</a></dd>
+                                }
+                                }
+                                        
+                            </dl>
+                            <div class="filter_hr">
+                            </div>
+                            <!-- /搜人登录 -->
+                            <!-- 搜人登录 -->
+                            <dl class="srch_filter">
+                                @{
+                                    if (string.IsNullOrEmpty(Model.Age))
+                                    {
+                                <dt>不限年龄</dt>
+                                    }
+                                    else
+                                    {
+								<dt><a href="@Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "Age")">不限年龄</a></dt>
+                                    }
+                                    if (Model.Age == "18")
+                                    {
+                                <dd>18岁以下</dd>
+                                    }
+                                    else
+                                    {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Age", "18")">18岁以下</a></dd>
+                                    }
+                                    if (Model.Age == "22")
+                                    {
+                                <dd>19~22岁</dd>
+                                    }
+                                    else
+                                    {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Age", "22")">19~22岁</a></dd>
+                                    }
+                                    if (Model.Age == "29")
+                                    {
+                                <dd>23~29岁</dd>
+                                    }
+                                    else
+                                    {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Age", "29")">23~29岁</a></dd>
+                                    }
+                                    if (Model.Age == "39")
+                                    {
+                                <dd>30~39岁</dd>
+                                    }
+                                    else
+                                    {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Age", "39")">30~39岁</a></dd>
+                                    }
+                                    if (Model.Age == "40")
+                                    {
+                                <dd>40岁以上</dd>
+                                    }
+                                    else
+                                    {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Age", "40")">40岁以上</a></dd>
+                                    }
+                                    }
+                            </dl>
+                            <div class="filter_hr">
+                            </div>
+                            <!-- /搜人登录 -->
+                            <dl class="srch_filter">
+                                <dt>单位</dt>
+                                <dd>
+                                    <input id="company" type="text" value="@(Model.Career ?? "")"></dd>
+                                <dd>
+                                    <a id="sear_company" href="#"  class="btn_normal btnxs"><em>确定</em></a></dd>
+                            </dl>
+                            <div class="filter_hr">
+                            </div>
+                            <dl class="srch_filter">
+                                <dt>学校</dt>
+                                <dd>
+                                    <input id="school_left" type="text" value="@(Model.School ?? "")"></dd>
+                                <dd>
+                                    <a id="sear_school" href="#" class="btn_normal btnxs"><em>确定</em></a></dd>
+                            </dl>
+                          </div>
+                        <div class="srch_main_con lf">
+                            @{
+                                if (Model.Users != null)
+                                {
+                            <ul class="concernBox" id="feed_list">
+                               @{
+                                    if (Model.Users != null)
+                                    {
+                                        foreach (User user in Model.Users)
+                                        {
+                                <li class="MIB_linedot_l">
+                                    <div class="conBox_l">
+                                        <a target="_blank" href="/@{@user.ID;}" >
+                                                    <img src="@{@user.MidAvartar;}" 
+                                                    title="@{@user.NickName;}"  uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" /></a></div>
+                                    <div class="conBox_c">
+                                        <div>
+                                        <a target="_blank"  class="font_14" title="@{@user.NickName;}" href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true"  uname="@{@user.NickName;}">@{@MvcHtmlString.Create(HighLineHelper.HighLine(user.NickName, Model.Key));}</a>
+                                            <img src="/Content/Image/transparent.gif" class="small_icon @{@(user.Sex == TypeConfigs.GetSexFemale ? "sicon_female" : "man")}" title="@{@(user.Sex == TypeConfigs.GetSexFemale ? "女" : "男")}"><span class="gray6 marRt10">@{@Types.GetCityTypesFullName(user.Location);}</span>
+                                                        <span  class="gray6">粉丝<strong>@user.FocusedCount</strong>人</span>
+                                        </div>
+                                        <div class="content">
+                                            @{
+                                                                                  if (!string.IsNullOrEmpty(user.CustomSite))
+                                                                                  {
+                                            <p>
+                                                @BaseConfigs.GetWebDomain/@(MvcHtmlString.Create(HighLineHelper.HighLine(user.CustomSite, Model.Key)))</p>
+                                                                                  }
+                                                }
+                                            <div class="contentinfo">
+                                                @{
+                                                                                  if (!string.IsNullOrEmpty(user.Description))
+                                                                                  {
+                                                <p>
+                                                    @(MvcHtmlString.Create(HighLineHelper.HighLine(user.Description, Model.Key)))
+                                                </p>
+                                                                                  }
+                                                                                  if (!string.IsNullOrEmpty(user.Tags))
+                                                                                  {
+                                                <p>
+                                                    标签：
+													@{
+                                                                                      string[] array = user.Tags.Split(',');
+                                                                                      foreach (var s in array)
+                                                                                      {
+                                                                                          if (!string.IsNullOrEmpty(s))
+                                                                                          {
+													<a href="/Search/User?Tag=@Utils.UrlEncode(s)">@(MvcHtmlString.Create(HighLineHelper.HighLine(s, Model.Key)))</a>
+                                                                                          }
+                                                                                      }
+													 }
+                                                </p>
+                                                                                  }
+                                                                                  if (!string.IsNullOrEmpty(user.Schools))
+                                                                                  {
+                                                <p>
+                                                    学校：
+													@{
+                                                                                      string[] array = user.Schools.Split(',');
+                                                                                      foreach (var s in array)
+                                                                                      {
+                                                                                          if (!string.IsNullOrEmpty(s))
+                                                                                          {
+													<a href="/Search/User?School=@Utils.UrlEncode(s)">@(MvcHtmlString.Create(HighLineHelper.HighLine(s, Model.Key)))</a>
+                                                                                          }
+                                                                                      }
+													 }
+                                                </p>
+                                                                                  }
+                                                                                  if (!string.IsNullOrEmpty(user.Companies))
+                                                                                  {
+                                                <p>
+                                                    公司：
+													@{
+                                                                                      string[] array = user.Companies.Split(',');
+                                                                                      foreach (var s in array)
+                                                                                      {
+                                                                                          if (!string.IsNullOrEmpty(s))
+                                                                                          {
+													<a href="/Search/User?Career=@Utils.UrlEncode(s)">@(MvcHtmlString.Create(HighLineHelper.HighLine(s, Model.Key)))</a>
+                                                                                          }
+                                                                                      }
+													 }
+                                                </p>
+                                                                                  }
+                                                    }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="conBox_r">
+									    @{
+                                                                                  int relate = Users.GetRelateBetweenUsers(Model.CurUser.ID, user.ID);
+                                                                                  if (relate == 1 || relate == 2)
+                                                                                  {
+											  <a href="javascript:void(0);" class="concernBtn_Yet"><span class="add_yet"></span>已关注</a>
+                                                                                  }
+
+                                                                                  else if (user.ID != Model.CurUser.ID)
+                                                                                  {
+										  <a href="javascript:void(0);" onclick="schManage.followOne(@user.ID,'@user.NickName',this);return false;" class="addFollow"><span class="addnew">+</span>加关注</a>
+                                                                                  }
+				                          }
+				                      </div>
+                                </li>
+                                        }
+                                    }
+                                   }
+                            </ul>
+                                }
+                                else
+                                {
+                                    <div class="box_lbWrap">
+                            <div class="notFind_w">
+							                                 <div class="sorry">
+                                   								   抱歉没有找到<span class="error_color">"@Model.Key"</span>相关的结果
+								                                    </div>
+                                 <ul class="sugst">
+
+								 	<li class="strong">建议：</li>
+								 									 <li>请尽量输入常用词</li>
+									 <li>请尽量使用简洁的关键词</li>
+									 <li>可用空格将多个关键词分开</li>
+								                                  </ul>
+							                            </div>
+                                                        </div>
+                                }
+                                }
+                           @Html.Pager(Model.Page, Model.RecordCount, Model.PageSize)
+
+                            <!--
+						<a href="javascript:void(0)" class="btn_longc" id="pagedown" onclick="App.pagedown(this)">展开更多</a>						!-->
+                            
+                        </div>
+                        <!-- 按标签搜索显示 -->
+                        <div class="srch_bar_r rt">
+                            <!--
+	-->
+                            <div class="sdbar_opt">
+                                <p>
+                                    <a onclick="App.publisherDialog.show('#微博搜索意见反馈#');return false;" href="javascript:">
+                                        微博搜索意见反馈</a></p>
+                                <p>
+                                    <a href="http://weibo.com/mbsearch">微博搜索产品动态</a></p>
+                            </div>
+                        </div>
+                        <!-- /按标签搜索显示 -->
+                    </div>
+                    <!--下面搜索-->
+                    <div class="srch_con_b">
+                        <div class="srch_form_b">
+                            <div>
+                                <div class="srch_form_c lf">
+                                    <div class="srch_arrow">
+                                        <div class="srch_form_cr rt">
+                                        </div>
+                                        <div class="srch_form_cl lf">
+                                        </div>
+                                        <input id="sInput_bottom" class="font_14 txt_srch" value="@(string.IsNullOrEmpty(Model.Key) ? (string.IsNullOrEmpty(Model.School) ? (string.IsNullOrEmpty(Model.Tag) ? (string.IsNullOrEmpty(Model.Career) ? "" : Model.Career) : Model.Tag) : Model.School) : Model.Key)" maxlength="40" autocomplete="off"
+                                            type="text">
+                                    </div>
+                                </div>
+                                <a id="search_bottom" class="srch_btn lf" href="###">搜索</a>
+                            </div>
+                        </div>
+                        <div class="srch_btm">
+                            <div class="kw_category" id="category_cont_bottom">
+                                <label for="name">@{if (Model.Tag == null && Model.School == null && Model.Career == null)
+                                                    {<input parms="key"  onclick=" schManage.radioClick(this,'sInput_bottom');"  name="srchb" id="name_bottom" checked="checked" type="radio" />}
+                                                    else
+                                                    {<input parms="key"  onclick=" schManage.radioClick(this,'sInput_bottom');" name="srchb" id="name_bottom"  type="radio" />}}名称</label>
+                                <label for="work">@{if (Model.Career != null)
+                                                    {<input parms="career"  onclick=" schManage.radioClick(this,'sInput_bottom');" name="srchb" checked="checked" id="work_bottom" type="radio" />}
+                                                    else
+                                                    {<input parms="career"  onclick=" schManage.radioClick(this,'sInput_bottom');" name="srchb"  id="work_bottom" type="radio" />}}单位</label>
+                                <label for="school">@{if (Model.School != null)
+                                                      {<input name="srchb" parms="school"  onclick=" schManage.radioClick(this,'sInput_bottom');" id="school_bottom" checked="checked" type="radio" />}
+                                                      else
+                                                      {<input name="srchb" parms="school"  onclick=" schManage.radioClick(this,'sInput_bottom');" id="school_bottom" type="radio" />}}学校</label>
+                                <label for="tag">@{if (Model.Tag != null)
+                                                   {<input name="srchb" parms="tag"  onclick=" schManage.radioClick(this,'sInput_bottom');" id="tag_bottom" checked="checked" type="radio" />}
+                                                   else
+                                                   {<input name="srchb" parms="tag"  onclick=" schManage.radioClick(this,'sInput_bottom');" id="tag_bottom" type="radio" />}}标签</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/下面搜索-->
+                    <div class="ftop">
+                        <a href="#">
+                            <img class="small_icon returntop" src="/Content/Image/transparent.gif" title="返回顶部"
+                                alt="↑">返回顶部</a>
+                    </div>
+                </div>
+            </div>
+

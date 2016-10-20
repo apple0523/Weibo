@@ -1,0 +1,408 @@
+﻿@model Weibo.Web.Models.CareerModel
+ @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "职业信息 XX微博-随时随地分享身边的新鲜事儿";
+ }
+  @section  cssInsert{
+    <link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+    <script src="/Scripts/Setup.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var career = {};
+        career.action = "create";
+        career.curCareer = -1;
+        career.createHtml = "";
+        career.initCreateBox = function (cobject) {
+            var city = $("select[name='city']");
+            var province = $("select[name='province']");
+            var company = $("#company");
+            var remark = $("#remark");
+            var selCompany = $("#selCompany");
+            if (cobject) {
+                var start = $("select[name='start']");
+                var end = $("select[name='end']");
+                selCompany.val(cobject.isvisible);
+                company.val(cobject.cname);
+                remark.val(cobject.remark);
+                setTimeout(function () { start.val(cobject.start); end.val(cobject.end) }, 1);
+            }
+            App.BindCityCtrl(province, "province", 1, function () {
+                if (cobject) { setTimeout(function () { province.val(cobject.province); }, 1); }
+                App.BindCityCtrl(city, "City", cobject?cobject.province:province.val(), function () {
+                    if (cobject) { setTimeout(function () { city.val(cobject.city); }, 1); }
+                }, "/Ajax/GetCity/");
+                province.hide();
+                city.hide();
+                province.show();
+                city.show();
+                setTimeout(function () { App.Setup.BindSelect(selCompany); }, 1);
+            }, "/Ajax/GetCity/");
+            province.change(function () {
+                App.BindCityCtrl(city, "City", province.val(), null, "/Ajax/GetCity/");
+            }, "/Ajax/GetCity/");
+            App.Setup.BindInput(company, "请输入名称，25个字以内", App.Setup.checkCompanyName);
+            App.Setup.BindInput(remark, "可以填写部门、组别、职位等信息，70个字以内", App.Setup.checkRemark);
+            $("#save").click(function () { career.submit(this); });
+            App.autoComplete(company, function (id, name) { company.val(name) });
+        }
+        career.submit = function (alink) {
+            var city = $("select[name='city']");
+            var province = $("select[name='province']");
+            var company = $("#company");
+            var remark = $("#remark");
+            var selCompany = $("#selCompany");
+            var careerList = $("#careerList");
+            App.Setup.checkCompanyName(company);
+            App.Setup.checkRemark(remark);
+            if (App.Setup.isCompanyName && App.Setup.isRemark && !alink.locked) {
+                alink.locked = true;
+                $.ajax(
+       {
+           url: this.action == "create" ? "/Ajax/CreateCareer" : "/Ajax/EditCareer",
+           datatype: "json",
+           cache: false,
+           data: { careerid: career.curCareer, companyName: $.trim(company.val()), remark: remark.val(), isVisible: selCompany.val(), location: city.val() > 0 ? city.val() : province.val(), startdate: $("#start").val(), enddate: $("#end").val() },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+               }
+               else {
+                   App.FullMiniTip(CodeList[o.Code], alink, 1000, 3);
+                   if (career.action == "create") {
+                       if (o.Data != "") {
+                           var first = careerList.find("div:first");
+                           if (first[0])
+                               $(o.Data).insertBefore(first);
+                           else
+                               careerList.html(o.Data);
+                       }
+                   }
+                   else {
+                       if (o.Data != "") {
+                           curCarItem = $("#career_" + career.curCareer)
+                           $(o.Data).insertBefore(curCarItem);
+                           curCarItem.remove();
+                       }
+                   }
+               }
+               alink.locked = false;
+           },
+           error: function (request) {
+               App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+               alink.locked = false;
+           }
+       });
+            }
+        }
+career.del = function (id) {
+    App.confirm("是否真的删除？", function () {
+        $.ajax(
+       {
+           url: "/Ajax/DelCareer",
+           datatype: "json",
+           cache: false,
+           data: { careerid: id },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.alert(CodeList["A00003"]);
+               }
+               else {
+                   $("#career_" + id).remove();
+               }
+           },
+           error: function (request) {
+               App.alert(CodeList["A00003"]);
+           }
+       });
+    });
+
+}
+career.edit = function (id) {
+    $.ajax(
+       {
+           url: "/Ajax/getCareerDetail",
+           datatype: "json",
+           cache: false,
+           data: { careerid: id },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.alert(CodeList["A00003"]);
+               }
+               else {
+                   $("div[edit='1']").html("");
+                   var editElem = $("#careerEdit_" + id);
+                   $("#divCreate").hide().find(".info_tab01").remove();
+                   editElem.html("<div class='info_tab01'>" + career.createHtml + "</div>");
+                   $("#btnCreate").show();
+                   career.initCreateBox(o.Data);
+                   career.action = "edit";
+                   career.curCareer = id;
+               }
+           },
+           error: function (request) {
+               App.alert(CodeList["A00003"]);
+           }
+       });
+
+}
+$(function () {
+
+    career.createHtml = $("#divCreate .info_tab01").html();
+    career.initCreateBox();
+    App.TimerFunArray.push(App.autoCompleteTimerEvent);
+    App.curGetLink = "autoCompleteCompany";
+    App.StartTimer();
+    $("#btnCreate a").click(function () {
+        $("div[edit='1']").html("");
+        $("#divCreate").show().append("<div class='info_tab01'>" + career.createHtml + "</div>");
+        career.initCreateBox();
+        $("#btnCreate").hide();
+        career.action = "create";
+        career.curCareer = -1;
+    });
+});
+    </script>
+    }
+
+
+
+            <div class="MIB_blogbody">
+                <!--找朋友-->
+                <div class="MIB_column">
+                    <div class="MIB_main_cont">
+                        <div class="MIB_setup">
+                            <!--页签-->
+                            <div class="PY_tag">
+                                <ul>
+                                    <li>
+                                        <div class="PY_tago">
+                                            <span class="bold">个人资料</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/myface">修改头像</a></span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/privacy">隐私设置</a></span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/notice">个性设置</a></span></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--/页签-->
+                            <div id="system_information" style="display: none">
+                            </div>
+                            <!--个人资料-->
+                            <div class="setup_main">
+                                <div class="infoTop  MIB_line1">
+                                    <div class="infoTop_nav">
+                                        <span><a href="/Setup/baseinfo">基本信息</a></span> <span class="navBorder gray9">|</span>
+                                        <span><a href="/Setup/EditPwd">修改密码</a></span> <span class="navBorder gray9">|</span>
+                                        <span><a href="/Setup/Education/">教育信息</a></span> <span class="navBorder gray9">|</span>
+                                        <span class="edutop_cur">职业信息</span> <span class="navBorder gray9">|</span> <span><a
+                                            href="http://account.weibo.com/setting/tag">个人标签</a></span> <span class="navBorder gray9">
+                                                |</span> <span><a href="http://account.weibo.com/setting/mysite">个性域名</a></span>
+                                    </div>
+                                </div>
+                                <div id="careerList">
+                                    @{
+                                        if (Model.Careers != null)
+                                        {
+                                            foreach (Career career in Model.Careers)
+                                            {
+                                        <div id="career_@{@career.ID;}" class="infoTableBox MIB_line1" onmouseout="$(this).find('.infoTable').removeClass('hover_table');App.hideExtendBtn(this);return false" onmouseover="$(this).find('.infoTable').addClass('hover_table');App.showExtendBtn(this);return false">
+                                            <ul class="infoTable                                                                                                                                    ">
+                                                <li class="lf"><span class="font_14"><a href="/Search/User/?Company=@career.CompanyName">
+                                                    @career.CompanyName</a></span>
+                                                    @{
+                                               if (career.Location > 0)
+                                               {
+                                                        <span class="edu_conn_place">(@Types.GetCityTypesFullName(career.Location))</span>
+                                               }
+                                                    }
+                                                    @{
+                                               if (!string.IsNullOrEmpty(career.StartDate) && Convert.ToInt32(career.StartDate) > 0)
+                                               {
+                                                        <span>
+                                                            @{@career.StartDate}年&nbsp;&mdash;&nbsp;@{@(career.EndDate == "0" ? "至今" : (career.EndDate == "-1" ? "未知" : career.EndDate + "年"))}</span>
+                                               }
+                                                    }
+                                                </li>
+                                                <li class="rt" style=""><span class="pri_content" extend="true" style="visibility: hidden;">
+                                                    <img title="隐私" class="small_icon privacy_icon" src="/Content/Image/transparent.gif">
+                                                    @{@(career.IsVisible == 1 ? "所有人可见" : (career.IsVisible == 2 ? "我关注的人可见" : "仅自己可见"))} </span><span class="info_tools"><a onclick="career.edit(@career.ID);return false;" extend="true" href="javascript:;" 
+                                                        style="visibility: hidden;">
+                                                        <img src="/Content/Image/transparent.gif" class="small_icon edit_icon" title="修改">修改</a>
+                                                        <a onclick="career.del(@career.ID);return false;" href="javascript:;" style="visibility: hidden;" extend="true">
+                                                            <img src="/Content/Image/transparent.gif" class="small_icon del_icon" title="删除">删除</a>
+                                                        <a href="/Search/User/?Company=@career.CompanyName" target="_blank" >
+                                                            <img src="/Content/Image/transparent.gif" class="small_icon search_icon" title="找同事" />
+                                                            <span>找同事</span> </a></span></li>
+                                            </ul>
+                                            <div id="careerEdit_@{@career.ID}" edit="1">
+                                            </div>
+                                            <div node-type="con_search" style="display: none;">
+                                            </div>
+                                        </div>
+                                            }
+
+                                        }
+                                    }
+                                </div>
+                                <div style="display: none;" id="btnCreate" class="btn btn1">
+                                    <a href="javascript:;" class="btn_green"><em>添加职业信息</em></a>
+                                </div>
+                                <div id="divCreate" style="">
+                                    <div class="title MIB_linedot2 title1">
+                                        <span class="fb">添加职业信息</span>
+                                    </div>
+                                    <div class="info_tab01">
+                                        <form>
+                                        <input type="hidden" name="id"  value="" />
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="gray6">
+                                                        所在地：
+                                                    </th>
+                                                    <td  class="info_tab_vm">
+                                                        <select name="province" >
+                                                        </select>
+                                                        <select name="city">
+                                                        </select>
+                                                        <!--下拉-->
+                                                        <select  id="selCompany" style="display: none;" class="info_tabTip" name="privacy" >
+                                                            <option value="1" selected="selected">所有人可见</option>
+                                                            <option value="2">我关注的人可见</option>
+                                                            <option value="3">仅自己可见</option>
+                                                        </select>
+                                                        <!--下拉-->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="gray6">
+                                                        <em class="error_color">*</em> 单位名称：
+                                                    </th>
+                                                    <td>
+                                                        <input type="text" id="company"  class="PY_input"/>
+                                                    </td>
+                                                    <td>
+                                                        <div class="setup_info" style="display:none;">
+                                                            <div class="info_tip2">
+                                                                <img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3">
+                                                            </div>
+                                                            <div   class="info_tip1">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table>
+                                            <tbody>
+                                                <tr >
+                                                    <th class="gray6">
+                                                        工作时间：
+                                                    </th>
+                                                    <td class="info_tab_vm">
+                                                        <select id="start" name="start">
+                                                            <option value="-1" selected="selected">请选择</option>
+                                                            @{
+                                                                for (var i = DateTime.Now.Year; i >= 1900; i--)
+                                                                {
+                                                                   <option value="@i">@i</option> 
+                                                                }
+                                                            }
+                                                        </select>&nbsp;至
+                                                        <select id="end" name="end">
+                                                            <option value="-1" selected="selected">请选择</option>
+                                                            <option value="0" >至今</option>
+                                                            @{
+                                                                for (var i = DateTime.Now.Year; i >= 1900; i--)
+                                                                {
+                                                                   <option value="@i">@i</option> 
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <div class="setup_info" style="display:none;">
+                                                            <div class="info_tip2">
+                                                                <img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3">
+                                                            </div>
+                                                            <div class="info_tip1">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="gray6">
+                                                        部门/职位：
+                                                    </th>
+                                                    <td>
+                                                        <input type="text" id="remark" class="PY_input"  name="remark"
+                                                            style="">
+                                                    </td>
+                                                    <td >
+                                                        <div class="setup_info" style="display: none;">
+                                                            <div class="info_tip2">
+                                                                <img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3">
+                                                            </div>
+                                                            <div  class="info_tip1">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                    </th>
+                                                    <td>
+                                                        <a href="javascript:;" id="save" class="newabtngrn" ><em>保存</em></a> <a id="cancel" href="javascript:;"
+                                                            class="btn_normal btns"><em>取消</em></a>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/个人资料-->
+                        </div>
+                    </div>
+                </div>
+                <!--/找朋友-->
+            </div>
+

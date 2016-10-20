@@ -1,0 +1,79 @@
+ @model Weibo.Web.Models.AjaxGetPagerCommentModel
+            @{
+                MiniBlog oriminiblog = null;
+                User oriuser = null;
+               if(Model.comments!=null)
+               {
+               foreach(Comment comment in Model.comments)
+               {
+                   User user=Users.GetUserByID(comment.UID);
+                    if(user!=null)
+                   {
+<li onmouseout="App.hideExtendBtn(this);return false" onmouseover="App.showExtendBtn(this);return false" class="commentsCell MIB_linedot_l selected">
+				
+				<div class="commentsTxt">
+					<a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" ><img src="@{@user.MidAvartar;}" title="@{@user.NickName;}" class="picborder_l" ></a>
+                     @{
+                        if(user.ID==Model.CurUser.ID||Model.CurUser.ID==Model.miniBlog.UID)
+                        {
+										<div title="删除" extend="true" style="visibility: hidden;" onclick="App.DelCommentFromPager(this,@comment.ID,@Model.miniBlog.ID);" class="icon_closel rt">x</div>
+					  }
+                      }
+					<div class="commentsContants">
+											<p><a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" >@{@user.NickName;}</a>  @{@MvcHtmlString.Create(Comments.TransformContent(comment.Content));}(@{@DateSpan.Get(comment.CreateTime)})
+											</p>
+										
+						<div class="commentOption">
+							<cite class="rt">
+                            @{
+                       if(user.ID!=Model.CurUser.ID)
+                       {
+					<a onclick="App.showReportBox(this,@user.ID,@TypeConfigs.GetComplaint_cm,@comment.ID);return false;" style="visibility: hidden;" extend="true" class="reportBtn" href="javascript:;">举报</a><span extend="true" style="visibility: hidden;" class="MIB_line_l">|</span>
+                        }
+                    }
+                            <a onclick="App.ReplyComment4Details(@{@comment.ID},@{@user.ID;},'@{@user.NickName;}',@{@Model.miniBlog.ID});return false;" href="javascript:void(0);">回复</a></cite>
+						</div>
+
+
+						<!-- 评论回复框开始 -->
+						<div class="clearit"></div>
+						<div id="comment_reply_@{@Model.miniBlog.ID}_@{@comment.ID}" class="MIB_assign">
+							<div class="MIB_asarrow_r"></div>
+							<div class="MIB_assign_t"></div>
+							<div class="MIB_assign_c">
+								<div class="logininput">
+									<a id="comment_face_@{@Model.miniBlog.ID}_@{@comment.ID}" title="表情" href="javascript:void(0);" class="faceicon1"></a>
+									<textarea range="0&0" class="lf" id="comment_content_@{@Model.miniBlog.ID}_@{@comment.ID}" style="overflow: hidden; height: 18px;"></textarea>
+									<a href="javascript:void(0);" id="comment_post_@{@Model.miniBlog.ID}_@{@comment.ID}" onclick="App.bindAddComment(this,@{@Model.miniBlog.ID},@{@Model.miniBlog.UID},'comment_content_@{@Model.miniBlog.ID}_@{@comment.ID}','agree_@{@comment.ID}','isroot_@{@comment.ID}');return false;" class="btn_normal"><em>评论</em>
+									</a>
+									<div class="margin_b MIB_txtbl ml35">
+									  <p> <input type="checkbox" id="agree_@{@comment.ID}"> <label for="agree_@{@comment.ID}">同时转发到我的微博</label></p>
+                                      @{
+                         if (Model.miniBlog.IsOriginal != 1)
+                         {
+                             oriminiblog = MiniBlogs.GetMiniBlogByID(Model.miniBlog.ID);
+                             if (oriminiblog != null)
+                             {
+                                 oriuser = Users.GetUserByID(oriminiblog.UID);
+                                 if (oriuser != null)
+                                 {
+									  									  <p><input type="checkbox" id="isroot_@{@comment.ID}"><label for="isroot_@{@comment.ID}"> 同时评论给原文作者 @{@oriuser.NickName;}</label></p> 
+									  								
+                                                     }
+                             }
+                         }
+                        }		</div>
+								</div>
+							</div>
+							<div class="MIB_assign_b"></div>
+						</div>
+						<!-- 评论回复框结束 -->
+					</div>
+
+
+				</div>
+			</li>
+                }
+               }
+               }
+               }

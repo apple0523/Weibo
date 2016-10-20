@@ -1,0 +1,5 @@
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/18 15:47:21
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.4.4.min.js' was not found or does not implement IController.

@@ -1,0 +1,112 @@
+﻿<div class="header">
+	<div class="head_menu">
+		<span class="menu_l">&nbsp;</span>
+		<div class="menu_c">
+			<div class="bg_menu_c">&nbsp;</div>
+			<ul>
+                @{
+                    if(ViewData["AdditionHeader"]!=null)
+                    {
+                    <li  class="cur"><a href="@Request.Url.ToString()">@ViewData["AdditionHeader"].ToString()</a></li><li class="line">|</li>
+                    }
+                    if (ViewData["CurHeader"] != null)
+                    {
+                        if (ViewData["CurHeader"].ToString() == "MyProfile")
+                        {
+				<li  class="cur"><a href="/">我的首页</a></li><li class="line">|</li><li><a href="/@Model.CurUser.ID/Profile">我的微博</a></li><li class="line">|</li><li><a href="/@Model.CurUser.ID/Follow">好友</a></li><li class="line">|</li><li><a href="/MiniBlog/MySkin">模板</a></li>
+                        }
+                        if (ViewData["CurHeader"].ToString() == "MyMiniblog")
+                        {
+				<li><a href="/">我的首页</a></li><li class="line">|</li><li   class="cur"><a href="/@Model.CurUser.ID/Profile">我的微博</a></li><li class="line">|</li><li><a href="/@Model.CurUser.ID/Follow">好友</a></li><li class="line">|</li><li><a href="/MiniBlog/MySkin">模板</a></li>
+                        }
+                        if (ViewData["CurHeader"].ToString() == "MyFriend")
+                        {
+				<li><a href="/">我的首页</a></li><li class="line">|</li><li><a href="/@Model.CurUser.ID/Profile">我的微博</a></li><li class="line">|</li><li    class="cur"><a href="/@Model.CurUser.ID/Follow">好友</a></li><li class="line">|</li><li><a href="/MiniBlog/MySkin">模板</a></li>
+                        }
+                        if (ViewData["CurHeader"].ToString() == "MySkin")
+                        {
+				<li><a href="/">我的首页</a></li><li class="line">|</li><li><a href="/@Model.CurUser.ID/Profile">我的微博</a></li><li class="line">|</li><li ><a href="/@Model.CurUser.ID/Follow">好友</a></li><li class="line">|</li><li    class="cur"><a href="/MiniBlog/MySkin">模板</a></li>
+                        }
+                    }
+                    else
+                    {
+               <li><a href="/">我的首页</a></li><li class="line">|</li><li><a href="/@Model.CurUser.ID/Profile">我的微博</a></li><li class="line">|</li><li ><a href="/@Model.CurUser.ID/Follow">好友</a></li><li class="line">|</li><li><a href="/MiniBlog/MySkin">模板</a></li>
+                    }
+                    }
+            </ul>
+			<div id="m_search" class="search">
+				<input type="text" value="搜索微博、找人" accesskey="3" title="搜索微博、找人" style="color: rgb(153, 153, 153);" autocomplete="off" id="m_keyword">
+				<a id="m_submit" href="javascript:void(0);" class="submit">搜索</a>
+			</div>
+		</div>
+		<span class="menu_r">&nbsp;</span>
+	</div>
+	<div style="display: none; z-index: 300; left: 600px; top: 99px; width: 137px;" class="resultTip" id="m_keyword_tip"><span>请选择搜索范围</span><ul id="m_keyword_tip_content"><li style="cursor:pointer" class="cur"><span act="def">搜微博</span><span act="isinput" style="display: none;">含<cite act="txt" id="m_keyword_tip_blog"></cite>的微博</span></li><li style="cursor:pointer"><span act="def">搜人</span><span act="isinput" style="display: none;">名为<cite act="txt" id="m_keyword_tip_author"></cite>的人</span></li></ul></div> 
+</div>
+<script type="text/javascript">
+    var keywordTip = $("#m_keyword_tip");
+    var keywordBlog = $("#m_keyword_tip_blog");
+    var keywordAuthor = $("#m_keyword_tip_author");
+    var docClick = function () {
+        keywordTip.hide();
+        $(document).unbind("click",docClick);
+    }
+    var moveCur = function () {
+        var curli = keywordTip.find(".cur");
+        curli.removeClass("cur");
+        if (curli.prev()[0]) {
+            curli.prev().addClass("cur");
+        }
+        else {
+            curli.next().addClass("cur");
+        }
+    }
+    $("#m_submit").click(function () {
+        var txt = $("#m_keyword");
+        if (txt.val()) {
+            window.location.href = "/k/" + encodeURIComponent(txt.val());
+        }
+        return false;
+    });
+    $("#m_keyword").JQP_HighLineInput2({ nullCon: "搜索微博、找人" }).keydown(function (e) {
+        if (this.value) {
+            switch (e.which) {
+                case 38:
+                    moveCur(); return false ;
+                case 40:
+                    moveCur(); return false;
+                case 13:
+                    if (keywordTip.find("li")[0].className == "cur")
+                        window.location.href = "/k/" + encodeURIComponent(this.value);
+                    else
+                        window.location.href = "/Search/User?key=" + encodeURIComponent(this.value);
+                    return false;
+            }
+        }
+
+    });
+    $("#m_keyword").keyup(function (e) {
+        if (this.value) {
+            var v = App.GetStringByte(this.value, 12);
+            if (App.byteLength(this.value) >= 12)
+                v += "...";
+            keywordTip.show();
+            $(document).bind("click", docClick);
+            keywordBlog.text(v).parent().show().prev().hide();
+            keywordAuthor.text(v).parent().show().prev().hide();
+        }
+        else {
+            keywordTip.hide();
+            $(document).unbind("click",docClick);
+        }
+        $("#m_keyword_tip_content li").mouseover(function () {
+            $("#m_keyword_tip_content li").removeClass("cur");
+            this.className = "cur";
+        }).click(function (e) {
+            if (keywordTip.find("li")[0].className == "cur")
+                window.location.href = "/k/" + encodeURIComponent($("#m_keyword").val());
+            else
+                window.location.href = "/Search/User?key=" + encodeURIComponent($("#m_keyword").val());
+        });
+    });
+</script>

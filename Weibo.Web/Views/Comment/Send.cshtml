@@ -1,0 +1,258 @@
+﻿@model Weibo.Web.Models.CommentSendModel
+                      @{
+    var border = "";
+    if(Model.CurUserConfig.IsThemeDIY==1){
+        ThemeDIY diy = Themes.GetThemeDIYByUID(Model.CurUser.ID);
+        border = diy.BorderStyle+"Bg";
+    }
+    ViewData["curBorder"] = border;
+ }
+ @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "发出的评论 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/miniblog/com_manage.css" />
+    <link rel="stylesheet" type="text/css" href="@Model.CurSkinCss" />
+    }
+ @section  jsInsert{   
+    <script type="text/javascript">
+        var curBorder = "@border";
+    </script>
+    <script type="text/javascript">
+                $(document).ready(function () {
+                    App.initMedia();
+                    App.bindGoTop(curBorder);
+                    App.initNameCard($(".commentsList"));
+                });
+                App.Comment = {};
+                App.Comment.DelComment = function (alink, cid) {
+                    App.confirm("是否删除该条评论", function () {
+                        if (alink.locked)
+                            return false;
+                        alink.locked = true;
+                        App.DelComment(cid, function (data) {
+                            $("#Comment_" + cid).fadeOut();
+                        }, function () {
+                            alink.locked = false;
+                        });
+                        return false;
+                    });
+                    return false;
+                };
+                App.Comment.SelAll = function (ctrl) {
+                    if (ctrl.tagName == "INPUT") {
+                        if (ctrl.checked) {
+                            $("input[selable='1']").attr("checked", "true");
+                            $("#selectallbottom").attr("checked", "true");
+                            $("#selectall").attr("checked", "true");
+                        }
+                        else {
+                            $("input[selable='1']").removeAttr("checked");
+                            $("#selectallbottom").removeAttr("checked");
+                            $("#selectall").removeAttr("checked");
+                        }
+                    }
+                    else {
+                        $("input[selable='1']").attr("checked", "true");
+                        $("#selectallbottom").attr("checked", "true");
+                        $("#selectall").attr("checked", "true");
+                    }
+                }
+
+                App.Comment.DelSeled = function (alink) {
+                    App.confirm("是否删除选中的评论", function () {
+                        if (alink.locked)
+                            return false;
+                        alink.locked = true;
+                        var cids = "";
+                        var selCtrls = $("input[selable='1']:checked");
+                        for (var i = 0; i < selCtrls.length; i++) {
+                            cids += selCtrls[i].value + ",";
+                        }
+
+                        if (!cids) {
+                            App.alert("请选择一项");
+                            return;
+                        }
+                        $.ajax({
+                            dataType: "json",
+                            data: {
+                                cids: cids
+                            },
+                            url: "/Ajax/DelArrayComment/",
+                            cache: false,
+                            type: "post",
+                            success: function (o) {
+                                if (o.Code == "A00003")
+                                    App.alert(CodeList[o.Code]);
+
+                                else if (o.Code == "A00001") {
+                                    App.showLoginDial();
+                                }
+                                else {
+                                    App.fullTip(CodeList[o.Code], 1000, "/Comment/Send", 3);
+                                }
+
+                            },
+                            error: function () {
+                                App.alert(CodeList["A00003"]);
+
+                            }
+                        });
+                    });
+                }
+     </script>
+     }
+
+            <div class="MIB_blogbody">
+                <div class="MIB_mblogbgr @border">
+                    <div class="MIB_mblogbgl">
+                        <div class="mainR MIB_200 MIB_txtar MIB_linkar">
+                           @RenderPage("~/Views/Shared/_userInfo.cshtml")
+                             @RenderPage("~/Views/Shared/_rightNav.cshtml") 
+                        </div>
+                        <div class="mainL MIB_600 MIB_txtal MIB_linkal">
+						   <div class="MIB_lf_titl font_14"> <span><a href="/comment/receive">收到的评论</a></span><span class="MIB_line_l2">|</span><span class="fb">发出的评论</span></div>
+                            <div class="commendBox">
+							<div class="navStyle">
+	
+																<div class="rt">
+									<div class="chdd">
+										    <label><input type="text" name="searchkeyword" id="searchkeyword" value="@(string.IsNullOrEmpty(Model.Key) ? "查找评论" : Model.Key)" class="test" style="color: rgb(153, 153, 153);">
+										    <a class="btn_normal btnxs" id="search_btn" href="javascript:;"><em>搜索</em></a>
+										    </label>
+										
+									</div>
+								</div>
+                                  <script type="text/javascript">
+                                      var atmeSearch = function () {
+                                          var url = window.location.href;
+                                          if ($("#searchkeyword").val() != "查找评论" && $.trim($("#searchkeyword").val())) {
+                                              url = App.AddQueryToUrl(url, "Key", encodeURIComponent($.trim($("#searchkeyword").val())));
+                                          } else {
+                                              url = App.RemoveQueryFromUrl(url, "Key");
+                                          }
+                                          window.location.href = url;
+                                      }
+
+                                      $("#searchkeyword").JQP_HighLineInput2({ nullCon: "查找评论" }).keyup(function (e) {
+                                          if (e.which == 13) {
+                                              atmeSearch();
+                                          }
+                                      });
+                                      $("#search_btn").click(function () {
+                                          atmeSearch();
+                                          return false;
+                                      });
+                </script>
+								                                <div class="clearit"></div>
+                            </div>
+							<div class="commentsmanage">
+							 <div class="MIB_comheader">
+                                    <input type="checkbox" onclick=" App.Comment.SelAll(this);" id="selectall" class="selectall" />
+                                    <a onclick=" App.Comment.SelAll(this);return false;" href="javascript:void(0);">全选</a><span class="MIB_line_l">|</span><a onclick=" App.Comment.DelSeled(this);return false;" href="javascript:void(0);">删除</a>
+                                    <div class="rt">共<span>@{@Model.RecordCount;}</span>条</div>
+                                </div>
+								<ul class="commentsList">
+								  @{
+                                      if(Model.Comments!=null)
+                                      {
+									  foreach (Comment comment in Model.Comments)
+									  {
+										  MiniBlog miniblog=MiniBlogs.GetMiniBlogByID(comment.MID);
+										 <li id="Comment_@{@comment.ID}" class="commentsCell MIB_linedot_l" onmouseout="App.hideExtendBtn(this);return false" onmouseover="App.showExtendBtn(this);return false">
+										 <div class="selector"> 
+
+												  <input selable="1" type="checkbox" value="@comment.ID"  class="ckb" />
+
+										 </div>
+										 <div class="commentsTxt">
+										 @{
+										  User user = Users.GetUserByID(comment.UID);
+										 <a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" title="@{@user.NickName;}" >
+                                                    <img class="picborder_l"  src="@{@user.MidAvartar;}" 
+                                                    title="@{@user.NickName;}" /></a>
+			                              <div class="icon_closel rt" onclick="App.Comment.DelComment(this,@comment.ID);return false;" style="visibility: hidden;"  extend="true"  title="删除">x</div>
+			                              <div class="commentsContants">
+										 <p class="commentsParm MIB_txtal">
+										 @{@MvcHtmlString.Create(!string.IsNullOrEmpty(Model.Key) ? HighLineHelper.HighLine(Comments.TransformContent(comment.Content), Model.Key) : Comments.TransformContent(comment.Content));}&nbsp;(@{@DateSpan.Get(comment.CreateTime);})
+										 </p>
+										 <div class="commentOption">
+										  <span class="from">
+                                          @{
+											if (comment.ReplyUID != -1)
+											{
+												if(comment.ReplyUID==Model.CurUser.ID)
+												{
+													<label class="MIB_txtbl">回复我的评论
+											  ：&quot;<a  href="/@{@miniblog.UID}/@{@miniblog.IDCode}">
+											@{@MvcHtmlString.Create(Comments.TransformContent(comment.ReplyContent,true));}
+											</a>&quot;
+											</label>
+												}
+												else
+												{
+												User replyUser=Users.GetUserByID(comment.ReplyUID);
+											<label class="MIB_txtbl">回复<a href="/@{@replyUser.ID;}" uid="@{@replyUser.ID;}" namecard="true" uname="@{@replyUser.NickName;}" title="@{@replyUser.NickName;}" >@{@replyUser.NickName;}</a>的评论
+											  ：&quot;<a  href="/@{@miniblog.UID}/@{@miniblog.IDCode}">
+											@{@MvcHtmlString.Create(Comments.TransformContent(comment.ReplyContent, true))}
+											</a>&quot;
+											</label>
+											   }
+											}
+											else
+											{
+												if(comment.MUID==Model.CurUser.ID)
+												{
+													<label class="MIB_txtbl">评论我的微博
+											  ：&quot;
+										    <a  href="/@{@miniblog.UID}/@{@miniblog.IDCode}">
+											@{@miniblog.OriginalContent}
+											</a>
+											&quot;
+											</label>
+												}
+												else
+												{
+												User miniblogUser=Users.GetUserByID(miniblog.UID);
+											<label class="MIB_txtbl">评论<a href="/@{@miniblogUser.ID;}" uid="@{@miniblogUser.ID;}" namecard="true" uname="@{@miniblogUser.NickName;}" title="@{@miniblogUser.NickName;}" >@{@miniblogUser.NickName;}</a>的微博
+											  ：&quot;
+										    <a  href="/@{@miniblog.UID}/@{@miniblog.IDCode}">
+											@{@miniblog.OriginalContent}
+											</a>
+											&quot;
+											</label>
+											   }
+											}
+									        }
+										  </span>
+										 </div>
+
+										 </div>
+									      } 
+										 </div>
+										 </li>
+									 }
+                                     }
+                                                                       else
+                                  {
+                                         <li class= "commentsCell MIB_linedot_l">没有发送任何评论</li>
+                                      }
+                                     }
+                                  
+								</ul>
+								<div class="MIB_comheader">
+                                    <input type="checkbox" onclick=" App.Comment.SelAll(this);" id="selectallbottom" class="selectall">
+                                    <a onclick=" App.Comment.SelAll(this);return false;" href="javascript:void(0);">全选</a><span class="MIB_line_l">|</span><a onclick="App.Comment.DelSeled(this);return false;" href="javascript:void(0);">删除</a>
+                                </div>
+							</div>
+							</div>
+						   <div class="MIB_bobar">@Html.Pager(Model.Page,Model.RecordCount,Model.PageSize)</div>
+					    </div>
+                    </div>
+                </div>
+            </div>
+

@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> XX微博-随时随地分享身边的新鲜事儿</title>
+<link href="/Content/CSS/layout.css" type="text/css" rel="stylesheet" />
+<link href="/Content/CSS/regv4.css" type="text/css" rel="stylesheet" />
+<link href="/Content/CSS/layer.css" type="text/css" rel="stylesheet" />
+<!–[if IE 6]>  
+<script type="text/javascript">
+    try {
+        document.execCommand("BackgroundImageCache", false, true);
+    } catch (err) { }        
+</script>  
+<![endif]–>
+<script src="/Scripts/Common/jquery-1.10.2.min.js" language="javascript" type="text/javascript"></script>
+<script src="/Scripts/JQP_ClickOther.js" language="javascript" type="text/javascript"></script>
+<script src="/Scripts/JQP_EmailNote.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/App.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/JQP_HighLineInput.js" language="javascript" type="text/javascript"></script>
+<script language="javascript" type="text/javascript">
+    var errorStr = "<div class=\"errormt\"><i></i><strong><span></span></strong></div>";
+    var successStr = "<div class=\"success\"><i></i></div>";
+    $(document).ready(function () {
+        $(".jh_yanzheng").focusin(function () {
+            $(this).attr("class", "jh_yanzhenghover");
+        }).focusout(function () {
+            $(this).attr("class", "jh_yanzheng");
+        });
+        $("#door").JQP_HighLineInput();
+        $("#nickname").JQP_HighLineInput();
+        App.BindCityCtrl($("#province"), "Province", 1, function () {
+            App.BindCityCtrl($("#city"), "City", $("#province").val());
+        });
+        $("#province").change(function () {
+            App.BindCityCtrl($("#city"), "City", $("#province").val());
+        });
+        $("#province").blur(function () {
+            checkProvince();
+        });
+        $("#nickname").blur(function () {
+            checkNickName(true);
+        });
+        $("#door").blur(function () {
+            checkCode(true);
+        });
+        $("#submit").click(function (e) {
+            App.disableAtag($(this));
+            checkCode(false);
+            checkNickName(false);
+            checkProvince();
+            if (isCheckCode && isNickName && isProvince) {
+                App.iframeSubmit({ formNickName: $.trim($("#nickname").val()), formProvince: $("#province").val(), formCity: $("#city").val(), formSex: $("#rdoboy").attr("checked") }, "form1", "/User/IframeFullInfo/", "iframe1");
+            }
+            else {
+                App.enableAtag($(this));
+            }
+        });
+    });
+    var isNickName = false;
+    var isProvince = false;
+    var isCheckCode = false;
+    var checkNickName = function (asysn) {
+        isNickName = false;
+        if ($.trim($("#nickname").val()) == "") {
+            $("#red_nickname").html(errorStr);
+            $("#red_nickname .errormt").find("span").text("请输入昵称");
+        }
+        else if (/^[0-9]*$/.test($.trim($("#nickname").val()))) {
+            $("#red_nickname").html(errorStr);
+            $("#red_nickname .errormt").find("span").text("昵称不能全是数字");
+        }
+        else if (!/^[0-9a-zA-Z\u4e00-\u9fa5_]*$/.test($.trim($("#nickname").val()))) {
+            $("#red_nickname").html(errorStr);
+            $("#red_nickname .errormt").find("span").text("支持中英文、数字或者“_”。");
+        }
+        else if ($.trim($("#nickname").val()).replace(/[^\x00-\xff]/g, 'xx').length > 20) {
+            $("#red_nickname").html(errorStr);
+            $("#red_nickname .errormt").find("span").text("不能超过20个字母或10个汉字");
+        }
+        else {
+            App.ajax_IsExsitNickName(function (o) {
+                if (o.Data == "1") {
+                    $("#red_nickname").html(errorStr);
+                    $("#red_nickname .errormt").find("span").text("此昵称太受欢迎，已有人抢了");
+                }
+                else {
+                    $("#red_nickname").html(successStr);
+                    isNickName = true;
+                }
+
+            }, asysn, $.trim($("#nickname").val()));
+        }
+    }
+
+    var checkCode = function (asysn) {
+        isCheckCode = false;
+        if ($.trim($("#door").val()) == "") {
+            $("#red_door").html(errorStr);
+            $("#red_door .errormt").find("span").text("请输入验证码");
+        }
+        else {
+            App.ajax_IsValidCode(function (o) {
+                if (o.Data == "1") {
+                    $("#red_door").html(errorStr);
+                    $("#red_door .errormt").find("span").text("验证码不对，重新输入下吧。");
+                }
+                else {
+                    $("#red_door").html(successStr);
+                    isCheckCode = true;
+                }
+
+            }, asysn, $.trim($("#door").val()));
+        }
+    }
+    var checkProvince = function () {
+        isProvince = false;
+        if ($("#province").val() == -1) {
+            $("#red_province").html(errorStr);
+            $("#red_province .errormt").find("span").text("请选择省份");
+        }
+        else {
+            $("#red_province").html(successStr);
+            isProvince = true;
+        }
+    }
+    var fullInfoCallBack = function (isSuccess) {
+        if (isSuccess) {
+            window.location.href = "/";
+        }
+        else {
+            App.alert("系统繁忙，稍后再试");
+        }
+
+    }
+</script>
+</head>
+<body class="regbody">
+<div class="cloud"></div>
+<div class="regv4"> <a href="http://weibo.com/" class="guidelink"></a>
+  <div class="reg_title"></div>
+  <div class="reg_con">
+    <!--fuen 内容框-->
+    <div class="reg_conbg" id="information_box">
+      <div class="reg_left">
+        <div class="reg_title1">开通微博</div>
+        <div class="new_construct">
+          <div class="new_item">
+            <div class="tit">微博帐号</div>
+            <div class="bdmain">
+              <div class="reg_con1">@ViewData["UserEmail"].ToString()</div>
+            </div>
+          </div>
+          <div class="new_item">
+            <div class="tit">昵称</div>
+            <div class="bdmain">
+              <div positionleft="7" class="jh_yanzheng"><strong>
+                <input class="textinp" id="nickname" style="width: 230px; color: rgb(153, 153, 153);" name="nickname"  type="text" /></strong></div>
+            </div>
+            <div id="red_nickname" class="new_plus">
+              
+            </div>
+			<div id="use_name"></div>
+          </div>
+          <div class="new_item">
+            <div class="tit">性别</div>
+            <div class="bdmain" id="gender">
+                  <div class="fragm">
+                     <label>
+                        <input value="1" name="gender" id="rdoboy" class="ra" checked="checked" type="radio" />
+                        男</label>
+                  </div>
+                  <div class="fragm">
+                     <label>
+                        <input value="2" name="gender" id="rdogirl" class="ra" type="radio" />
+                        女</label>
+                  </div>
+               </div>
+            <div class="new_plus"></div>
+          </div>
+         <div class="new_item">
+            <div class="tit">所在地</div>
+            <div class="bdmain">
+              <div class="fakesel"> <strong>
+                     <select class="nob"  id="province" name="province"></select>
+                     </strong> </div>
+                     <div class="fakesel"> <strong>
+                     <select class="nob"  id="city" name="city"></select>
+                     </strong> </div>
+            </div>
+            <div id="red_province" class="new_plus"></div>
+		</div>
+		<div class="new_item">
+        		<div class="tit">验证码</div>
+        		<div class="bdmain">
+	          	<div positionleft="185" class="jh_yanzheng"><strong><input class="textinp" name="basedoor" id="door" style="color: rgb(153, 153, 153);"  type="text" /></strong></div>
+	          	<div class="jh_yanzhimg"><img src="/User/GetCheckCode/" style="" id="check_img" width="100" height="35" /><span class="noti1"><a onclick="App.refreshCheckCode('check_img');return false" href="javascript:void(0);">换一换</a></span></div>
+	          </div>   
+          	 <div style="" id="red_door" class="new_plus"></div>
+        </div>		
+        </div>
+        <div class="reg_bt"><a href="javascript:void(0);" id="submit" class="btn2" title="立即开通"></a></div>
+      </div>
+      <div class="reg_right">
+        <div class="reg_title2">你正在使用<b>@ViewData["UserEmail"].ToString()</b>这个帐号<i>|</i><a href="/User/Logout/">换个帐号？</a></div>
+      </div>
+    </div>
+  </div>
+    <div class="regv4_foot">
+     <div class="lf">
+                    <p class="p1">QQ:542752480</p>
+                </div>        
+                <div class="rt">
+                    <p>dev by shaojunjie</p>
+                </div>
+  </div>
+
+</div>
+
+
+</body></html>

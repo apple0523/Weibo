@@ -1,0 +1,117 @@
+﻿<div id="wedget_mytopic">
+    @{
+        Weibo.Entity.User user = Model.CurUser;
+        IList<UserTopic> uts = Topics.GetUserTopicByUID(user.ID);
+        <div id="att_topic" class="f_pro" style="position: relative; overflow: visible; z-index: 4;">
+            <div id="topic_list_title" class="title font_14 MIB_linkcr">
+                关注的话题<span class="MIB_txtbr">(@(uts!=null?uts.Count:0))</span></div>
+            <ul id="list_topic_box" class="conlist list_hover MIB_txtbr">
+             @{
+                if(uts!=null)
+                {
+                    foreach(var ut in uts)
+                    {
+                <li onmouseout="this.className=''" onmouseover="this.className='list_hover'"
+                    class=""><a href="/k/@ut.TopicName">
+                        @ut.TopicName</a> <span onclick="App.myTopic.delUserTopic(@ut.ID,this);return false;"
+                            title="删除">x</span> </li>
+                  }
+                }
+                else{
+                    <li id="notopic" class="no_dot MIB_txtbr">我还没有关注任何话题</li>
+                }
+                }
+            </ul>
+            <div class="txt_right">
+                <a id="add_topic_btn" href="javascript:;" onclick="$(this).parent().next().show();">添加</a></div>
+            <div style="position: absolute; left: 0px; z-index: 10;display:none;" class="small_Yellow pop_tips" id="yellowTopicBOx">
+                <table class="CP_w" style="width: 200px;">
+                    <thead>
+                        <tr>
+                            <th class="tLeft">
+                                <span></span>
+                            </th>
+                            <th class="tMid">
+                                <span></span>
+                            </th>
+                            <th class="tRight">
+                                <span></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <td class="tLeft">
+                                <span></span>
+                            </td>
+                            <td class="tMid">
+                                <span></span>
+                            </td>
+                            <td class="tRight">
+                                <span></span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <tr>
+                            <td class="tLeft">
+                                <span></span>
+                            </td>
+                            <td class="tMid">
+                                <div class="tagslayer">
+                                    <p>
+                                        <input type="text" class="PY_input" style="color: rgb(153, 153, 153);"><a href="javascript:;" onclick="App.myTopic.addUserTopic($(this).prev().val(),this);return false;"
+                                            class="btn_normal btnxs"><em>保存</em></a></p>
+                                    <p class="txt">
+                                        <span>请添加想关注的话题</span></p>
+                                </div>
+                            </td>
+                            <td class="tRight">
+                                <span></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="close">
+                    <a onclick="$('#yellowTopicBOx').hide();" href="javascript:;"></a>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            App.myTopic = {};
+            App.myTopic.addUserTopic = function (name, alink) {
+                if (alink.locked || !name)
+                    return;
+                else {
+                    alink.locked = true;
+                    App.AddUserTopic(name, function (o) {
+                        var no = $("#notopic")[0];
+                        var list = $("#list_topic_box");
+                        if (no) {
+                            list.html('<li onmouseout="this.className=\'\'" onmouseover="this.className=\'list_hover\'"class=""><a href="/k/' + o.Data.TopicName + '">' + o.Data.TopicName + '</a> <span onclick=" App.myTopic.delUserTopic(' + o.Data.ID + ',this);return false;"title="删除">x</span> </li>');
+                        }
+                        else {
+                            var lis = list.find("li");
+                            if (lis.length == 0)
+                                list.append('<li onmouseout="this.className=\'\'" onmouseover="this.className=\'list_hover\'"class=""><a href="/k/' + o.Data.TopicName + '">' + o.Data.TopicName + '</a> <span onclick=" App.myTopic.delUserTopic(' + o.Data.ID + ',this);return false;"title="删除">x</span> </li>');
+                            else {
+                                $('<li onmouseout="this.className=\'\'" onmouseover="this.className=\'list_hover\'"class=""><a href="/k/' + o.Data.TopicName + '">' + o.Data.TopicName + '</a> <span onclick=" App.myTopic.delUserTopic(' + o.Data.ID + ',this);return false;"title="删除">x</span> </li>').insertBefore(lis.first());
+                            }
+                        }
+                        $("#yellowTopicBOx").hide();
+                    }, function () { alink.locked = false; });
+                }
+            };
+            App.myTopic.delUserTopic = function (id, alink) {
+                if (alink.locked)
+                    return;
+                else {
+                    alink.locked = true;
+                    App.DelUserTopic(id, function (s) {
+                           $(alink).parent().fadeOut();
+                    }, function () { alink.locked = false; });
+                }
+            };
+        </script>
+    }
+</div>

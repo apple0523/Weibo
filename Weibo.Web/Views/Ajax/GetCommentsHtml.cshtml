@@ -1,0 +1,91 @@
+﻿@model Weibo.Web.Models.AjaxGetCommentModel
+<div  class="MIB_assign rt">
+    <div class="MIB_asarrow_r">
+    </div>
+    <div class="MIB_assign_t">
+    </div>
+    <div class="MIB_assign_c MIB_txtbl">
+        <div class="logininput new_position">
+
+            <a class="faceicon1" href="javascript:void(0);" title="表情"></a>
+            <textarea id="comment_content_@{@Model.miniBlog.ID}" class="lf"  style="overflow: hidden; height: 18px; font-family: Tahoma,宋体;
+                border-style: solid; border-width: 1px; word-wrap: break-word; font-size: 12px;
+                line-height: 18px;" id="comment_content_@{@Model.miniBlog.ID}" range="0&0"></textarea>
+            <a href="javascript:void(0);" id="comment_post_@{@Model.miniBlog.ID}" class="btn_normal">
+                <em>评论</em></a>
+            <div class="margin_b MIB_txtbl ml35">
+                <p>
+                    <input type="checkbox" id="agree_@{@Model.miniBlog.ID}"><label for="agree_@{@Model.miniBlog.ID}">同时转发到我的微博</label></p>
+                    @{
+                        if(Model.miniBlog.IsOriginal!=1)
+                        {
+                            MiniBlog oriminiblog = MiniBlogs.GetMiniBlogByID(Model.miniBlog.ID);
+                            if(oriminiblog!=null)
+                            {
+                            User user = Users.GetUserByID(oriminiblog.UID);
+                                if(user!=null)
+                                {
+                <p>
+                    <input type="checkbox" id="isroot_@{@Model.miniBlog.ID}"><label for="isroot_@{@Model.miniBlog.ID}">同时评论给原文作者
+                        @{@user.NickName;}</label></p>
+                        }
+                        }
+                        }
+                        }
+            </div>
+                
+        </div>
+        <ul class="PL_list oddline">
+           @{
+               if(Model.comments!=null)
+               {
+               foreach(Comment comment in Model.comments)
+               {
+                   User user=Users.GetUserByID(comment.UID);
+                    if(user!=null)
+                   {
+                   <li onmouseout="App.hideExtendBtn(this);return false" onmouseover="App.showExtendBtn(this);return false" cacheid="8" class="MIB_linedot3">
+				<a href="/@{@user.ID;}" ><img  uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" src="@{@user.SmallAvartar;}" title="@{@user.NickName;}" class="picborder_l lf" ></a>
+                    @{
+                        if(user.ID==Model.CurUser.ID||Model.CurUser.ID==Model.miniBlog.UID)
+                        {
+                            <div class="icon_closel rt" extend="true"  onclick="App.DelCommentFromBox(this,@comment.ID,@Model.miniBlog.ID);"    title="删除" style="visibility: hidden;">x</div>
+                        }
+                      }
+								<div class="txt">
+				  <div class="txtinfo">
+										<a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" >@{@user.NickName;}</a> @{@MvcHtmlString.Create(Comments.TransformContent(comment.Content));}
+										<span class="MIB_txtbl">(@{@DateSpan.Get(comment.CreateTime)})</span>
+										</div>
+					<p class="MIB_more MIB_linkbl">
+                     @{
+                       if(user.ID!=Model.CurUser.ID)
+                       {
+					<a  style="visibility: hidden;" onclick="App.showReportBox(this,@user.ID,@TypeConfigs.GetComplaint_cm,@comment.ID);return false;" extend="true" class="reportBtn" href="javascript:;">举报</a><span extend="true" style="visibility: hidden;" class="MIB_line_l">|</span>
+                        }
+                    }
+                    <a onclick="App.ReplyComment(@{@comment.ID},@{@comment.UID},'@{@user.NickName}',@{@comment.MID;})" class="lose"  href="javascript:void(0);">回复</a>
+					</p>
+				</div>
+				<span class="clear"></span>
+			</li>
+               }
+               }
+               }
+               }
+        </ul>
+                @{
+            int count=Comments.GetCommentCountByMID(Model.miniBlog.ID);
+            if(count>10)
+            {
+                
+        <div class="list_head MIB_linedot3 moreheight">
+			后面还有<span>@{@(count-10);}</span>条评论，<a href="/@{@Model.miniBlog.UID;}/@{@Model.miniBlog.IDCode;}#a_comment">点击查看<em>&gt;&gt;</em>
+			</a>			
+		</div>
+            }
+            }
+    </div>
+    <div class="MIB_assign_b">
+    </div>
+</div>

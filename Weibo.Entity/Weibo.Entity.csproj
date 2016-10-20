@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FDE14159-C92A-4556-866C-CF2809D7F529}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Weibo.Entity</RootNamespace>
+    <AssemblyName>Weibo.Entity</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BlackList.cs" />
+    <Compile Include="Career.cs" />
+    <Compile Include="Comment.cs" />
+    <Compile Include="Company.cs" />
+    <Compile Include="Complaint.cs" />
+    <Compile Include="Contact.cs" />
+    <Compile Include="Education.cs" />
+    <Compile Include="Expression.cs" />
+    <Compile Include="From.cs" />
+    <Compile Include="Group.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MiniBlog.cs" />
+    <Compile Include="Music.cs" />
+    <Compile Include="Notice.cs" />
+    <Compile Include="Pic.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="School.cs" />
+    <Compile Include="StatisticTopic.cs" />
+    <Compile Include="Tag.cs" />
+    <Compile Include="Theme.cs" />
+    <Compile Include="ThemeDIY.cs" />
+    <Compile Include="Topic.cs" />
+    <Compile Include="Type.cs" />
+    <Compile Include="Url.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="UserConfig.cs" />
+    <Compile Include="UserTag.cs" />
+    <Compile Include="UserTopic.cs" />
+    <Compile Include="Video.cs" />
+    <Compile Include="Vote.cs" />
+    <Compile Include="VoteJoin.cs" />
+    <Compile Include="VoteOption.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

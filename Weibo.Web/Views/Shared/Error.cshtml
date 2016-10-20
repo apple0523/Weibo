@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>找不到页面或出错</title>
+</head>
+<body>
+    <div id="Count" style=" margin-left:auto; margin-right:auto; font-size:200px; text-align:center; font-weight:bold; ">10</div>
+    <script type="text/javascript">
+        setInterval(function () {
+            var o = document.getElementById("Count");
+            var val = parseInt(o.innerHTML);
+            if (val == 1) {
+            o.innerHTML = "回首页咯。。。";
+                window.location.href = "/";
+                
+            }
+            else {
+                o.innerHTML=val - 1;
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

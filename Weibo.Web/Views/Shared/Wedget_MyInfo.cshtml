@@ -1,0 +1,31 @@
+﻿<div id="wedget_myinfo">
+    @{
+        Weibo.Entity.User curUser = Model.CurUser;
+        IList<Career> careers = Careers.GetCareersByUID(curUser.ID);
+        IList<Education> educations = Educations.GetEducationsByUID(curUser.ID);
+    <div class="f_pro">
+        <div class="title font_14 MIB_linkcr">
+            <a href="/@curUser.ID/info">我的资料</a></div>
+        <ul class="con">
+            @{
+                if(careers!=null){
+                    foreach(var c in careers){
+            <li title="@c.CompanyName" class="MIB_dot"><a href="/Search/User?career=@c.CompanyName"> @c.CompanyName</a></li>
+               
+                }
+                }
+                if(educations!=null)
+                {
+                    foreach(var e in educations)
+                    {
+                            <li title="@e.SchoolName" class="MIB_dot"><a href="/Search/User?school=@e.SchoolName">@e.SchoolName</a></li>    
+                    }
+                }
+             }
+        </ul>
+        <div class="txt_right">
+            <a href="/Setup/BaseInfo">修改</a><span class="MIB_liner">|</span>
+            <a href="/@curUser.ID/info">更多<em>&gt;&gt;</em></a></div>
+    </div>
+        }
+</div>

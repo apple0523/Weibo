@@ -1,0 +1,233 @@
+﻿@model Weibo.Web.Models.MessageDetailsModel
+@{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "私信对话列表 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+    <link href="/Content/CSS/privatemsg.css" rel="stylesheet" type="text/css" />
+ }
+ @section  jsInsert{
+    <script type="text/javascript">
+        $(function () {
+            App.TimerFunArray.push(App.ajaxAtWho);
+            App.StartTimer();
+            App.initNameCard($("#msg_list"));
+            $("#msg_faces a").click(function () { App.showExpression($("#msg_editor"), this); });
+            $(".seMsInput").click(function (e) { e.stopPropagation(); $(".tear_bottom").removeClass("tear_bottomJ"); });
+            $(document).click(function () { $(".tear_bottom").addClass("tear_bottomJ"); });
+            App.bindTxtarea($("#msg_editor")[0], { IsEnableAuto: true, keyUpCallBack: function () {
+                var textbox = $("#msg_editor")[0];
+                var curLen = App.getTxtLen(textbox);
+                if (curLen > 600) {
+                    textbox.value = App.GetStringByte(textbox.value, 600);
+                }
+                else {
+                    $("#msg_info .num").text(parseInt((600 - curLen) / 2));
+                }
+            }
+            });
+        $("#msg_submit").click(function () {
+            var textarea=$("#msg_editor");
+            if (App.byteLength(textarea.val()) > 600) {
+                    App.alert("内容超过300字");
+                    return;
+                }
+                if ($.trim(textarea.val()) == "") {
+                    App.alert("内容不能为空");
+                    return;
+                }
+                if (this.locked)
+                    return;
+                this.locked = true;
+                var thisBtn = this;
+                App.AddMessage(curMessageUNickName, $.trim(textarea.val()), function () {
+                    App.fullTip("发送成功", 1000, window.location.href, 3);
+                }, function () { thisBtn.locked = false; });
+
+            });
+
+            var searchBox = $("#searchkeyword").JQP_HighLineInput2({ nullCon: "搜索私信内容" }).keyup(function (e) {
+                if (e.which == 13) {
+                    window.location.href = "/Message/Search?Key=" + encodeURIComponent($.trim(this.value));
+                }
+            });
+            $("#search_btn").click(function () {
+                if (searchBox.val() == "搜索私信内容")
+                    return false;
+                else {
+                    window.location.href = "/Message/Search?Key=" + encodeURIComponent($.trim(searchBox.val()));
+                    return false;
+                }
+            });
+        });
+
+        var DelMessage = function (alink, mid) {
+            App.confirm("是否删除这条信息", function () {
+                if (alink.locked)
+                    return false;
+                alink.locked = true;
+
+                App.DelMessageByMid(mid, function () {
+                    $("li[mid='" + mid + "']").fadeOut();
+                }, function () {
+                    alink.locked = false;
+
+                })
+            });
+        }
+        var reMessage = function (event) {
+            if ($.browser.msie) {
+                event.cancelBubble = true;
+                event.returnValue = false;
+            }
+            else {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            $(document).scrollTop(0);
+            $('#msg_editor').focus().click()
+        }
+        var curMessageUNickName='@Model.TalkUser.NickName';
+    </script>
+    }
+
+
+
+
+
+			<div class="MIB_blogbody">
+				<div class="MIB_mblogbgr">
+					<div class="MIB_mblogbgl">
+						<!--右栏内容 -->
+						<div class="mainR MIB_200 MIB_txtar MIB_linkar">
+							<!--个人信息-->
+							@RenderPage("~/Views/Shared/_userInfo.cshtml")
+							
+						</div>
+						<!--/右栏内容 -->
+						<!--左栏内容 -->
+						<div class="mainL MIB_600 MIB_txtal MIB_linkal ssdh_wrap">
+							<div class="msg_lf clearFix titmg10">
+								<div class="titmg10">
+									<span class="font_14 fb">我和“@Model.TalkUser.NickName” 的对话</span></div>
+								<div class="lf">
+									<a href="/message/index"><em>&lt;&lt;</em>返回所有私信</a></div>
+								<div class="rt">
+									<div class="chdd">
+									
+										<label>
+											<input id="searchkeyword" name="searchkeyword" style="color: rgb(153, 153, 153);"
+												class="txt_s2" value="搜索私信内容"  type="text">
+											<a id="search_btn" href="javascript:void(0)" class="btn_normal btnxs"><em>搜索</em></a>
+										</label>
+								
+									</div>
+								</div>
+							</div>
+							<div class="sendMsg_form">
+								<div class="lf">
+									<p class="seword">
+										<span class="icon_send" id="msg_nick" nick="@Model.TalkUser.NickName">发私信给：@Model.TalkUser.NickName</span> <span id="msg_info"
+											class="leaveWord">你还可以输入<font class="num">300</font>字</span>
+									</p>
+									<div class="seMsInput">
+										<div class="tear_top">
+										</div>
+										<div class="tear_cen">
+											<span class="arr"></span>
+											<!--改变textare的宽度，可以通过改变style的高来实现-->
+											<textarea style="overflow: hidden;"range="0&0" id="msg_editor" name="msg_editor" cols="" rows=""
+												class="textarea"></textarea>
+										</div>
+										<!--下面这段，不触发输入框，表情和按钮是隐藏的，class追加tear_bottomJ即可。-->
+										<div class="tear_bottom tear_bottomJ">
+											<div id="msg_faces" class="OnTit">
+												<img title="表情" class="small_icon faceicon" src="/Content/Image/transparent.gif">
+												<a href="javascript:void(0)">表情</a>
+											</div>
+											<a id="msg_submit" class="btn_send" href="javascript:void(0)">发送</a>
+										</div>
+									</div>
+								</div>
+								<div class="rt_pic">
+									<a href="/@{@Model.CurUser.ID;}"  >
+                                                    <img uid="@{@Model.CurUser.ID;}" namecard="true" uname="@{@Model.CurUser.NickName;}" src="@{@Model.CurUser.MidAvartar;}" 
+                                                    title="@{@Model.CurUser.NickName;}" class="picborder_l" /></a>
+								</div>
+							</div>
+							<ul class="MIB_msg" id="msg_list" >
+                                @{
+                                    if(Model.Messages!=null)
+                                    {
+                                    foreach(Message message in Model.Messages)
+                                    {
+                                        if(message.Direction==1)
+                                        {
+								<li mid="@message.ID" class="MIB_msg_r" onmouseover="App.showExtendBtn(this);" onmouseout="App.hideExtendBtn(this);">
+									<div class="head_pic">
+										<a href="/@{@Model.CurUser.ID;}"  >
+                                                    <img  uid="@{@Model.CurUser.ID;}" namecard="true" uname="@{@Model.CurUser.NickName;}"  src="@{@Model.CurUser.MidAvartar;}" 
+                                                    title="@{@Model.CurUser.NickName;}" class="picborder_l" /></a></div>
+									<div class="MIB_msg_c">
+										<a href="javascript:void(0);" onclick="DelMessage (this, @message.ID);return false;" style=" visibility:hidden;" extend="true" onclick="App.delMsg('@message.ID');"
+											class="msg_close" title="删除"></a>
+										<div class="rd_tr">
+										</div>
+										<div class="rd_tl">
+										</div>
+										<p class="msg_detail gray6">
+											发送给<a href="/@{@Model.TalkUser.ID;}" uid="@{@Model.TalkUser.ID;}" namecard="true" uname="@{@Model.TalkUser.NickName;}" >@{@Model.TalkUser.NickName;}</a>：@MvcHtmlString.Create(Messages.TransformContent(message.Content))
+											<span class="gray9">(@DateSpan.Get(message.CreateTime))</span></p>
+										<div class="feed_att">
+                                        <a href="javascript:void(0);" onclick="reMessage(event)">回复</a>
+										</div>
+										<div class="rd_br">
+										</div>
+										<div class="rd_bl">
+										</div>
+									</div>
+								</li>
+                                    }
+                                    else
+                                    {
+								<li  mid="@message.ID" class="MIB_msg_l" onmouseover="App.showExtendBtn(this);" onmouseout="App.hideExtendBtn(this);">
+									<div class="head_pic">
+										<a href="/@{@Model.TalkUser.ID;}">
+                                                    <img src="@{@Model.TalkUser.MidAvartar;}"   uid="@{@Model.TalkUser.ID;}" namecard="true" uname="@{@Model.TalkUser.NickName;}" 
+                                                    title="@{@Model.TalkUser.NickName;}" class="picborder_l" /></a></div>
+									<div class="MIB_msg_c">
+										<a href="javascript:void(0);" onclick="DelMessage (this, @message.ID);return false;" style=" visibility:hidden;" extend="true" class="msg_close" onclick="App.delMsg('@message.ID');"
+											title="删除"></a>
+										<div class="rd_tr">
+										</div>
+										<div class="rd_tl">
+										</div>
+										<p class="msg_detail gray6">
+											<a href="/@{@Model.TalkUser.ID;}" uid="@{@Model.TalkUser.ID;}" namecard="true" uname="@{@Model.TalkUser.NickName;}" >@{@Model.TalkUser.NickName;}</a>：@MvcHtmlString.Create(Messages.TransformContent(message.Content)) <span class="gray9">(@DateSpan.Get(message.CreateTime))</span></p>
+										<div class="feed_att">
+											<a href="javascript:void(0);" onclick="reMessage(event)">回复</a></div>
+										<div class="rd_br">
+										</div>
+										<div class="rd_bl">
+										</div>
+									</div>
+								</li>
+                                    }
+                                    }
+                                    }
+                                    }
+							</ul>
+							<div class="sper_page">
+								<div class="ftop lf">
+									<a href="#">
+										<img class="small_icon returntop" src="/Content/Image/transparent.gif" title="">返回顶部</a></div>
+                                         @Html.Pager(Model.PageIndex,Model.RecordCount,Model.PageSize)
+							</div>
+						</div>
+						<!--/左栏内容 -->
+					</div>
+				</div>
+			</div>
+

@@ -1,0 +1,224 @@
+﻿@model Weibo.Web.Models.BaseInfoModel
+            @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "修改密码 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+    <link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+    <script src="/Scripts/Setup.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            var newCtrl = $("#new_password");
+            var compareCtrl = $("#compare_password");
+            var oldCtrl = $("#old_password");
+            var comparePwd = function () {
+                var ctrl1 = newCtrl;
+                var ctrl = compareCtrl;
+                var error = ctrl.parent().next().find(".cudTs3");
+                var errorCon = error.find(".tdCon");
+                var select = ctrl.parent().next().find(".setup_info");
+                if (ctrl.val() != ctrl1.val()) {
+                    errorCon.text("两次输入的密码不一致，请重新输入");
+                    App.Setup.redInput(ctrl[0]);
+                    error.show();
+                    select.hide();
+                    return false;
+                }
+                else if (ctrl.val().length < 6 || ctrl.val().length > 16) {
+                    errorCon.text("密码长度不正确，应为6～16个字符");
+                    App.Setup.redInput(ctrl[0]);
+                    error.show();
+                    select.hide();
+                    return false;
+                }
+                else if (!new RegExp("^([\\w\\~\\!\\@@\\#\\$\\%\\^\\&\\*\\(\\)\\+\\`\\-\\=\\[\\]\\\\{\\}\\|\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{6,16})$").test(ctrl.val())) {
+                    errorCon.text("密码请勿使用特殊字符");
+                    App.Setup.redInput(ctrl[0]);
+                    error.show();
+                    select.hide();
+                    return false;
+                }
+                else {
+                    select.show();
+                    App.Setup.normalInput(ctrl[0]);
+                    return true;
+                }
+            }
+            App.Setup.BindInput(oldCtrl, "密码由6-16位半角(字母、数字、符号)组成，区分大小写", App.Setup.checkPWD);
+            App.Setup.BindInput(newCtrl, "密码由6-16位半角(字母、数字、符号)组成，区分大小写", App.Setup.checkPWD);
+            App.Setup.BindInput(compareCtrl, "密码由6-16位半角(字母、数字、符号)组成，区分大小写", comparePwd);
+            newCtrl.keyup(function () {
+                var showPower = $("#image_password img");
+                if (!this.value)
+                    showPower.attr("src", "/Content/Image/pwd_no.gif");
+                var power = App.Setup.pwdPower(this.value);
+                if (power == 1) {
+                    showPower.attr("src", "/Content/Image/pwd_simple.gif");
+                }
+                else if (power == 2) {
+                    showPower.attr("src", "/Content/Image/pwd_middle.gif");
+                }
+                else if (power == 3) {
+                    showPower.attr("src", "/Content/Image/pwd_strong.gif");
+                }
+
+            });
+            $("#submit_password").click(function () {
+                if (this.locked)
+                    return false;
+                var ispwd1 = App.Setup.checkPWD(oldCtrl);
+                var ispwd2 = App.Setup.checkPWD(newCtrl);
+                var ispwd3 = comparePwd();
+                if (ispwd1 && ispwd2 && ispwd3) {
+                    var alink = this;
+                    this.locked = true;
+                    $.ajax(
+       {
+           url: "/Ajax/EditPwd",
+           datatype: "json",
+           cache: false,
+           data: { newpwd: newCtrl.val(), oldpwd: oldCtrl.val() },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+               }
+               else if (o.Code == "A00020") {
+                   App.FullMiniTip(CodeList[o.Code], alink, 2000, 1);
+               }
+               else {
+                   App.FullMiniTip(CodeList[o.Code], alink, 1000, 3);
+               }
+               alink.locked = false;
+           },
+           error: function (request) {
+               App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+               alink.locked = false;
+           }
+       });
+                }
+   return false;
+            });
+            
+        });
+    </script>
+    }
+
+
+            <div class="MIB_blogbody">
+                <!--找朋友-->
+                <div class="MIB_column">
+                    <div class="MIB_main_cont">
+                        <div class="MIB_setup">
+                            <!--页签-->
+                            <div class="PY_tag">
+                                <ul>
+                                    <li>
+                                        <div class="PY_tago">
+                                            <span class="bold">个人资料</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/myface">修改头像</a></span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/privacy">隐私设置</a></span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/notice">个性设置</a></span></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--/页签-->
+                            <div id="system_information" style="display: none">
+                            </div>
+                            <!--个人资料-->
+                            <div class="setup_main">
+                                <div class="infoTop">
+                                    <div class="infoTop_nav">
+                                        <span><a href="/Setup/baseinfo">基本信息</a></span> <span class="navBorder gray9">|</span> <span  class="edutop_cur">修改密码</a></span> <span class="navBorder gray9">
+                                                |</span> <span><a href="http://account.weibo.com/setting/educationinfo">教育信息</a></span>
+                                        <span class="navBorder gray9">|</span> <span><a href="http://account.weibo.com/setting/workinfo">
+                                            职业信息</a></span> <span class="navBorder gray9">|</span> <span><a href="http://account.weibo.com/setting/tag">
+                                                个人标签</a></span> <span class="navBorder gray9">|</span> <span><a href="http://account.weibo.com/setting/mysite">
+                                                    个性域名</a></span>
+                                    </div>
+                                </div>
+                                <div class="info_tab01">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <th class="gray6" scope="row">
+                                                    当前密码：
+                                                </th>
+                                                <td>
+                                                    <input type="password" id="old_password" class="PY_input"><span class="errorTs2"
+                                                        style="display: none"></span>
+                                                </td>
+                                                <td id="old_password_td">
+                                                    												<div class="setup_info" style="display:none;"><div class="info_tip2"><img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3"></div><div class="info_tip1"></div></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="gray6" scope="row">
+                                                    新 密 码：
+                                                </th>
+                                                <td>
+                                                    <input type="password" class="PY_input" id="new_password"><span class="errorTs2"
+                                                        style="display: none"></span>
+                                                </td>
+                                                <td id="new_password_td">
+												<div class="setup_info" style="display:none;"><div class="info_tip2"><img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3"></div><div class="info_tip1"></div></div>                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">
+                                                </th>
+                                                <td>
+                                                    <div class="pwd_level gray6" id="image_password">
+                                                        安全强度
+                                                        <img src="/Content/Image/pwd_no.gif"></div>
+                                                </td>
+                                                <td>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="gray6" scope="row">
+                                                    确认密码：
+                                                </th>
+                                                <td>
+                                                    <input type="password" id="compare_password" class="PY_input"><span class="errorTs2"
+                                                        style="display: none"></span>
+                                                </td>
+                                                <td id="compare_password_td">
+												<div class="setup_info" style="display:none;"><div class="info_tip2"><img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3"></div><div class="info_tip1"></div></div>                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">
+                                                </th>
+                                                <td>
+                                                    <div class="MIB_btn">
+                                                        <a class="newabtngrn" id="submit_password" href="javascript:void(0);"><em>保存</em></a>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!--/个人资料-->
+                        </div>
+                    </div>
+                </div>
+                <!--/找朋友-->
+            </div>

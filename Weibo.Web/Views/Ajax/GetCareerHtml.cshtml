@@ -1,0 +1,42 @@
+﻿@model Weibo.Entity.Career
+           @{
+               Career career = Model;
+               if(career!=null)
+               {
+  <div id="career_@{@career.ID;}" class="infoTableBox MIB_line1" onmouseout="$(this).find('.infoTable').removeClass('hover_table');App.hideExtendBtn(this);return false" onmouseover="$(this).find('.infoTable').addClass('hover_table');App.showExtendBtn(this);return false">
+                                            <ul class="infoTable                                                                                                                                    ">
+                                                <li class="lf"><span class="font_14"><a href="/Search/User/?Company=@career.CompanyName">
+                                                    @career.CompanyName</a></span>
+                                                    @{
+                                               if (career.Location > 0)
+                                               {
+                                                        <span class="edu_conn_place">(@Types.GetCityTypesFullName(career.Location))</span>
+                                               }
+                                                    }
+                                                    @{
+                                               if (!string.IsNullOrEmpty(career.StartDate)&&Convert.ToInt32(career.StartDate)>0)
+                                               {
+                                                        <span>
+                                                            @{@career.StartDate}
+                                                            年&nbsp;&mdash;&nbsp;@{@(career.EndDate == "0" ? "至今" : (career.EndDate == "-1" ? "未知" : career.EndDate+"年"))}</span>
+                                               }
+                                                    }
+                                                </li>
+                                                <li class="rt" style=""><span class="pri_content" extend="true" style="visibility: hidden;">
+                                                    <img title="隐私" class="small_icon privacy_icon" src="/Content/Image/transparent.gif">
+                                                    @{@(career.IsVisible == 1 ? "所有人可见" : (career.IsVisible==2?"我关注的人可见":"仅自己可见"))} </span><span class="info_tools"><a  onclick="career.edit(@career.ID);return false;" extend="true" href="javascript:;" 
+                                                        style="visibility: hidden;"> 
+                                                        <img src="/Content/Image/transparent.gif" class="small_icon edit_icon" title="修改">修改</a>
+                                                        <a onclick="career.del(@career.ID);return false;" href="javascript:;" style="visibility: hidden;" extend="true">
+                                                            <img src="/Content/Image/transparent.gif" class="small_icon del_icon" title="删除">删除</a>
+                                                        <a href="/Search/User/?Company=@career.CompanyName" target="_blank" >
+                                                            <img src="/Content/Image/transparent.gif" class="small_icon search_icon" title="找同事" />
+                                                            <span>找同事</span> </a></span></li>
+                                            </ul>
+                                            <div id="careerEdit_@{@career.ID}" edit="1">
+                                            </div>
+                                            <div node-type="con_search" style="display: none;">
+                                            </div>
+                                        </div>
+               }
+               }

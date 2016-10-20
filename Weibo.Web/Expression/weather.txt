@@ -1,0 +1,36 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('雾','[雾]',3008,'/Expression/weather/w_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('台风','[台风]',3008,'/Expression/weather/tf_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('沙尘暴','[沙尘暴]',3008,'/Expression/weather/sc_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('晴转多云','[晴转多云]',3008,'/Expression/weather/qzdy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('流星','[流星]',3008,'/Expression/weather/lx_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('龙卷风','[龙卷风]',3008,'/Expression/weather/ljf_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('洪水','[洪水]',3008,'/Expression/weather/hs2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('风','[风]',3008,'/Expression/weather/gf_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('多云转晴','[多云转晴]',3008,'/Expression/weather/dyzq_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('彩虹','[彩虹]',3008,'/Expression/weather/ch_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('冰雹','[冰雹]',3008,'/Expression/weather/bb2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('微风','[微风]',3008,'/Expression/weather/wind_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('阳光','[阳光]',3008,'/Expression/weather/sunny_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('雪','[雪]',3008,'/Expression/weather/snow_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('闪电','[闪电]',3008,'/Expression/weather/sh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('下雨','[下雨]',3008,'/Expression/weather/rain.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('阴天','[阴天]',3008,'/Expression/weather/dark_thumb.gif')
+
+
+

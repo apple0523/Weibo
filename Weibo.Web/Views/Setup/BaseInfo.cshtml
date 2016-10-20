@@ -1,0 +1,371 @@
+﻿@model Weibo.Web.Models.BaseInfoModel
+@{
+    Weibo.Entity.Type cityType = Types.GetTypeByID(Model.CurUser.Location);
+    int province;
+    int city=-1;
+    if(cityType.PID==1)
+    {
+        province = cityType.ID;
+    }
+    else
+    {
+        province = cityType.PID;
+        city = cityType.ID;
+    }
+
+}
+ @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "设置基本信息 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+    <link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+	<script src="/Scripts/Setup.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	    $(function () {
+	        App.Setup.BindSelect($("#pub_name_option"));
+	        App.Setup.BindSelect($("#pub_birthday_option"));
+	        App.Setup.BindSelect($("#pub_blog"));
+	        App.Setup.BindSelect($("#pub_email_option"));
+	        App.Setup.BindSelect($("#pub_qq_option"));
+	        App.Setup.BindSelect($("#pub_msn_option"));
+	        App.Setup.BindInput($("#nickname"), "4-30个字符，支持中英文、数字、\"_\"", App.Setup.CheckNickName);
+	        App.Setup.BindInput($("#realname"), "请填写真实姓名", App.Setup.checkRealName);
+	        App.Setup.BindInput($("#blog"), "请填写你的博客地址", App.Setup.checkRealBlog);
+	        App.Setup.BindInput($("#qq"), "请填写QQ号码", App.Setup.checkQQ);
+	        App.Setup.BindInput($("#msn"), "请填写MSN", App.Setup.checkMsn);
+	        App.Setup.BindInput($("#mydesc"), "请不要超过70个字", App.Setup.checkMydec);
+	        $("#modify_email").click(function () {
+                var curEmail=$("#favorite_email").text();
+	            App.Setup.showEditEmailBox(curEmail,function(email){
+                  $("#favorite_email").text(email);
+                  $("#email").val(email);
+                });
+	        });
+            App.BindCityCtrl($("#province"),"province",1,function(){
+                if($.browser.msie&&$.browser.version == 6)
+                setTimeout(function(){$("#province").val(@province);},1);
+                else{$("#province").val(@province);}
+                App.BindCityCtrl($("#city"), "City", $("#province").val(), function () {
+                if($.browser.msie&&$.browser.version == 6)
+                setTimeout(function(){$("#city").val(@city);},1);
+                else{$("#city").val(@city);}
+                },"/Ajax/GetCity1/");
+                $("#province").hide();
+                $("#city").hide();
+                 $("#province").show();
+                $("#city").show();
+            
+            },"/Ajax/GetCity1/");
+            $("#province").change(function () {
+                App.BindCityCtrl($("#city"), "City", $("#province").val(),null,"/Ajax/GetCity1/");
+            }, "/Ajax/GetCity1/");
+             $("#submit").click(function(){
+                if(this.locked)
+                return false;
+               var setup=App.Setup;
+               setup.CheckNickName($("#nickname"),false);
+               setup.checkRealName($("#realname"));
+               setup.checkRealBlog($("#blog"));
+               setup.checkQQ($("#qq"));
+               setup.checkMsn($("#msn"));
+               setup.checkMydec($("#mydesc"));
+               if(setup.isMsn&&setup.isMydec&&setup.isNickName&&setup.isQQ&&setup.isRealBlog&&setup.isRealName){ 
+                var nickname=$.trim($("#nickname").val());
+                var realname=$.trim($("#realname").val());
+                var isreal=$("#pub_name_option").val();
+                var location=$("#city").val()>0?$("#city").val():$("#province").val();
+                var sex=$("#man")[0].checked?$("#man").val():$("#woman").val();
+                var birth=$("#Date_Year").val()+"-"+$("#birthday_m").val()+"-"+$("#birthday_d").val();
+                var isbirth=$("#pub_birthday_option").val();
+                var blog=$.trim($("#blog").val());
+                var isblog=$("#pub_blog").val();
+                var email=$.trim($("#email").val());
+                var isemail=$("#pub_email_option").val();
+                var qq=$.trim($("#qq").val());
+                 var isqq=$("#pub_qq_option").val();
+                var msn=$.trim($("#msn").val());
+                 var ismsn=$("#pub_msn_option").val();
+                 var dec=$.trim($("#mydesc").val());
+                 var alink=this;
+                 this.locked=true;
+        $.ajax(
+       {
+           url:"/Ajax/SaveUserBaseInfo",
+           datatype: "json",
+           cache: false,
+           data: {nick:nickname,real:realname,isreal:isreal, location:location,sex:sex,birth:birth,isbirth:isbirth,isblog:isblog,blog:blog,email:email,isemail:isemail,qq:qq,isqq:isqq,msn:msn,ismsn:ismsn,dec:dec},
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+                   }
+                    else if (o.Code == "A00003") {
+                   App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+               }
+               else{
+                   App.FullMiniTip(CodeList[o.Code], alink, 1000, 3);
+               }
+               alink.locked=false;
+           },
+           error: function (request) {
+           App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+           alink.locked=false;
+           }
+       });
+               }
+               return false;
+            });
+            @{
+                if(Model.CurUser.BirthDay!=null)
+                {
+            @:App.Setup.bindDate($("#Date_Year"),$("#birthday_m"),$("#birthday_d"),@Model.CurUser.BirthDay.Value.Year,@Model.CurUser.BirthDay.Value.Month,@Model.CurUser.BirthDay.Value.Day);
+                }
+                else
+                {
+             @:App.Setup.bindDate($("#Date_Year"),$("#birthday_m"),$("#birthday_d"));
+                }
+            }
+
+           
+	    });
+	</script>
+    }
+
+			<div class="MIB_blogbody">
+				<!--找朋友-->
+				<div class="MIB_column">
+					<div class="MIB_main_cont">
+						<div class="MIB_setup">
+							<!--页签-->
+							<div class="PY_tag">
+								<ul>
+									<li>
+										<div class="PY_tago">
+											<span class="bold">个人资料</span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/myface">修改头像</a></span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/privacy">隐私设置</a></span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/notice">个性设置</a></span></div>
+									</li>
+
+								</ul>
+							</div>
+							<!--/页签-->
+							<div id="system_information" style="display: none">
+							</div>
+							<!--个人资料-->
+							<div class="setup_main">
+								<div class="infoTop">
+									<div class="infoTop_nav">
+										<span class="edutop_cur">基本信息</span> <span class="navBorder gray9">|</span> <span><a
+											href="http://account.weibo.com/setting/editpasswd">修改密码</a></span> <span class="navBorder gray9">
+												|</span> <span><a href="http://account.weibo.com/setting/educationinfo">教育信息</a></span>
+										<span class="navBorder gray9">|</span> <span><a href="http://account.weibo.com/setting/workinfo">
+											职业信息</a></span> <span class="navBorder gray9">|</span> <span><a href="http://account.weibo.com/setting/tag">
+												个人标签</a></span> <span class="navBorder gray9">|</span> <span><a href="http://account.weibo.com/setting/mysite">
+													个性域名</a></span>
+									</div>
+								</div>
+								<div style="display: block;" class="info_tab01" id="information_box">
+									<table>
+										<tbody>
+											<tr>
+												<th class="gray6">
+													登录名：
+												</th>
+												<td class="font_12" colspan="2">
+													<div>
+														<span><em>@Model.CurUser.Email</em></span><span style="margin-left: 40px"></span></div>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													<em class="error_color">*</em> 昵&nbsp;&nbsp;称：
+												</th>
+												<td>
+													<input class="PY_input" value="@Model.CurUser.NickName" name="nickname" id="nickname" type="text">
+													<input name="oldnick" id="oldnick" value="@Model.CurUser.NickName" type="hidden">
+												</td>
+												<td id="red_nickname">
+												<div class="setup_info" style="display:none;"><div class="info_tip2"><img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3"></div><div class="info_tip1"></div></div>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													真实姓名：
+												</th>
+												<td>
+													<input class="PY_input" name="realname" id="realname" value="@Model.CurUser.RealName" type="text">
+													<input class="PY_input" name="oldrealname" value="" type="hidden">
+												</td>
+												<td id="red_realname">
+													<select style="display: none;" class="info_tabTip" name="pub_name" id="pub_name_option">
+														<option value="1" @(Model.CurUser.RealNameVisible == 1 ? "selected='selected'" : "")>所有人可见</option>
+														<option value="2" @(Model.CurUser.RealNameVisible == 2 ? "selected='selected'" : "")>我关注的人可见</option>
+														<option value="3" @(Model.CurUser.RealNameVisible == 3 ? "selected='selected'" : "")>仅自己可见</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													<em class="error_color">*</em> 所在地：
+												</th>
+												<td class="info_tab_vm">
+													<select name="province" id="province" defvalue="44">
+													</select>
+													<select name="city" id="city" defvalue="1000">
+													</select>
+													<span class="co_kd2" style="display: none"></span>
+												</td>
+												<td id="red_prov">
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													<em class="error_color">*</em> 性&nbsp;&nbsp;别：
+												</th>
+												<td class="info_tab_vm">
+													<input id="man" name="gender" value="@TypeConfigs.GetSexMale" class="info_radio01" @(Model.CurUser.Sex == TypeConfigs.GetSexMale ? "checked='checked'" : "") type="radio"><label
+														for="man">男</label>&nbsp;&nbsp;&nbsp;&nbsp;<input id="woman" name="gender" value="@TypeConfigs.GetSexFemale"
+															class="info_radio01" @(Model.CurUser.Sex == TypeConfigs.GetSexFemale ? "checked='checked'" : "") type="radio"><label for="woman">女</label><span style="display: none"
+																class="co_kd2" id=""></span>
+												</td>
+												<td>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													生日：
+												</th>
+												<td class="info_tab_vm birthDay" id="birthday">
+													<select name="Date_Year" id="Date_Year">
+														
+													</select><em>年</em>
+													<select name="birthday_m" id="birthday_m">
+														
+													</select><em>月</em>
+													<select name="birthday_d" id="birthday_d">
+														
+													</select><em>日</em>
+												</td>
+												<td id="birthdaytip">
+													<select style="display: none;" class="info_tabTip" name="pub_birthday" id="pub_birthday_option">
+														<option value="1"  @(Model.CurUser.BirthDayVisible == 1 ? "selected='selected'" : "")>公开,完整显示</option>
+														<option value="2"  @(Model.CurUser.BirthDayVisible == 2 ? "selected='selected'" : "")>只显示星座</option>
+														<option value="3" @(Model.CurUser.BirthDayVisible == 3 ? "selected='selected'" : "")>只显示月日</option>
+														<option value="4" @(Model.CurUser.BirthDayVisible == 4 ? "selected='selected'" : "")>保密</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													博客地址：
+												</th>
+												<td>
+													<input class="PY_input" id="blog" name="blog" value="@Model.CurUser.Blog"
+														type="text" />
+												</td>
+												<td id="blogtip">
+		
+													<select style="display: none;" name="pub_blog" id="pub_blog">
+														<option value="1"  @(Model.CurUser.BlogVisible == 1 ? "selected='selected'" : "")>所有人可见</option>
+														<option value="2" @(Model.CurUser.BlogVisible == 2 ? "selected='selected'" : "")>我关注的人可见</option>
+														<option value="3" @(Model.CurUser.BlogVisible == 3 ? "selected='selected'" : "")>仅自己可见</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													联系邮箱：
+												</th>
+												<td>
+													<p class="info_tabTip">
+														<span id="favorite_email">@Model.CurUser.ContactEmail</span><a href="javascript:void(0);"
+															id="modify_email"> 修改</a><input id="email" name="cmail" value="@Model.CurUser.ContactEmail"
+																class="PY_input" type="hidden" /></p>
+													<span class="co_kd2" style="display: none" id=""></span>
+												</td>
+												<td id="red_email" style="vertical-align: top;">
+													<select style="display: none;" name="pub_email" id="pub_email_option">
+														<option value="1"  @(Model.CurUser.ContactEmailVisible == 1 ? "selected='selected'" : "")>所有人可见</option>
+														<option value="2"  @(Model.CurUser.ContactEmailVisible == 2 ? "selected='selected'" : "")>我关注的人可见</option>
+														<option value="3"  @(Model.CurUser.ContactEmailVisible == 3 ? "selected='selected'" : "")>仅自己可见</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													QQ：
+												</th>
+												<td>
+													<input id="qq" name="qq" class="PY_input" type="text" value="@Model.CurUser.QQ" />
+												</td>
+												<td id="red_qq" style="vertical-align: top;">
+													<select style="display: none;" name="pub_qq" id="pub_qq_option">
+														<option value="1"  @(Model.CurUser.QQVisible == 1 ? "selected='selected'" : "")>所有人可见</option>
+														<option value="2" @(Model.CurUser.QQVisible == 2 ? "selected='selected'" : "")>我关注的人可见</option>
+														<option value="3"@(Model.CurUser.QQVisible == 3 ? "selected='selected'" : "")>仅自己可见</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													MSN：
+												</th>
+												<td>
+													<input id="msn" name="msn" class="PY_input" value="@Model.CurUser.MSN" type="text" />
+												</td>
+												<td id="red_msn" style="vertical-align: top;">
+													<select style="display: none;" name="pub_msn" id="pub_msn_option">
+														<option value="1" @(Model.CurUser.MSNVisible == 1 ? "selected='selected'" : "")>所有人可见</option>
+														<option value="2" @(Model.CurUser.MSNVisible == 2 ? "selected='selected'" : "")>我关注的人可见</option>
+														<option value="3"@(Model.CurUser.MSNVisible == 3 ? "selected='selected'" : "")>仅自己可见</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<th class="gray6">
+													一句话介绍：
+												</th>
+												<td>
+													<textarea name="mydesc" id="mydesc" class="info_txtarea">@Model.CurUser.Description</textarea>
+												</td>
+												<td id="red_mydesc">
+																								<div class="setup_info" style="display:none;"><div class="info_tip2"><img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3"></div><div class="info_tip1"></div></div>
+
+												</td>
+											</tr>
+											<tr>
+												<th>
+												</th>
+												<td>
+													<div class="MIB_btn">
+														<a href="javascript:void(0);" id="submit" class="newabtngrn"><em>保存</em></a></div>
+												</td>
+												<td>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!--/个人资料-->
+						</div>
+					</div>
+				</div>
+				<!--/找朋友-->
+			</div>
+

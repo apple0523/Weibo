@@ -1,0 +1,34 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('烦躁','[烦躁]',3012,'/Expression/zhangxiaohe/fanzao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('呲牙','[呲牙]',3012,'/Expression/zhangxiaohe/ciya_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('有钱','[有钱]',3012,'/Expression/zhangxiaohe/youqian_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('微笑','[微笑]',3012,'/Expression/zhangxiaohe/weixiao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('帅爆','[帅爆]',3012,'/Expression/zhangxiaohe/shuaibao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('生气','[生气]',3012,'/Expression/zhangxiaohe/shengqi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('生病了','[生病了]',3012,'/Expression/zhangxiaohe/shengbing_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('色眯眯','[色眯眯]',3012,'/Expression/zhangxiaohe/semimi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('疲劳','[疲劳]',3012,'/Expression/zhangxiaohe/pilao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('瞄','[瞄]',3012,'/Expression/zhangxiaohe/miao_thumb.gif')
+
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('哭','[哭]',3012,'/Expression/zhangxiaohe/ku_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('好可怜','[好可怜]',3012,'/Expression/zhangxiaohe/kelian_thumb.gif')
+insert into TExpression ([Name],[Code],[Type],[Url]) values('紧张','[紧张]',3012,'/Expression/zhangxiaohe/jinzhang_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('惊讶','[惊讶]',3012,'/Expression/zhangxiaohe/jingya_thumb.gif')
+insert into TExpression ([Name],[Code],[Type],[Url]) values('激动','[激动]',3012,'/Expression/zhangxiaohe/jidong_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('见钱','[见钱]',3012,'/Expression/zhangxiaohe/jianqian_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('汗了','[汗了]',3012,'/Expression/zhangxiaohe/han_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('奋斗','[奋斗]',3012,'/Expression/zhangxiaohe/fendou_thumb.gif')

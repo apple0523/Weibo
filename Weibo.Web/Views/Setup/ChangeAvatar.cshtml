@@ -1,0 +1,338 @@
+﻿@model Weibo.Web.Models.BaseInfoModel
+ @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "修改头像 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+	<link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    	<style type="text/css">
+		.up .head, .up .con,up.bottom
+		{
+			width: 100%;
+		}
+		.head .upload
+		{
+			margin: 10px 10px 10px 0px;
+		}
+		.upload input
+		{
+			filter:alpha(opacity=0);
+			opacity:0;
+		}
+		.con .left
+		{
+			width: 50%;
+			float: left;
+			border-right: 1px solid #E5E5E5;
+			padding: 10px 10px 10px 0px;
+		}
+		.left .preview
+		{
+			width:300px;
+			height:300px;
+			background-color:#E5E5E5;
+			position:relative;
+			overflow:hidden;
+		}
+		.con .right1
+		{
+			width: 300px;
+			float: left;
+			padding: 10px;
+		}
+		.right1 .head
+		{
+			color:#CD6500;
+		 width:100%;
+		 float:left;
+		}
+		.right1 .big
+		{
+			float:left;
+			margin:10px;
+			width:180px;
+			_display:inline;
+			text-align:center;
+		}
+		.big .preview
+		{
+			width:180px;
+			height:180px;
+			background-color:#E5E5E5;
+			position:relative;
+			overflow:hidden;
+		}
+		.right1 .mid
+		{
+			float:left;
+			margin:10px;
+			width:60px;
+			_display:inline;
+			text-align:center;
+		}
+		.mid .preview
+		{
+			width:50px;
+			height:50px;
+			background-color:#E5E5E5;
+			position:relative;
+			overflow:hidden;
+			margin:0 auto;
+		}
+		.right1 .small
+		{
+			float:left;
+			margin:10px;
+			width:60px;
+			_display:inline;
+			text-align:center;
+		}
+		.small .preview
+		{
+			width:30px;
+			height:30px;
+			background-color:#E5E5E5;
+			position:relative;
+			overflow:hidden;
+			margin:0 auto;
+		}
+	</style>
+    }
+     @section  jsInsert{
+	<script src="/Scripts/Setup.js" type="text/javascript"></script>
+	<link href="/Scripts/jcorp/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
+
+	<script src="/Scripts/jcorp/jquery.Jcrop.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	    $(function () {
+	        var jcrop_api;
+	        var defWidth = 300;
+	        var defHeight = 300;
+	        var curWidth = 0;
+	        var curHeight = 0;
+	        var rate = defWidth / defHeight;
+	        var zoom = 1;
+	        var size = { x: 0, y: 0, x1: 300, y1: 300 };
+	        function showPreview(coords) {
+	            showPreview_30(coords);
+	            showPreview_50(coords);
+	            showPreview_180(coords);
+	        }
+	        function showPreview_180(coords) {
+	            var rx = 180 / coords.w;
+	            var ry = 180 / coords.h;
+
+	            $('#preview_180').css({
+	                width: Math.round(rx * curWidth) + 'px',
+	                height: Math.round(ry * curHeight) + 'px',
+	                marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+	                marginTop: '-' + Math.round(ry * coords.y) + 'px'
+	            });
+
+	            size.x = coords.x;
+	            size.y = coords.y;
+	            size.x1 = coords.x2;
+	            size.y1 = coords.y2;
+
+	        };
+	        function showPreview_50(coords) {
+	            var rx = 50 / coords.w;
+	            var ry = 50 / coords.h;
+
+	            $('#preview_50').css({
+	                width: Math.round(rx * curWidth) + 'px',
+	                height: Math.round(ry * curHeight) + 'px',
+	                marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+	                marginTop: '-' + Math.round(ry * coords.y) + 'px'
+	            });
+
+	        };
+	        function showPreview_30(coords) {
+	            var rx = 30 / coords.w;
+	            var ry = 30 / coords.h;
+
+	            $('#preview_30').css({
+	                width: Math.round(rx * curWidth) + 'px',
+	                height: Math.round(ry * curHeight) + 'px',
+	                marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+	                marginTop: '-' + Math.round(ry * coords.y) + 'px'
+	            });
+	        };
+	        $("#CutBox").load(function () {
+	            this.style.cssText="";
+	            $("#loadCut").hide();
+	            $("#load_180").hide();
+	            $("#load_50").hide();
+	            $("#load_30").hide();
+	            var height = this.height;
+	            var width = this.width;
+	            if (height > defHeight || width > defWidth) {
+	                if ((width / height) > rate) {
+	                    var r = width / defWidth;
+	                    zoom = r;
+	                    curHeight = Math.round(height / r);
+	                    curWidth = Math.round(width / r);
+	                }
+	                else {
+	                    var r = height / defHeight;
+	                    zoom = r;
+	                    curHeight = Math.round(height / r);
+	                    curWidth = Math.round(width / r);
+	                }
+	            }
+	            else {
+	                curHeight = height;
+	                curWidth = width;
+	                zoom = 1;
+	            }
+	            $(this).width(curWidth);
+	            $(this).height(curHeight);
+	            if (jcrop_api)
+	                jcrop_api.destroy();
+	            jcrop_api = $.Jcrop("#CutBox", {
+	                onChange: showPreview,
+	                onSelect: showPreview,
+	                aspectRatio: 1
+	            });
+	        });
+	        $(".upload .btn_green").mousemove(function (e) {
+	            var btnX = e.pageX - $(this).offset().left;
+	            var btnY = e.pageY - $(this).offset().top;
+	            var uploadInput = $(this).find("input");
+	            uploadInput.css("left", btnX - 60);
+	            uploadInput.css("top", btnY - 10);
+	        });
+	        $("#frmPicUpload").find("input").change(function () {
+	            App.PicUpload("frmPicUpload", this, function () {
+	                $("#loadCut").show();
+	                $("#load_180").show();
+	                $("#load_50").show();
+	                $("#load_30").show();
+	            });
+	        });
+	        $("#submitAvatar").click(function () {
+	            if (this.locked)
+	                return false;
+	            this.locked = true;
+	            alink = this;
+	            $.ajax(
+       {
+           url: "/Ajax/cutAvatar",
+           datatype: "json",
+           cache: false,
+           data: { imgSrc: $("#CutBox").attr("src"), x: size.x, y: size.y, x1: size.x1, y1: size.y1, zoom: zoom },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.alert(CodeList["A00003"]);
+               }
+               else {
+                   App.fullTip(CodeList[o.Code], 2000, null, 3);
+               }
+               alink.locked = false;
+           },
+           error: function (request) {
+               App.alert(CodeList["A00003"]);
+               alink.locked = false;
+           }
+       });
+	            return false;
+	        });
+
+	    });
+		function uploadCallback(path) {
+			$("#CutBox").attr("src", path);
+			$("#preview_180").attr("src", path);
+			$("#preview_50").attr("src", path);
+			$("#preview_30").attr("src", path);
+
+        }
+
+	</script>
+    }
+
+
+			<div class="MIB_blogbody">
+				<!--找朋友-->
+				<div class="MIB_column">
+					<div class="MIB_main_cont">
+						<div class="MIB_setup">
+							<!--页签-->
+							<div class="PY_tag">
+								<ul>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="/Setup/baseinfo">个人资料</a></span></div>
+									</li>
+									<li>
+										<div class="PY_tago">
+											<span class="bold">修改头像</span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/privacy">隐私设置</a></span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/notice">个性设置</a></span></div>
+									</li>
+								</ul>
+							</div>
+							<!--/页签-->
+							<!--个人资料-->
+							<div class="setup_main">
+								<div id="div_flashupload" class="up">
+								 <div class="head">
+								   <div class="upload"><a href="javascript:void(0)" style="overflow:hidden;position:relative;" class="btn_green"><em>从电脑选择图片</em><form target="ifrPicUpload" id="frmPicUpload" enctype="multipart/form-data" method="POST" action="/Setup/UploadAvatar/"><input type="file"  name="pic1" style="outline: medium none; width: 75px; height: 25px; position:absolute; z-index:100000; "   hidefoucs="true" /></form></a></div>
+								   <div class="gray9">仅支持JPG、PNG、Gif图片文件，且文件小于5M</div>
+								 </div>
+								 <div class="con">
+								 <div class="left">
+								 <div class="preview">
+								   <img id="CutBox" src="/Content/Image/transparent.gif"/>
+								   <img id="loadCut" src="/Content/Image/loading.gif" alt="" title="" height="16" width="16" style="display:none;left:142px;top:142px; position:absolute;">
+								 </div>
+								 </div>
+								 <div class="right1">
+								   <div class="head">你上传的头像会自动生成三种尺寸，请注意中小尺寸的头像是否清晰</div>
+								   <div class="big">
+								   <div class="preview">
+								     <img id="preview_180" src="/Content/Image/transparent.gif"/>
+								   <img id="load_180" src="/Content/Image/loading.gif" alt="" title="" height="16" width="16" style="display:none;left:82px;top:82px; position:absolute;">
+								   </div>
+								   <div class="gray9">大尺寸头像，180*180</div>
+								   </div>
+								   <div class="mid">
+								   <div class="preview">
+								    <img id="preview_50" src="/Content/Image/transparent.gif"/>
+								   <img id="load_50" src="/Content/Image/loading.gif" alt="" title="" height="16" width="16" style="display:none;left:17px;top:17px; position:absolute;">
+								   </div>
+								   <div class="gray9">中尺寸头像，50*50</div>
+								   </div>
+								   <div class="small">
+								   <div class="preview">
+								    <img id="preview_30" src="/Content/Image/transparent.gif"/>
+								   <img id="load_30" src="/Content/Image/loading.gif" alt="" title="" height="16" width="16" style="display:none;left:7px;top:7px; position:absolute;">
+								   </div>
+								   <div class="gray9">小尺寸头像，30*30</div>
+								   </div>
+								 </div>
+								 <div class="clearit"></div>
+								 </div>
+								 <div class="bottom">
+								  <a class="newabtngrn" id="submitAvatar" href="javascript:void(0);"><em>保存</em></a>
+								 </div>
+								</div>
+							</div>
+							<!--/个人资料-->
+						</div>
+					</div>
+				</div>
+				<!--/找朋友-->
+			</div>
+

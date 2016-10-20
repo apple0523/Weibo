@@ -1,0 +1,120 @@
+﻿@model Weibo.Web.Models.FollowListModel
+
+ @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = Model.OtherUser.NickName+"关注的人 XX微博-随时随地分享身边的新鲜事儿";
+ }
+
+    @section  cssInsert{
+    <link href="/Content/CSS/connect.css" type="text/css" rel="stylesheet">
+    }
+    @section  jsInsert{
+    <script src="/Scripts/Friend.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+
+
+
+        $(function () {
+            App.initNameCard($("#att_wrap"));
+        });
+        
+    </script>
+  }
+            <div class="MIB_blogbody">
+                <div class="MIB_mblogbgr ">
+                    <div class="MIB_mblogbgl">
+                        <!--右栏内容 -->
+                        <div class="mainR MIB_200 MIB_txtar MIB_linkar">
+                            @RenderPage("~/Views/Shared/_otherInfo.cshtml")
+                        </div>
+                        <!--/右栏内容 -->
+                        <!--左栏内容 -->
+                        <div class="mainL MIB_600 MIB_txtal MIB_linkal">
+                            <div class="cetSearch">
+<div class="btmTit_wrap_tag">
+				                <div class="PY_tag">
+				                  <ul>
+				                  				                    <li>
+				                      <div class="PY_tago"><span class="bold"><a href="http://weibo.com/attention/att_list.php?action=0&amp;uid=1650662251&amp;tag=0">她的关注</a></span></div>
+				                    </li>
+
+				                   				                  </ul>
+				                </div>
+				              </div>
+<div class="csTitle btmTit_wrap">@{@Model.OtherUser.NickName}关注了@{@Model.RecordCount}人</div>
+                                <div class="box_gr1">
+                                    <ul class="concernBox" id="att_wrap" >
+                                        @{
+                                            if (Model.Follows != null)
+                                            {
+                                                foreach (Follow follow in Model.Follows)
+                                                {
+                                            <li class="MIB_linedot_l" 
+											id="@follow.ID">
+                                                <div class="conBox_l">
+                                                    <a href="/@follow.ID" uid="@follow.ID" namecard="true" uname="@follow.NickName" >
+                                                        <img title="@follow.NickName"  src="@follow.MidAvartar"></a></div>
+                                                <div class="conBox_c">
+                                                    <span class="name"><a uid="@follow.ID" namecard="true" uname="@follow.NickName" href="/@follow.ID" title="@follow.NickName">@follow.NickName</a></span>
+                                                    <p class="address">
+                                                        <img src="/Content/Image/transparent.gif" class="small_icon @{@(follow.Sex == TypeConfigs.GetSexFemale ? "sicon_female" : "man")}" title="@{@(follow.Sex == TypeConfigs.GetSexFemale ? "女" : "男")}">@{@Types.GetCityTypesFullName(follow.Location);}
+                                                        <span>粉丝<strong>@follow.FocusedCount</strong>人</span></p>
+                                                    <div class="content MIB_linkbl">
+                                                        <a href="/@follow.ID" class="ms">
+                                                            @{@follow.LastMContent}
+                                                            (@{@(follow.LastUpdateDate != null ? DateSpan.Get(follow.LastUpdateDate.Value) : "未知")})</a>
+                                                    </div>
+
+                                                </div>
+                                                <div class="conBox_r ">
+                                                @{
+                                                    if(follow.ID!=Model.CurUser.ID)
+                                                    {
+                 <p>
+                 @{
+                                                                          
+                                                                                  if (follow.FriendShip==1)
+                                                                                  {
+											  <a href="javascript:void(0);" class="concernBtn_Yet"><span class="add_yet"></span>已关注</a>
+                                                                                  }
+
+                                                                                  else 
+                                                                                  {
+										  <a href="javascript:void(0);" onclick="App.FriendManage.followOne (@follow.ID,'@follow.NickName',this);return false;" class="addFollow"><span class="addnew">+</span>加关注</a>
+                                                                                  }
+                                                                                  }
+				                          
+                                          </p>
+                                                    }
+                                                    }
+                                                </div>
+                                                <div class="clearit">
+                                                </div>
+                                            </li>
+                                                }
+                                                }
+                                                }
+                                    </ul>
+                                </div>
+                                <div class="MIB_bobar">
+                                    <!--返回顶部-->
+                                    <div class="ftop lf">
+                                        <a href="#">
+                                            <img title="返回顶部" src="/Content/Image/transparent.gif" class="small_icon returntop">返回顶部</a>
+                                    </div>
+                                    <!--返回顶部-->
+                                    <!--翻页-->
+                                    @Html.Pager(Model.Page, Model.RecordCount, Model.PageSize)
+                                    <!--翻页-->
+                                </div>
+                                <!--/内容区 -->
+                            </div>
+                        </div>
+                        <!--/左栏内容 -->
+                    </div>
+                </div>
+            </div>
+

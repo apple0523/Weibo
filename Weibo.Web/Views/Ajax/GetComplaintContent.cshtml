@@ -1,0 +1,146 @@
+﻿@model Weibo.Web.Models.AjaxComplaintContentModel
+@{
+    User reportedUser = Users.GetUserByID(Model.ToUID);
+    if (reportedUser != null)
+    {
+                    
+    <div class="layerBox">
+        <div class="layerBoxTop">
+            <div class="topCon">
+                <strong>举报不良信息</strong><a href="javascript:;" class="close" title="关闭"></a><div class="clear">
+                </div>
+            </div>
+        </div>
+        <div class="layerBoxCon">
+            <div class="reportLayer1">
+                <div class="popreport_tip">
+                    <img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip5">不良信息是指含有色情、暴力、广告或其他骚扰你正常微博生活的内容。</div>
+                <div class="MIB_linedot1">
+                </div>
+                <div class="popreport_title">
+                    你要举报的是 <a href="/@reportedUser.ID" target="_blank">@@@reportedUser.NickName</a>
+                    的@(Model.ConType == TypeConfigs.GetComplaint_mb ? "微博" : (Model.ConType == TypeConfigs.GetComplaint_cm ? "评论" : (Model.ConType == TypeConfigs.GetComplaint_msg ? "私信" : "账号"))):</div>
+                @{
+                 if (Model.ConType == TypeConfigs.GetComplaint_mb)
+                 {
+                     MiniBlog m = MiniBlogs.GetMiniBlogByID(Model.ConID);
+                     if (m != null)
+                     {
+                         User muser = Users.GetUserByID(m.UID);
+                    <div class="popreport_info">
+                        <div class="popreport_infol">
+                            <a href="#">
+                                <img alt="@muser.NickName" src="@muser.SmallAvartar"></a></div>
+                        <div class="popreport_infor">
+                            <p>
+                                <a href="/@muser.ID" target="_blank">@muser.NickName</a>：@MvcHtmlString.Create(MiniBlogs.BBCodeToHtml(m.RealContent))</p>
+                        </div>
+                    </div>
+                     }
+                 }
+                 if (Model.ConType == TypeConfigs.GetComplaint_cm)
+                 {
+                     Comment c = Comments.GetCommentByID(Model.ConID);
+                     if (c != null)
+                     {
+                         User muser = Users.GetUserByID(c.UID); 
+                    <div class="popreport_info">
+                        <div class="popreport_infol">
+                            <a href="#">
+                                <img alt="@muser.NickName" src="@muser.SmallAvartar"></a></div>
+                        <div class="popreport_infor">
+                            <p>
+                                <a href="/@muser.ID" target="_blank">@muser.NickName</a>：@MvcHtmlString.Create(Comments.TransformContent(c.Content))</p>
+                        </div>
+                    </div>		
+                     }
+                 }
+
+                 if (Model.ConType == TypeConfigs.GetComplaint_msg)
+                 {
+                     Message c = Messages.GetMessageByID(Model.ConID);
+                     if (c != null)
+                     {
+                         User muser = Users.GetUserByID(c.ToUID); 
+                    <div class="popreport_info">
+                        <div class="popreport_infol">
+                            <a href="#">
+                                <img alt="@muser.NickName" src="@muser.SmallAvartar"></a></div>
+                        <div class="popreport_infor">
+                            <p>
+                                <a href="/@muser.ID" target="_blank">@muser.NickName</a>：@MvcHtmlString.Create(Messages.TransformContent(c.Content))</p>
+                        </div>
+                    </div>		
+                     }
+                 }
+        if (Model.ConType == TypeConfigs.GetComplaint_user)
+        {
+            User user = Users.GetUserByID(Model.ConID);
+            if (user != null)
+            {
+                      <div class="popreport_info">
+                        <div class="popreport_infol">
+                            <a href="#">
+                                <img alt="@user.NickName" src="@user.SmallAvartar"></a></div>
+                        <div class="popreport_infor">
+                            <p>
+                                <a href="/@user.ID" target="_blank">@user.NickName</a></p>
+                        </div>
+                    </div>	
+            }		
+        }
+                }
+                <div class="popreport_say">
+                    <table class="noteTab2">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    举报类型：
+                                </th>
+                                <td>
+                                    @for (int i = 0; i < Model.reasons.Count;i++ )
+                                    {
+                                        if (i == 0)
+                                        {
+                                             <label>
+                                            <input type="radio" checked value="@Model.reasons[i].ID" name="reportType">@Model.reasons[i].Name</label>
+                                        }
+                                        else
+                                        {
+                                        <label>
+                                            <input type="radio" value="@Model.reasons[i].ID" name="reportType">@Model.reasons[i].Name</label>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="tPadding">
+                                <th>
+                                    补充说明<i>（选填）</i>：
+                                </th>
+                                <td>
+                                    <input type="text" id="supplement" class="PY_input" value="">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="MIB_linedot1">
+                </div>
+                <div class="lf">
+                    <a id="SendReport" class="btn_normal" href="javascript:void(0)"><em>确认举报</em></a> <span class="errorTs2 error_color"
+                        style="display: none;">请选择举报类型</span>
+                </div>
+                <div class="rt">
+                    <p>
+                        请放心,你的隐私将会得到保护.<br>
+                        举报电话：110</p>
+                </div>
+                <div class="clearit">
+                </div>
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
+    }
+}

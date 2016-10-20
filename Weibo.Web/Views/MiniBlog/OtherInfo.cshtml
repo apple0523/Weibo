@@ -1,0 +1,320 @@
+﻿@model Weibo.Web.Models.OtherInfoModel
+@{
+    var border = "";
+    if (Model.OtherUserConfig.IsThemeDIY == 1)
+    {
+        ThemeDIY diy = Themes.GetThemeDIYByUID(Model.OtherUser.ID);
+        border = diy.BorderStyle + "Bg";
+    }
+    ViewData["curBorder"] = border;
+    int relation = Users.GetRelateBetweenUsers(Model.CurUser.ID, Model.OtherUser.ID);
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.Title = Model.OtherUser.NickName + "的资料 XX微博-随时随地分享身边的新鲜事儿";
+}
+@section  cssInsert{
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/miniblog/index.css" />
+    <link rel="stylesheet" type="text/css" href="@Model.OthersSkinCss" />
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/miniblog/layer.css" />
+}
+@section  jsInsert{
+    <script type="text/javascript">
+        var curBorder = "@border";
+    </script>
+     <script src="/Scripts/DatePicker.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            App.TimerFunArray.push(App.ajaxAtWho);
+            App.StartTimer();
+            App.bindGoTop(curBorder);
+        });
+       
+
+        var follow = function (id, name, alink) {
+            if (alink.locked)
+                return;
+            alink.locked = true;
+           
+            App.FollowOne(id, name, function (ID, Name, O) {
+                if (O.Data == 1) {
+                    $('<div class="MIB_btn_inter lf">互相关注<span class="MIB_line_sp">|</span><a onclick="cancelFollow(' + ID + ',\'' + Name + '\',this);return false;" href="javascript:void(0)" class="MIB_linkbl"><em>取消</em></a></div>').insertAfter($(alink).parent());
+                    $(alink).parent().remove();
+                }
+                if (O.Data == 2) {
+                    $('<div class="MIB_btn2 lf">已关注<span class="MIB_line_sp">|</span><a onclick="cancelFollow(' + ID + ',\'' + Name + '\',this);return false;" href="javascript:void(0)" class="MIB_linkbl"><em>取消</em></a></div>').insertAfter($(alink).parent());
+                    $(alink).parent().remove();
+                }
+                $("#more_handle").fadeIn();
+                $("#remark_name").fadeIn();
+            }, function () { alink.locked = false; });
+        };
+        var cancelFollow = function (id, name, alink) {
+            if (alink.locked)
+                return;
+            App.miniConfirm("是否取消关注" + name, alink, function () {
+             
+                alink.locked = true;
+                App.CancelFollow(id, function (ID, O) {
+                    if (O.Data == 3) {
+                        $('<div class="lf"><a class="btn_add" onclick="follow(' + ID + ',\'' + name + '\',this);return false;" href="javascript:void(0)"><img src="/Content/Image/transparent.gif" alt="" title="已关注你" class="ico_addGrn"><em><img src="/Content/Image/transparent.gif" alt="" class="SG_icon add_icoz">&nbsp;加关注</em></a></div>').insertAfter($(alink).parent());
+                        $(alink).parent().remove();
+                    }
+                    if (O.Data == 4) {
+                        $('<div class="lf"><a onclick="follow(' + ID + ',\'' + name + '\',this);return false;" href="javascript:void(0);" class="btn_add"><img class="SG_icon" src="/Content/Image/transparent.gif" title="关注"><em>加关注</em></a></div>').insertAfter($(alink).parent());
+                        $(alink).parent().remove();
+                    }
+                    $("#more_handle").fadeOut();
+                    $("#remark_name").fadeOut();
+                }, function () { alink.locked = false; });
+            });
+
+        };
+    </script>
+}
+<div class="MIB_blogbody">
+    <div class="MIB_mblogbgr @border">
+        <div class="MIB_mblogbgl">
+            <div class="mainR MIB_200 MIB_txtar MIB_linkar">
+               @RenderPage("~/Views/Shared/_otherInfoNoAvatar.cshtml")
+               @RenderPage("~/Views/Shared/Wedget_OtherInfo.cshtml")
+               @RenderPage("~/Views/Shared/Wedget_OtherFan.cshtml")
+               @RenderPage("~/Views/Shared/Wedget_OtherFollow.cshtml")
+               @RenderPage("~/Views/Shared/Wedget_OtherTopic.cshtml")
+                @RenderPage("~/Views/Shared/Wedget_OtherTags.cshtml")
+            </div>
+            <div id="profileL" class="mainL MIB_600 MIB_txtal MIB_linkal">
+                <div id="profileHead" class="MIB_mbloghead">
+                    <div id="profileHeadBg" class="MIB_mbloglist">
+                        <div class="other_headpic">
+                            <a href="#">
+                                <img title="@Model.OtherUser.NickName" src="@Model.OtherUser.BigAvartar"></a></div>
+                        <div class="other_info">
+                            <div class="name MIB_txtal">
+                                <span class="lf">@Model.OtherUser.NickName<a href="http://weibo.com/zt/s?k=9413"></a></span>
+                                @{
+                                    Follow f = Users.GetFollowByFuid(Model.OtherUser.ID, Model.CurUser.ID);
+                                    if (f != null && !string.IsNullOrEmpty(f.Remark))
+                                    {
+                                        <div style="cursor:pointer;" onclick="App.showEditRemarkBox (this,'@Model.OtherUser.ID');return false;" id="remark_name" class="remarks MIB_txtbl">(@f.Remark)</div>
+                                    }
+                                    else if (f != null && string.IsNullOrEmpty(f.Remark))
+                                    {
+                                         <div style="cursor:pointer;" onclick="App.showEditRemarkBox (this,'@Model.OtherUser.ID');return false;" id="remark_name" class="remarks MIB_txtbl">(设置备注)</div>
+                                    }
+                                }
+                            </div>
+                            <p>
+ @{
+     if (string.IsNullOrEmpty(Model.OtherUser.CustomSite))
+     {
+                  <a href="@(BaseConfigs.GetWebDomain + "/" + Model.OtherUser.ID)">@(BaseConfigs.GetWebDomain + "/" + Model.OtherUser.ID)</a>
+     }
+     else
+     {
+                 <a href="@(BaseConfigs.GetWebDomain + "/" + Model.OtherUser.CustomSite)">@(BaseConfigs.GetWebDomain + "/" + Model.OtherUser.CustomSite)</a>
+     }
+                      }                                </p>
+				  <div class="ad MIB_txtbl"><img src="/Content/Image/transparent.gif" class="small_icon @{@(Model.OtherUser.Sex == TypeConfigs.GetSexFemale ? "sicon_female" : "man")}" title="@{@(Model.OtherUser.Sex == TypeConfigs.GetSexFemale ? "女" : "男")}">@{@Types.GetCityTypesFullName(Model.OtherUser.Location);}</div>
+                  @{
+                      if (string.IsNullOrEmpty(Model.OtherUser.Blog) && Model.OtherUser.BlogVisible == 1)
+                      {
+                            <p class="blog MIB_txtbl">
+                                <a href="@Model.OtherUser.Blog">@Model.OtherUser.Blog</a></p>
+                      }
+                      if (string.IsNullOrEmpty(Model.OtherUser.Blog) && Model.OtherUser.BlogVisible == 2 && relation == 3)
+                      {
+                            <p class="blog MIB_txtbl">
+                                <a href="@Model.OtherUser.Blog">@Model.OtherUser.Blog</a></p>
+                      }
+                      }
+                            <p class="MIB_txtbl">
+                                @{
+                                    if (!string.IsNullOrEmpty(Model.CurUser.Description))
+                                    {
+                                         @Model.CurUser.Description
+                                    }
+                                    else
+                                    {
+                                        @:他还没填写个人介绍
+                                    }
+                                    }
+                                </p>
+                       <div class="concern">
+                       @{
+                           if (relation == 1)
+                           {
+                           <div class="MIB_btn_inter lf">互相关注<span class="MIB_line_sp">|</span><a onclick="cancelFollow(@Model.OtherUser.ID,'@Model.OtherUser.NickName',this);return false;" href="javascript:void(0)" class="MIB_linkbl"><em>取消</em></a></div>
+                           }
+                           if (relation == 2)
+                           {
+                               <div class="MIB_btn2 lf">已关注<span class="MIB_line_sp">|</span><a onclick="cancelFollow(@Model.OtherUser.ID,'@Model.OtherUser.NickName',this);return false;" href="javascript:void(0)" class="MIB_linkbl"><em>取消</em></a></div>
+                           }
+                           if (relation == 3)
+                           {
+                           <div class="lf"><a class="btn_add" onclick="follow(@Model.OtherUser.ID,'@Model.OtherUser.NickName',this);return false;" href="javascript:void(0)"><img src="/Content/Image/transparent.gif" alt="" title="已关注你" class="ico_addGrn"><em><img src="/Content/Image/transparent.gif" alt="" class="SG_icon add_icoz">&nbsp;加关注</em></a></div>
+                           }
+                           if (relation == 4)
+                           {
+                           <div class="lf"><a onclick="follow(@Model.OtherUser.ID,'@Model.OtherUser.NickName',this);return false;" href="javascript:void(0);" class="btn_add"><img class="SG_icon" src="/Content/Image/transparent.gif" title="关注"><em>加关注</em></a></div>
+                           }
+                       }
+                        <div id="more_handle" class="more_handle" style="display:@(relation == 1 || relation == 2 ? "block" : "none")">
+                        						<a onclick="App.confirm('是否把TA拉入黑名单？',function(){App.pullBlackList(@Model.OtherUser.ID,function(o){ App.fullTip(CodeList[o.Code], 1000, window.location.href.replace('#',''), 3);})});return false;" href="javascript:void(0);">拉黑</a>
+                        <em id="line" class="MIB_line_l">|</em>
+
+						<a onclick="App.showGroupAssignBox(@Model.OtherUser.ID,'@Model.OtherUser.NickName');return false;" href="javascript:void(0);" id="setgroup">设置分组</a>
+						<em class="MIB_line_l">|</em>
+						<a onclick="App.showPopMiniBlog('@@@Model.OtherUser.NickName');return false;" href="javascript:void(0);">@@TA</a>
+						<em id="line" class="MIB_line_l">|</em>
+						<a onclick="App.showMessageBox('@Model.OtherUser.NickName');return false;" href="javascript:void(0);">发私信</a>
+					</div>
+                     </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="profileFeed" class="MIB_mbloglist">
+                <div class="newFilter MIB_txtal newFilterMb0">
+				<div class="nfTagB nfTagOff">
+					<ul>
+						<li><a href="/@Model.OtherUser.ID">微博</a></li>
+						<li class="current"><span>TA的资料</span></li>
+					</ul>
+				<div class="clear"></div>
+				</div>
+			</div>
+                 <div class="MindexInfoList">
+                        <dl class="indexInfoList">
+                            <dt class="MIB_fixdot font_14"><strong class="font_14">基本信息</strong></dt>
+                            <dd>
+                                <ul>
+                                    @{
+                                        if (!string.IsNullOrEmpty(Model.OtherUser.RealName))
+                                        {
+                                            if (Model.OtherUser.RealNameVisible == 1 || (Model.OtherUser.RealNameVisible == 2 && (relation == 1 || relation == 3)))
+                                            {
+                                        <li>真实姓名：@Model.OtherUser.RealName</li>}
+                                        }
+                                        if (Model.OtherUser.BirthDay != null)
+                                        {
+                                            if (Model.OtherUser.BirthDayVisible == 1)
+                                            {
+                                                
+                                        <li>生日：@Model.OtherUser.BirthDay.Value.ToString("yyyy年MM月dd日")</li>
+                                            }
+                                            if (Model.OtherUser.BirthDayVisible == 2)
+                                            {
+                                                
+                                        <li>星座：@Utils.GetXinZuo( Model.OtherUser.BirthDay.Value.ToString("MM-dd"))</li>
+                                            }
+                                             if (Model.OtherUser.BirthDayVisible == 3)
+                                            {
+                                                
+                                        <li>生日：@Model.OtherUser.BirthDay.Value.ToString("MM月dd日")</li>
+                                            }
+                                             if (!string.IsNullOrEmpty(Model.OtherUser.ContactEmail))
+                                             {
+                                                 if (Model.OtherUser.ContactEmailVisible == 1 || (Model.OtherUser.ContactEmailVisible == 2 && (relation == 1 || relation == 3)))
+                                                 {
+                                        <li>邮箱：@Model.OtherUser.ContactEmail</li>
+                                                 }
+                                             }
+                                             if (!string.IsNullOrEmpty(Model.OtherUser.QQ))
+                                             {
+                                                 if (Model.OtherUser.QQVisible == 1 || (Model.OtherUser.QQVisible == 2 && (relation == 1 || relation == 3)))
+                                                 {
+                                        <li>QQ：@Model.OtherUser.QQ</li>
+                                                 }
+                                             }
+                                             if (!string.IsNullOrEmpty(Model.OtherUser.MSN))
+                                             {
+                                                 if (Model.OtherUser.MSNVisible == 1 || (Model.OtherUser.MSNVisible == 2 && (relation == 1 || relation == 3)))
+                                                 {
+                                        <li>QQ：@Model.OtherUser.MSN</li>
+                                                 }
+                                             }
+                                        }
+                                        }
+                                </ul>
+                            </dd>
+                        </dl>
+                        <div class="MIB_linedot_l1">
+                        </div>
+                        <dl class="indexInfoList">
+                            <dt class="font_14 MIB_fixdot"><strong class="font_14">教育信息</strong></dt>
+                            @{
+                                if (Model.OtherEducation != null)
+                                {
+                                    foreach (var e in Model.OtherEducation)
+                                    {
+                                        if (e.IsVisible == 1 || (e.IsVisible == 2 && (relation == 1 || relation == 3)))
+                                        {
+                                        string schoolType = Types.GetTypeByID(e.Type).Name;
+                                <dd>
+                                    <table cellspacing="0" cellpadding="0" border="0">
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                    @schoolType：
+                                                </th>
+                                                <td>
+                                                    <span><a href="/Search/User?School=@Utils.UrlEncode(e.SchoolName)">
+                                                        @e.SchoolName</a></span><span class="infospan">@(!string.IsNullOrEmpty(e.Remark) ? "-" + e.Remark : "")(@(!string.IsNullOrEmpty(e.StartDate) ? e.StartDate + "年" : ""))</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </dd>
+                                }
+                                    }
+                                }
+                            }
+                        </dl>
+                        <div class="MIB_linedot_l1">
+                        </div>
+                        <dl class="indexInfoList">
+                            <dt class="font_14 MIB_fixdot"><strong class="font_14">职业信息</strong></dt>
+                            @{
+                                if (Model.OtherCareer != null)
+                                {
+                                    foreach (var c in Model.OtherCareer)
+                                    {
+                                        if (c.IsVisible == 1 || (c.IsVisible == 2 && (relation == 1 || relation == 3)))
+                                        {
+                            <dd>
+                                <ul>
+                                    <li><span><a href="/Search/User?Career=@Utils.UrlEncode(c.CompanyName)">@c.CompanyName</a></span>
+                                        @{
+                                                                                                       if (c.Location > 0)
+                                                                                                       {
+                                        <span class="edu_place">(@Types.GetCityTypesFullName(c.Location))</span> 
+                                                                                                       }
+                                                                                                       if (c.StartDate != null)
+                                                                                                       {
+                                        <span>@{@c.StartDate}年 - @{@(c.EndDate == "0" ? "至今" : (c.EndDate == "-1" ? "未知" : c.EndDate + "年"))}</span>
+                                                                                                       } 
+                                            }</li>
+                                            @{
+                                                                                                       if (!string.IsNullOrEmpty(c.Position))
+                                                                                                       {
+                                    <li class="MIB_txtbl">@c.Position</li>
+                                                                                                       }
+                                                }
+                                </ul>
+                            </dd>
+                                }
+                                    }
+                                }
+                                }
+                        </dl>
+                        <div class="MIB_linedot_l1">
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div> 

@@ -1,0 +1,36 @@
+﻿<div id="wedget_myinfo">
+    @{
+        Weibo.Entity.User otherUser = Model.OtherUser;
+        int relation = Users.GetRelateBetweenUsers(Model.CurUser.ID, Model.OtherUser.ID);
+        IList<Career> careers = Careers.GetCareersByUID(otherUser.ID);
+        IList<Education> educations = Educations.GetEducationsByUID(otherUser.ID);
+    <div class="f_pro">
+        <div class="title font_14 MIB_linkcr">
+            <a href="/@otherUser.ID/info">TA的资料</a></div>
+        <ul class="con">
+            @{
+                if(careers!=null){
+                    foreach(var c in careers){
+                         if (c.IsVisible == 1 || (c.IsVisible == 2 && (relation == 1 || relation == 3)))
+                                        {
+                  
+            <li title="@c.CompanyName" class="MIB_dot"><a href="/Search/User?career=@c.CompanyName"> @c.CompanyName</a></li>
+                }
+                }
+                }
+                if(educations!=null)
+                {
+                    foreach(var e in educations)
+                    {
+                        if (e.IsVisible == 1 || (e.IsVisible == 2 && (relation == 1 || relation == 3))){
+                            <li title="@e.SchoolName" class="MIB_dot"><a href="/Search/User?school=@e.SchoolName">@e.SchoolName</a></li>    
+                    }
+                    }
+                }
+                }
+        </ul>
+        <div class="txt_right">
+            <a href="/@otherUser.ID/info">更多<em>&gt;&gt;</em></a></div>
+    </div>
+        }
+</div>

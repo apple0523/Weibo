@@ -1,0 +1,64 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('小人得志','[小人得志]',3013,'/Expression/youxihou/xrdz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('哇哈哈','[哇哈哈]',3013,'/Expression/youxihou/whh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('叹气','[叹气]',3013,'/Expression/youxihou/tq_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('冻结','[冻结]',3013,'/Expression/youxihou/sjdj_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('切','[切]',3013,'/Expression/youxihou/q_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('拍照','[拍照]',3013,'/Expression/youxihou/pz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('怕怕','[怕怕]',3013,'/Expression/youxihou/pp_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('怒吼','[怒吼]',3013,'/Expression/youxihou/nh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('膜拜','[膜拜]',3013,'/Expression/youxihou/mb2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('路过','[路过]',3013,'/Expression/youxihou/lg_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('泪奔','[泪奔]',3013,'/Expression/youxihou/lb_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('脸变色','[脸变色]',3013,'/Expression/youxihou/lbs_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('亲','[亲]',3013,'/Expression/youxihou/kiss_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('恐怖','[恐怖]',3013,'/Expression/youxihou/kb_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('交给我吧','[交给我吧]',3013,'/Expression/youxihou/jgwb_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('欢欣鼓舞','[欢欣鼓舞]',3013,'/Expression/youxihou/hxgw_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('高兴','[高兴]',3013,'/Expression/youxihou/gx3_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('尴尬','[尴尬]',3013,'/Expression/youxihou/gg_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('发嗲','[发嗲]',3013,'/Expression/youxihou/fd_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('犯错','[犯错]',3013,'/Expression/youxihou/fc_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('得意','[得意]',3013,'/Expression/youxihou/dy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('吵闹','[吵闹]',3013,'/Expression/youxihou/cn_thumb.gif')
+insert into TExpression ([Name],[Code],[Type],[Url]) values('冲锋','[冲锋]',3013,'/Expression/youxihou/cf_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('抽耳光','[抽耳光]',3013,'/Expression/youxihou/ceg_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('差得远呢','[差得远呢]',3013,'/Expression/youxihou/cdyn_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('被砸','[被砸]',3013,'/Expression/youxihou/bz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('拜托','[拜托]',3013,'/Expression/youxihou/bt_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('必胜','[必胜]',3013,'/Expression/youxihou/bs3_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('不关我事','[不关我事]',3013,'/Expression/youxihou/bgws_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('上火','[上火]',3013,'/Expression/youxihou/bf_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('不倒翁','[不倒翁]',3013,'/Expression/youxihou/bdw_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('不错哦','[不错哦]',3013,'/Expression/youxihou/bco_thumb.gif')
+
+

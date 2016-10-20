@@ -1,0 +1,14 @@
+﻿
+<b style=" font-size:30px;">
+邮箱验证@{@ViewData["Result"].ToString();}，跳转到相应的页面
+</b>
+
+<script type="text/javascript" language="javascript">
+    var str = "@ViewData["Result"].ToString()";
+    if(str=="成功")
+    {
+      window.location.href="/User/Login/";
+    }
+    else
+    window.location.href="/User/Reg/";
+</script>

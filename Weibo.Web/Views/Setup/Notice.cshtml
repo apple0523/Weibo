@@ -1,0 +1,301 @@
+﻿@model Weibo.Web.Models.BaseInfoModel
+            @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "隐私设置 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+    <link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+      <script type="text/javascript">
+          $(function () {
+              $("#new_comm").click(function () {
+                  if (this.checked) {
+                      $("#notice_yellow_tips").find("li")[0].style.display = "block";
+                      $("#arrow_commtype").attr("class", "arrow_d");
+                      $("#newcommtype").show();
+                      $("#commall").attr("checked", "true");
+                  }
+                  else {
+                      $("#notice_yellow_tips").find("li")[0].style.display = "none";
+                      $("#arrow_commtype").attr("class", "arrow_t");
+                      $("#newcommtype").hide();
+                  }
+              });
+
+              $("#new_fans").click(function () {
+                  if (this.checked) {
+                      $("#notice_yellow_tips").find("li")[1].style.display = "block";
+
+                  }
+                  else {
+                      $("#notice_yellow_tips").find("li")[1].style.display = "none";
+
+                  }
+              });
+              $("#new_msg").click(function () {
+                  if (this.checked) {
+                      $("#notice_yellow_tips").find("li")[2].style.display = "block";
+
+                  }
+                  else {
+                      $("#notice_yellow_tips").find("li")[2].style.display = "none";
+
+                  }
+              });
+              $("#new_atme").click(function () {
+                  if (this.checked) {
+                      $("#notice_yellow_tips").find("li")[3].style.display = "block";
+                      $("#arrow").attr("class", "arrow_d");
+                      $("#newaddtalk").show();
+                      $("#all").attr("checked", "true");
+                      $("#allblog").attr("checked", "true");
+                  }
+                  else {
+                      $("#notice_yellow_tips").find("li")[3].style.display = "none";
+                      $("#arrow").attr("class", "arrow_t");
+                      $("#newaddtalk").hide();
+                  }
+              });
+              $("#new_notice").click(function () {
+                  if (this.checked) {
+                      $("#notice_yellow_tips").find("li")[4].style.display = "block";
+
+                  }
+                  else {
+                      $("#notice_yellow_tips").find("li")[4].style.display = "none";
+
+                  }
+              });
+
+              $("#submit").click(function () {
+                  if (this.locked)
+                      return false;
+                  this.locked = true;
+                  alink = this;
+                  var EditNoticeModel = {};
+                  var commentVal = $("#new_comm:checked")[0] ? $("input[name='commentype']:checked").val() : 0; ;
+                  if (commentVal)
+                      EditNoticeModel.IsCommentTip = commentVal;
+                  else
+                      EditNoticeModel.IsCommentTip = 0;
+                  var followVal = $("#new_fans:checked")[0] ? 1 : 0;
+                  EditNoticeModel.IsFollowTip = followVal;
+                  var msgVal = $("#new_msg:checked")[0] ? 1 : 0;
+                  EditNoticeModel.IsMsgTip = msgVal;
+                  var atVal = $("#new_atme:checked")[0] ? parseFloat($("input[name='atblogrelation']:checked").val()) + parseFloat($("input[name='atblogtype']:checked").val()) : 0.0;
+                  if (atVal)
+                      EditNoticeModel.IsAtTip = atVal;
+                  else
+                      EditNoticeModel.IsAtTip = 0.0;
+                  var noticeVal = $("#new_notice:checked")[0] ? 1 : 0;
+                  EditNoticeModel.IsNoticeTip = noticeVal;
+                  var waterStyle = "";
+                  if ($("#_nickname:checked")[0])
+                      waterStyle += "1|";
+                  else
+                      waterStyle += "0|";
+                  if ($("#_turl:checked")[0])
+                      waterStyle += "1";
+                  else
+                      waterStyle += "0";
+                  EditNoticeModel.WaterMarkStyle = waterStyle;
+                  var waterpos = $("input[name='picpostion']:checked").val();
+                  EditNoticeModel.WaterMarkPosition = waterpos;
+
+                  $.ajax({
+                      dataType: "json",
+                      url: "/Ajax/EditNotice/",
+                      data: EditNoticeModel,
+                      cache: false,
+                      type: "post",
+                      success: function (o) {
+                          if (o.Code == "A00004") {
+                              App.FullMiniTip(CodeList["A00004"], alink, 2000, 3);
+                          }
+                          else if (o.Code == "A00001") {
+                              App.showLoginDial();
+                          }
+                          else {
+                              App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+                          }
+                          alink.locked = false;
+                      },
+                      error: function () {
+                          App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+                          alink.locked = false;
+                      }
+                  });
+              });
+          });
+          
+      </script>
+    }
+
+
+            <div class="MIB_blogbody">
+                <!--找朋友-->
+                <div class="MIB_column">
+                    <div class="MIB_main_cont">
+                        <div class="MIB_setup">
+<div class="PY_tag">
+<ul><li><div class="PY_tagn"><span><a href="http://account.weibo.com/setting/user">个人资料</a></span></div></li>
+<li><div class="PY_tagn"><span><a href="http://account.weibo.com/setting/myface">修改头像</a></span></div></li>
+<li><div class="PY_tagn"><span><a href="http://account.weibo.com/setting/privacy">隐私设置</a></span></div></li>
+<li><div class="PY_tago"><span class="bold">个性设置</span></div></li>
+</ul>
+
+      	</div>
+                            <!--个人资料-->
+<div class="setup_main"><div id="notice" class="rb">
+				<div class="rb_t"><strong>微博小黄签</strong> <span class="font_12 gray9">设置哪些新消息，通过微博小黄签提醒我</span></div>
+					<div id="talk" class="tag_tips marBt12 MIB_linedot2">
+					<p class="gray6">
+                            <input type="checkbox" @(Model.CurUserConfig.IsCommentTip==0?"":"checked") name="new_comm" id="new_comm">
+                            <label for="new_comm">新评论提醒</label>
+                            <a href="javascript:void(0)" class="@(Model.CurUserConfig.IsCommentTip == 0 ? "arrow_t" : "arrow_d")" id="arrow_commtype"></a>                    </p>
+                                       	<div style="display:@(Model.CurUserConfig.IsCommentTip==0?"none":"block")" id="newcommtype" class="newaddtalk case_tips">
+                         <div class="refer_tit">设置哪些评论计入评论提醒数字中</div>
+					  <table class="gray9">
+					  	<tbody><tr>
+							<td>评论的作者是：</td>
+							<td>
+	  							<input type="radio" value="1"@(Model.CurUserConfig.IsCommentTip == 1 ? "checked" : "") name="commentype" id="commall">
+                               	<label for="commall">所有人&nbsp;&nbsp;&nbsp;&nbsp;</label>
+							</td>
+							<td>
+	      						<input type="radio" value="2" name="commentype" @(Model.CurUserConfig.IsCommentTip == 2? "checked" : "") id="commone">
+                               	<label for="commone">关注的人</label>
+							</td>
+						</tr>
+					  </tbody></table>
+                    </div>
+                                        <p class="gray6">
+                            <input type="checkbox" @(Model.CurUserConfig.IsFollowTip == 1? "checked" : "") name="new_fans" id="new_fans">
+                            <label for="new_fans">新增粉丝提醒</label>
+                    </p>
+                    <p class="gray6">
+                           	<input type="checkbox" @(Model.CurUserConfig.IsMsgTip == 1? "checked" : "") name="new_msg" id="new_msg">
+                           	<label for="new_msg">新私信提醒</label>
+                    </p>
+                    <p class="gray6">
+                        	<input type="checkbox"@(Model.CurUserConfig.IsAtTip == 0.0? "" : "checked") name="new_atme" id="new_atme">
+                        	<label for="new_atme">@@提到我提醒</label><a class="@(Model.CurUserConfig.IsAtTip == 0.0 ? "arrow_t" : "arrow_d")" id="arrow" href="javascript:void(0)"></a> 
+                    </p>
+                        <div id="newaddtalk" class="newaddtalk case_tips" style="display:@(Model.CurUserConfig.IsAtTip==0?"none":"block")">
+                          <div class="refer_tit">设置哪些@提到我的微博/评论计入@提醒数字中</div>
+						  <table class="gray9">
+						  	<tbody><tr>
+								<td>微博/评论的作者是：</td>
+								<td>
+		  							<input type="radio" value="1" @(Model.CurUserConfig.IsAtTip == 1.1 || Model.CurUserConfig.IsAtTip == 1.2? "checked" : "") name="atblogrelation" id="all">
+                                	<label for="all">所有人&nbsp;&nbsp;&nbsp;&nbsp;</label>
+								</td>
+								<td>
+		      						<input type="radio" value="2" @(Model.CurUserConfig.IsAtTip == 2.1 || Model.CurUserConfig.IsAtTip == 2.2 ? "checked" : "") name="atblogrelation" id="one">
+                                	<label for="one">关注的人</label>
+								</td>
+							</tr>
+							<tr>
+								<td>微博的类型是：</td>
+								<td>
+					     		<input type="radio"  @(Model.CurUserConfig.IsAtTip == 1.1 || Model.CurUserConfig.IsAtTip == 2.1 ? "checked" : "") value="0.1" name="atblogtype" id="allblog">
+                                <label for="allblog">所有微博</label>
+								</td>
+								<td>
+								<input type="radio" value="0.2"  @(Model.CurUserConfig.IsAtTip == 1.2 || Model.CurUserConfig.IsAtTip == 2.2 ? "checked" : "") name="atblogtype" id="oriblog">
+                                <label for="oriblog">原创的微博</label>
+								</td>
+							</tr>
+						  </tbody></table>
+                        </div>
+                        <p class="gray6">
+                          <input type="checkbox"  @(Model.CurUserConfig.IsNoticeTip == 1  ? "checked" : "") id="new_notice" name="new_notice">
+                          <label for="new_notice">新通知提醒</label>
+                        </p>
+                        <!-- 微博小黄签 -->
+                        <div id="yellow_tips" class="yellow">
+                            <p class="yellowtitle gray6">微博小黄签</p>
+                            <div class="small_Yellow">
+                            <table class="CP_w">
+                            <thead>
+                                <tr>
+                                    <th class="tLeft"><span></span></th>
+                                    <th class="tMid"><span></span></th>
+                                    <th class="tRight"><span></span></th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <td class="tLeft"><span></span></td>
+                                    <td class="tMid"><span></span></td>
+                                    <td class="tRight"><span></span></td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr>
+                                    <td class="tLeft"><span></span></td>
+                                    <td class="tMid">
+                                    <!-- 任何内容 开始 -->
+                                    <div id="notice_yellow_tips" class="yInfo gray6">
+                                      <ul>
+										<li style="display:@(Model.CurUserConfig.IsCommentTip >0  ? "block" : "none")" >1条新评论，查看评论</li>
+										<li  style="display:@(Model.CurUserConfig.IsFollowTip == 1  ? "block" : "none")">1位新粉丝，查看我的粉丝</li>
+										<li  style="display:@(Model.CurUserConfig.IsMsgTip == 1  ? "block" : "none")">1条新私信，查看私信</li>
+										<li  style="display:@(Model.CurUserConfig.IsAtTip>0  ? "block" : "none")">1条微博/评论提到我，查看@我</li>
+								         <li  style="display:@(Model.CurUserConfig.IsNoticeTip == 1  ? "block" : "none")">1条新通知，查看消息</li>
+
+                                      </ul>
+                                    </div>
+                                    <!-- 任何内容 结束 -->
+																		</td>
+                                    <td class="tRight"><span></span></td>
+                                </tr>
+                            </tbody>
+                            </table>
+                            <div class="arrow"></div>
+                            </div>
+                            </div>
+                        <!-- //微博小黄签 -->
+                      </div>
+                               <!-- 图片水印 -->
+               	<div class="rb_t">
+               		<strong>图片水印</strong> 
+               		<span class="font_12 gray9">设置在图片微博中增加独具个性的微博水印</span>
+               	</div>
+               	<div class="tag_tips MIB_linedot2 list10">
+           				<em class="gray6">水印样式:</em>
+							<p class="gray6">
+								 <input type="checkbox"  @(Model.CurUserConfig.WaterMarkStyle.Split('|')[0] == "1"  ? "checked" : "") id="_nickname">
+								 <label for="_nickname" >微博昵称</label>
+							</p>
+							<p class="gray6">
+								<input type="checkbox" @(Model.CurUserConfig.WaterMarkStyle.Split('|')[1].Trim() == "1"  ? "checked" : "") id="_turl">
+								<label for="_turl">微博地址</label>
+							</p>
+							<em class="gray6">水印位置：</em>
+							<p class="gray6">	
+								<input type="radio" @(Model.CurUserConfig.WaterMarkPosition==1? "checked" : "") value="1" id="bottomright" name="picpostion">
+								<label for="bottomright">底部居右</label>
+							</p>
+							<p class="gray6">
+								<input type="radio" @(Model.CurUserConfig.WaterMarkPosition==2? "checked" : "") value="2" id="bottomcenter" name="picpostion">
+								<label for="bottomcenter">底部居中</label>
+							</p>
+			               	<p class="gray6">
+			              		<input type="radio" @(Model.CurUserConfig.WaterMarkPosition==3? "checked" : "") value="3" id="center" name="picpostion">
+								<label for="center">图片中心</label>
+			               	</p>
+			</div>
+              <!-- //图片水印 -->
+                <div class="langbtsave"><a id="submit" href="javascript:;" class="btn_normal"><em>保存</em></a></div>
+              </div>
+    </div>
+                            <!--/个人资料-->
+                        </div>
+                    </div>
+                </div>
+                <!--/找朋友-->
+            </div>

@@ -1,0 +1,72 @@
+﻿ @model Weibo.Web.Models.NameCardModel
+ @{
+     if (Model.NCUser != null)
+     {
+         Follow follow = Users.GetFollowByFuid(Model.NCUser.ID, Model.CurUser.ID);
+<div>
+    <dl class="name clearFix">
+        <dt><a target="_blank" href="/@Model.NCUser.ID"><img uid="@Model.NCUser.ID" title="@Model.NCUser.NickName"  class="picborder_r" src="@Model.NCUser.MidAvartar"></a></dt>
+        <dd class="name_card_con0"><a target="_blank" uid="@Model.NCUser.ID" title="@Model.NCUser.NickName" href="/@Model.NCUser.ID">@Model.NCUser.NickName</a>
+        @{
+                                                                                                                                if (Model.CurUser.ID != Model.NCUser.ID && follow != null)
+                                                                                                                                {
+        <span>(<a onclick="App.showEditRemarkBox (this,'@Model.NCUser.ID');App.removeNcItemInHsTable('@Model.NCUser.NickName');return false;" href="javascript:void(0)">@{@(follow != null ? (string.IsNullOrEmpty(follow.Remark) ? "设置备注" : follow.Remark) : "设置备注")}</a>)</span>
+                                                                                                                                }
+            }
+            <p class="address">@{@Types.GetCityTypesFullName(Model.NCUser.Location);}<img title="@{@(Model.NCUser.Sex == TypeConfigs.GetSexFemale ? "女" : "男")}" class="small_icon @{@(Model.NCUser.Sex == TypeConfigs.GetSexFemale ? "sicon_female" : "man")}" src="/Content/Image/transparent.gif"></p>
+        <p class="name_card_con4"><span><a target="_blank" title="@Model.NCUser.FocusCount" href="/@Model.NCUser.ID/follow">关注</a>@Model.NCUser.FocusCount</span><i>|</i><span><a target="_blank" title="@Model.NCUser.FocusedCount" href="/@Model.NCUser.ID/fan">粉丝</a>@Model.NCUser.FocusedCount</span><i>|</i><span><a target="_blank" title="@Model.NCUser.MiniBlogCount" href="/@Model.NCUser.ID">微博</a>@Model.NCUser.MiniBlogCount</span></p>
+        </dd>
+    </dl>
+    	<dl class="info clearFix">
+	<dt>简介：</dt>
+	@{
+                                                                                                                                                                                                                                                                                                                                                                                                         if (string.IsNullOrEmpty(Model.NCUser.Description))
+                                                                                                                                                                                                                                                                                                                                                                                                         {
+	<dd><p title="此人很懒" class="gray6">此人很懒</p></dd>
+                                                                                                                                                                                                                                                                                                                                                                                                         }
+                                                                                                                                                                                                                                                                                                                                                                                                         else
+                                                                                                                                                                                                                                                                                                                                                                                                         {
+	<dd><p title="@Model.NCUser.Description" class="gray6">@Model.NCUser.Description</p></dd>		  
+                                                                                                                                                                                                                                                                                                                                                                                                         }
+	 }
+	</dl>
+          @{
+                                                                                                                                                                                                                                                                                                                                                                                                         if (Model.CurUser.ID != Model.NCUser.ID)
+                                                                                                                                                                                                                                                                                                                                                                                                         {
+                                                                                                                                                                                                                                                                                                                                                                                                             if (Model.Relation == 2)
+                                                                                                                                                                                                                                                                                                                                                                                                             {
+		   <div class="links">
+		                <div class="MIB_btn2 rt">已关注<span class="MIB_line_sp">|</span><a onclick="App.CancelNameCardFollow(@Model.NCUser.ID,'@Model.NCUser.NickName',this);return false;" href="javascript:void(0)" class="MIB_linkbl"><em>取消</em></a></div>
+        		<span class="name_card_con3"><i class="com_mess">&nbsp;</i><a onclick="App.showMessageBox('@Model.NCUser.NickName');return false;" href="javascript:void(0)">私信</a></span><i>|</i><span class="name_card_con3"><a onclick="App.showGroupAssignBox(@Model.NCUser.ID, '@Model.NCUser.NickName');return false;" href="javascript:void(0)">设置分组</a></span>
+		    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                             }
+                                                                                                                                                                                                                                                                                                                                                                                                             else if (Model.Relation == 1)
+                                                                                                                                                                                                                                                                                                                                                                                                             {
+                  <div class="links">
+		                <div class="MIB_btn_inter rt">互相关注<span class="MIB_line_sp">|</span><a onclick="App.CancelNameCardFollow(@Model.NCUser.ID,'@Model.NCUser.NickName',this);return false;" href="javascript:void(0)" class="MIB_linkbl"><em>取消</em></a></div>
+        		<span class="name_card_con3"><i class="com_mess">&nbsp;</i><a onclick="App.showMessageBox('@Model.NCUser.NickName');return false;" href="javascript:void(0)">私信</a></span><i>|</i><span class="name_card_con3"><a onclick="App.showGroupAssignBox(@Model.NCUser.ID, '@Model.NCUser.NickName');return false;" href="javascript:void(0)">设置分组</a></span>
+		    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                             }
+                                                                                                                                                                                                                                                                                                                                                                                                             else if (Model.Relation == 3)
+                                                                                                                                                                                                                                                                                                                                                                                                             {
+                  <div class="links">
+		                <a class="btn_add" onclick="App.NameCardFollow(@Model.NCUser.ID,'@Model.NCUser.NickName',this);return false;" href="javascript:void(0)"><img src="/Content/Image/transparent.gif" alt="" title="已关注你" class="ico_addGrn"><em><img src="/Content/Image/transparent.gif" alt="" class="SG_icon add_icoz">&nbsp;加关注</em></a>
+        		<span class="name_card_con3"><i class="com_mess">&nbsp;</i><a onclick="App.showMessageBox('@Model.NCUser.NickName');return false;" href="javascript:void(0)">私信</a></span>
+		    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                             }
+                                                                                                                                                                                                                                                                                                                                                                                                             else if (Model.Relation == 4)
+                                                                                                                                                                                                                                                                                                                                                                                                             {
+                  <div class="links">
+		                <a onclick="App.NameCardFollow(@Model.NCUser.ID,'@Model.NCUser.NickName',this);return false;" href="javascript:void(0);" class="btn_add"><img class="SG_icon" src="/Content/Image/transparent.gif" title="关注"><em>加关注</em></a>
+                 </div>
+                                                                                                                                                                                                                                                                                                                                                                                                             }
+                                                                                                                                                                                                                                                                                                                                                                                                         }
+     }
+
+	</div>
+	 }
+	 else
+	 {
+         <p class="name_card_con5">这个昵称不存在噢 :(</p>
+     }
+     }

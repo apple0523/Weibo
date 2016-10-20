@@ -1,0 +1,146 @@
+﻿<div id="wedget_othertags"><!--标签-->
+@{
+    var CurUser = Model.CurUser;
+    IList<UserTag> tags = Tags.GetUserTagsByUID(CurUser.ID);
+<div class="f_pro" style="position: relative; overflow: visible; z-index: 4;">
+		<div class="title font_14 MIB_linkcr"><a href="/setup/tag">我的标签</a></div>
+			<div id="module_tags" class="tags">
+                @{
+                    if(tags!=null){
+                  foreach(var t in tags){      
+				<a class="font_@((t.ID%5+6)*2) fb" href="/Search/User?tag=@t.TagName" weight="2" >@t.TagName</a>
+                    }
+                    }
+                    }
+                    </div>
+                    <div class="txt_right">
+                    @{
+                        if(tags==null||tags.Count<10)
+                        {
+                    <a style="" id="addUserTag" onclick="$('#yellowTagBOx').show();return false;" href="javascript:;">添加</a><span style="" class="MIB_liner">|</span>
+                        }
+                        }
+                    <a href="/setup/tag">管理<em>&gt;&gt;</em></a></div>
+                    <div style="position: absolute; left: 0px; z-index: 10;display:none;" class="small_Yellow pop_tips" id="yellowTagBOx">
+                <table class="CP_w" style="width: 200px;">
+                    <thead>
+                        <tr>
+                            <th class="tLeft">
+                                <span></span>
+                            </th>
+                            <th class="tMid">
+                                <span></span>
+                            </th>
+                            <th class="tRight">
+                                <span></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <td class="tLeft">
+                                <span></span>
+                            </td>
+                            <td class="tMid">
+                                <span></span>
+                            </td>
+                            <td class="tRight">
+                                <span></span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        <tr>
+                            <td class="tLeft">
+                                <span></span>
+                            </td>
+                            <td class="tMid">
+                                <div class="tagslayer">
+                                    <p>
+                                        <input type="text" class="PY_input" style="color: rgb(153, 153, 153);"><a href="javascript:;" onclick="App.tag.AddUserTag($(this).prev(),this);return false;"
+                                            class="btn_normal btnxs"><em>保存</em></a></p>
+                                    <p class="txt">
+                                        <span>请添加想自己的标签</span></p>
+                                </div>
+                            </td>
+                            <td class="tRight">
+                                <span></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="close">
+                    <a onclick="$('#yellowTagBOx').hide();" href="javascript:;"></a>
+                </div>
+            </div>
+		</div>
+    }
+    <script type="text/javascript">
+        App.tag = {};
+        App.tag.AddUserTag = function (txt, alink) {
+            var tags = $.trim(txt.val());
+
+            if (tags == "多个标签词之间请用空格分开" || !tags) {
+                App.FullMiniTip("请输入1到14个字符的标签", alink, 1000, 1);
+                return false;
+            }
+            if (!/^[\u4E00-\u9FA50-9A-Za-z\s]*$/.test(tags)) {
+                App.FullMiniTip("存在非法字符", alink, 1000, 1);
+                return false;
+            }
+
+
+            if (App.byteLength(tags) > 14) {
+                App.FullMiniTip("请输入1到14个字符的标签", alink, 1000, 1);
+                return false;
+            }
+
+            if (alink.locked) {
+                return false;
+            }
+            alink.locked = true;
+            $.ajax(
+       {
+           url: "/Ajax/AddTag",
+           datatype: "json",
+           cache: false,
+           data: { tag: tags },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.FullMiniTip(CodeList["A00003"], alink, 1000, 1);
+               }
+               else if (o.Code == "A00021") {
+                   App.FullMiniTip(CodeList["A00021"], alink, 1000, 1);
+               }
+               else if (o.Code == "A00022") {
+                   App.FullMiniTip(CodeList["A00022"], alink, 1000, 1);
+               }
+               else {
+                   var list = $("#module_tags");
+                   var as = list.find("a");
+                   if (as.length == 0)
+                       list.append('<a class="font_' + ((o.Data.ID % 5 + 6) * 2) + ' fb" href="/Search/User?tag=' + o.Data.TagName + '" weight="2" >' + o.Data.TagName + '</a>');
+                   else {
+                       $('<a class="font_' + ((o.Data.ID % 5 + 6) * 2) + ' fb" href="/Search/User?tag=' + o.Data.TagName + '" weight="2" >' + o.Data.TagName + '</a>').insertBefore(as.first());
+                   }
+                   as = list.find("a");
+                   if (as.length == 10) {
+                       $("#addUserTag").hide().next().hide();
+                   }
+                   $("#yellowTagBOx").hide();
+               }
+               alink.locked = false;
+           },
+           error: function (request) {
+               App.FullMiniTip(CodeList["A00003"], alink, 1000, 1);
+               alink.locked = false;
+           }
+       });
+
+        }
+    </script>
+<!--/标签--></div>

@@ -1,0 +1,33 @@
+﻿@model Weibo.Entity.Education    
+    @{
+        Education education = Model;
+        if(education!=null)
+        {
+                            
+                                        <div  id="education_@{@education.ID}" onmouseout="$(this).find('.infoTable').removeClass('hover_table');App.hideExtendBtn(this);return false" onmouseover="$(this).find('.infoTable').addClass('hover_table');App.showExtendBtn(this);return false" class="infoTableBox MIB_line1">
+                                            <ul class="infoTable                                                                                                                                                                                                                                                                                                                            ">
+                                                <li class="lf"><span class="font_14"><a href="/Search/User/?School= @education.SchoolName">
+                                                    @education.SchoolName</a> </span><span class="edu_conn_place">
+                                                        @{@Types.GetTypeByID(education.Type).Name}
+                                                        @{@(!string.IsNullOrEmpty(education.StartDate) && Convert.ToInt32(education.StartDate) > 0 ? "-" + education.StartDate + "年" : "") }
+                                                        @{@(!string.IsNullOrEmpty(education.Remark) ? "-" + education.Remark : "")}
+                                                    </span></li>
+                                                <li class="rt" style=""><span extend="true" class="pri_content" style="visibility: hidden;">
+                                                    <img title="隐私" class="small_icon privacy_icon" src="/Content/Image/transparent.gif">
+                                                    @{@(education.IsVisible == 1 ? "所有人可见" : (education.IsVisible == 2 ? "我关注的人可见" : "仅自己可见"))} </span><span class="info_tools"><a onclick="education.edit(@education.ID);return false;" extend="true" href="javascript:;" style="visibility: hidden;">
+                                                        <img src="/Content/Image/transparent.gif" class="small_icon edit_icon" title="修改">修改</a>
+                                                        <a onclick="education.del(@education.ID);return false;" href="javascript:;" extend="true" style="visibility: hidden;">
+                                                            <img src="/Content/Image/transparent.gif" class="small_icon del_icon" title="删除">删除</a>
+                                                        <a target="_blank" href="/Search/User/?School= @education.SchoolName">
+                                                            <img src="/Content/Image/transparent.gif" class="small_icon search_icon" title="找同学">
+                                                            <span>找同学</span> </a></span></li>
+                                            </ul>
+                                            <div id="educationEdit_@{@education.ID}" edit="1">
+                                            </div>
+                                            <div node-type="con_search" style="display: none;">
+                                            </div>
+                                        </div>
+                                                }
+                                            }
+                                        
+                                    

@@ -1,0 +1,111 @@
+﻿@model Weibo.Web.Models.NoticeListModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "我的通知 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+    <link href="/Content/CSS/notice.css" rel="stylesheet" type="text/css" />
+    }
+@{
+    <script type="text/javascript">
+        $(function () {
+            $(".MIB_ntcf").click(function () {
+                var top = $(this).parent();
+                if (top.attr("class").lastIndexOf("ntc_expand") > 0) {
+                    top.removeClass("ntc_expand");
+                    $(this).find(".tmPTicon_Down").attr("class", "tmPTicon_Up");
+                }
+                else {
+                    top.addClass("ntc_expand");
+                    $(this).find(".tmPTicon_Up").attr("class", "tmPTicon_Down");
+                }
+            });
+            $(".ntc_rowr").mouseover(function () { $(this).addClass("ntc_hover"); }).mouseout(function () { $(this).removeClass("ntc_hover"); });
+            $(".checklf .current_sel").click(function () {
+                if (this.className == "current_sel") return;
+                $(".ntc_rowr").removeClass("ntc_expand");
+                $(".tmPTicon_Down").attr("class", "tmPTicon_Up");
+                 $(".checklf a")[0].className = "current_sel";
+                $(".checklf a")[1].className = "";
+                $(".checklf a")[2].className = "current_sel";
+                $(".checklf a")[3].className = "";
+            });
+            $(".checklf a[class!='current_sel']").click(function () {
+                if (this.className == "current_sel") return;
+                $(".ntc_rowr").addClass("ntc_expand");
+                $(".tmPTicon_Up").attr("class", "tmPTicon_Down");
+                $(".checklf a")[0].className = "";
+                $(".checklf a")[1].className = "current_sel";
+                $(".checklf a")[2].className = "";
+                $(".checklf a")[3].className = "current_sel";
+            });
+        });
+    </script>
+    }
+
+
+
+            <div class="MIB_blogbody">
+                <!--找朋友-->
+                <div class="MIB_column">
+                    <div class="MIB_main_cont">
+                        <div class="ntc_wrap">
+                            <div class="ntc_tit">
+                                <div class="tit_bd">
+                                    <h1>
+                                        我的通知&nbsp;&nbsp;<span>共@{@Model.RecordCount}条通知</span></h1>
+                                </div>
+                            </div>
+                            <div class="ntc_cont" id="notice_list">
+                                <div class="fanye_qx">
+                                    <div class="lf checklf">
+                                        <span class="gray6">显示方式：</span> <a href="javascript:void(0);" class="current_sel">全收起</a><span
+                                            class="gray6">&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;</span><a href="javascript:void(0);"
+                                                class="">全展开</a></div>
+                                    @Html.NoticePager(Model.PageIndex, Model.RecordCount, Model.PageSize)
+                                </div>
+                                @{
+                                    if (Model.Notices != null)
+                                    {
+                                        foreach (Notice notice in Model.Notices)
+                                        {
+                                            User user = Users.GetUserByID(notice.UID);
+                                            if (user != null)
+                                            {
+                                <div class="ntc_rowr">
+                                    <div class="MIB_ntcf">
+                                        <div class="img_col">
+                                            <a href="/@user.ID">
+                                                <img src="@user.MidAvartar" alt=""></a></div>
+                                        <div class="msg_col">
+                                            <span class="name_msg"><a href="/@user.ID">@user.NickName</a></span><p class="tit_z">@notice.Title<em>&nbsp;&nbsp;-&nbsp;&nbsp;@MvcHtmlString.Create(Notices.TransformContent(notice.Content))</em></p>
+                                        </div>
+                                        <div class="time_col">
+                                            @DateSpan.Get(notice.CreateTime)<a href="javascript:void(0);" title="点击展开通知"><img class="tmPTicon_Up"
+                                                src="/Content/Image/transparent.gif" alt="点击展开通知" title="点击展开通知"></a></div>
+                                    </div>
+                                    <div class="info_ntcf">
+                                        <div class="hlw_info">@MvcHtmlString.Create(Notices.TransformContent(notice.Content))</div>
+                                    </div>
+                                </div>
+                                            }
+                                        }
+                                    }
+                                }
+                              
+                                <div class="fanye_qx">
+                                    <div class="lf checklf">
+                                        <span class="gray6">显示方式：</span> <a  href="javascript:void(0);" class="current_sel">全收起</a><span
+                                            class="gray6">&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;</span><a href="javascript:void(0);"
+                                                class="">全展开</a></div>
+                                    @Html.NoticePager(Model.PageIndex, Model.RecordCount, Model.PageSize)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/找朋友-->
+            </div>
+

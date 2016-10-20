@@ -1,0 +1,100 @@
+﻿@model Weibo.Web.Models.BaseInfoModel
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>@ViewBag.Title</title>
+    @RenderSection("cssInsert",false)
+    <script language="javascript" type="text/javascript" src="/Scripts/Common/jquery-1.10.2.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/Scripts/CodeList.js"></script>
+    <script src="/Scripts/JQP_ClickOther.js" type="text/javascript"></script>
+    <script src="/Scripts/JQP_EmailNote.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/JQP_HighLineInput.js" type="text/javascript"></script>
+    <script src="/Scripts/App.js" type="text/javascript"></script>
+    <!–[if IE 6]> 
+    <script type="text/javascript">
+        try {
+            document.execCommand("BackgroundImageCache", false, true);
+        } catch (err) { } 
+          
+    </script>
+    <![endif]–>
+    <script  type="text/javascript">
+     App.config.curUid=@Model.CurUser.ID;
+     App.config.Domain="@BaseConfigs.GetWebDomain";  
+    </script>
+    @RenderSection("jsInsert",false)
+</head>
+<body>
+     <div class="MIB_bloga">
+        <div class="MIB_blogb">
+        @{
+            if(Model.CurUser!=null){
+                <style type="text/css">@@media screen and (-webkit-min-device-pixel-ratio:0){.tsina_gnb{top:8px;}.tsina_gnb ul li.on a{margin-bottom:-1px; padding:2px 5px 10px 7px;}.tsina_gnb ul.sltmenu{top:26px;}.tsina_gnb ul.sltmenu li a{margin:0 2px; padding:4px 13px 3px;}.tsina_gnb ul li em.nmTxt,.tsina_gnb ul li a{font-family:inherit;}}.top_yellowtip{position:fixed;top:30px;_position:relative;_top:0px;width:100%;z-index:2000;}.re_top{top:0px;}</style><div class="tsina_gnbarea" id="topBar"><div class="bg_gnbarea">&nbsp;</div><div  class="tsina_gnb"><ul class="gnb_l"><li><a href="/">微博</a></li></ul><ul class="gnb_r"><li><a href="/@Model.CurUser.ID/profile/">@Model.CurUser.NickName</a></li><li><a href="/Message/Index">私信</a> </li><li><a href="/Notice/Index/">通知</a></li><li><a href="/Setup/BaseInfo">帐号设置</a></li><li class="line">|</li><li><a href="/User/Logout">退出</a></li></ul></div></div><div class="top_yellowtip" id="yellowtip"><div class="small_Yellow_div tsina_gnb re_top"><div id="unreadLayer" class="small_Yellow" style="display:none"><table class="CP_w"><thead><tr><th class="tLeft"><span></span></th><th class="tMid"><span></span></th><th class="tRight"><span></span></th></tr></thead><tbody><tr><td class="tLeft"><span></span></td><td class="tMid"><div class="yInfo"><p id="unreadCommentCount" style="display: none;"></p><p id="unreadFollowCount" style="display: none;"></p><p id="unreadMsgCount" style="display: none;"></p><p id="unreadAtmeCount" style="display: none;"></p><p id="unreadAtcmtCount" style="display: none;"></p><p id="unreadNoticeCount" style="display: none;"></p><div></div></div></td><td class="tRight"><span></span></td></tr></tbody><tfoot><tr><td class="tLeft"><span></span></td><td class="tMid"></td><td class="tRight"><span></span></td></tr></tfoot></table><div class="close"><a id="unreadLayerClose" href="javascript:void(0)">&nbsp;</a></div></div></div></div>
+                <script type="text/javascript">
+                    $(function () {
+                        App.TimerFunArray.push(App.GetUnreadJsonpEvent);
+                        if (!App.Timer) {
+                            App.StartTimer();
+                        }
+
+                        var isTop = true;
+                        var tip = $("#yellowtip");
+                        $("#unreadLayerClose").click(function () {
+                            $("#unreadLayer").find("p").hide();
+                            $("#unreadLayer").hide();
+                            $.ajax({
+                                dataType: "json",
+                                url: "/Ajax/ClearTip/",
+                                cache: false,
+                                type: "post",
+                                success: function (o) {
+                                    if (o.Code == "A00001") {
+                                        App.showLoginDial();
+                                    }
+                                },
+                                error: function () {
+                                    App.fullTip(CodeList["A00003"], 1000, null, 1);
+                                }
+                            });
+                            return false;
+                        });
+                        $(window).scroll(function () {
+
+
+                            if ($.browser.msie && ($.browser.version == "6.0")) {
+                                if ($(document).scrollTop() < 10) {
+                                    tip.css("top", 0);
+                                }
+                                else {
+                                    tip.css("top", $(document).scrollTop() - 30);
+                                }
+                            }
+                            else {
+                                if ($(document).scrollTop() < 10) {
+                                    isTop = true;
+                                    tip.css("top", 30);
+
+                                }
+                                if (isTop && $(document).scrollTop() >= 10) {
+                                    tip.css("top", 0);
+                                    isTop = false;
+                                }
+                            }
+                        });
+                    });
+                </script>
+            }
+            else
+            {
+               <style type="text/css">@@media screen and (-webkit-min-device-pixel-ratio:0){.tsina_gnb{top:8px;}.tsina_gnb ul li.on a{margin-bottom:-1px; padding:2px 5px 10px 7px;}.tsina_gnb ul.sltmenu{top:26px;}.tsina_gnb ul.sltmenu li a{margin:0 2px; padding:4px 13px 3px;}.tsina_gnb ul li em.nmTxt,.tsina_gnb ul li a{font-family:inherit;}}.top_yellowtip{position:fixed;top:30px;_position:relative;_top:0px;width:100%;z-index:2000;}.re_top{top:0px;}</style><div class="tsina_gnbarea" id="topBar"><div class="bg_gnbarea">&nbsp;</div><div  class="tsina_gnb"><ul class="gnb_l"></ul><ul class="gnb_r"><li><a onclick='App.showLoginDial();return false;' href="javascript:void(0);">登录</a></li><li><a href='javascript:void(0);' onclick='App.showLoginDial();App.showLoginDial2Reg();'>注册</a></li></ul></div></div><div class="top_yellowtip" id="yellowtip"><div class="small_Yellow_div tsina_gnb re_top"><div id="unreadLayer" class="small_Yellow" style="display:none"><table class="CP_w"><thead><tr><th class="tLeft"><span></span></th><th class="tMid"><span></span></th><th class="tRight"><span></span></th></tr></thead><tbody><tr><td class="tLeft"><span></span></td><td class="tMid"><div class="yInfo"><p id="unreadCommentCount" style="display: none;"></p><p id="unreadFollowCount" style="display: none;"></p><p id="unreadMsgCount" style="display: none;"></p><p id="unreadAtmeCount" style="display: none;"></p><p id="unreadAtcmtCount" style="display: none;"></p><p id="unreadNoticeCount" style="display: none;"></p><div></div></div></td><td class="tRight"><span></span></td></tr></tbody><tfoot><tr><td class="tLeft"><span></span></td><td class="tMid"></td><td class="tRight"><span></span></td></tr></tfoot></table><div class="close"><a id="WB_unread_layer_close_1316403245132" href="javascript:void(0)">&nbsp;</a></div></div></div></div>
+            }
+        }
+        @RenderBody()
+        @RenderPage("_Bottom.cshtml")
+        </div>
+     </div>
+     @RenderSection("conSupplement",false)
+</body>
+</html>

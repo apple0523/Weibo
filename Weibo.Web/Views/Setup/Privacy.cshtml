@@ -1,0 +1,111 @@
+﻿@model Weibo.Web.Models.BaseInfoModel
+            @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "隐私设置 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+    <link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+      <script type="text/javascript">
+          $(function () {
+              $("#submit").click(function () {
+                  if (this.locked)
+                      return false;
+                  this.locked = true;
+                  alink = this;
+                  $.ajax({
+                      dataType: "json",
+                      url: "/Ajax/EditPrivacy/",
+                      data: { comment: $("input[name='comment']:checked").val(), message: $("input[name='message']:checked").val() },
+                      cache: false,
+                      type: "post",
+                      success: function (o) {
+                          if (o.Code == "A00004") {
+                              App.FullMiniTip(CodeList["A00004"], alink, 2000, 3);
+                          }
+                          else if (o.Code == "A00001") {
+                              App.showLoginDial();
+                          }
+                          else {
+                              App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+                          }
+                          alink.locked = false;
+                      },
+                      error: function () {
+                          App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+                          alink.locked = false;
+                      }
+                  });
+              });
+          });
+      </script>
+    }
+
+
+            <div class="MIB_blogbody">
+                <!--找朋友-->
+                <div class="MIB_column">
+                    <div class="MIB_main_cont">
+                        <div class="MIB_setup">
+                           <div class="PY_tag">
+            <ul>
+<li><div class="PY_tagn"><span><a href="http://account.weibo.com/setting/user">个人资料</a></span></div></li>
+
+<li><div class="PY_tagn"><span><a href="http://account.weibo.com/setting/myface">修改头像</a></span></div></li>
+
+<li><div class="PY_tagn"><span><a href="http://account.weibo.com/setting/mobile">绑定手机</a></span></div></li>
+
+<li><div class="PY_tago"><span class="bold">隐私设置</span></div></li>
+
+<li><div class="PY_tagn"><span><a href="http://account.weibo.com/setting/notice">个性设置</a></span></div></li>
+ 
+<li><div class="PY_tagn"> <span class="bold"><a href="http://account.weibo.com/setting/connections">应用授权</a></span></div></li>
+<li><div class="PY_tagn"> <span class="bold"><a target="_blank" href="http://credits.weibo.com/">我的微币</a></span></div></li>
+</ul>
+
+      	</div>
+                            <!--个人资料-->
+<div id="setup_main" class="setup_main">     
+				<div class="infoTop MIB_line1">
+                        <div class="infoTop_nav"> <span class="edutop_cur">隐私设置</span> <span class="navBorder gray9">|</span> <span><a href="http://account.weibo.com/setting/blacklist">黑名单</a></span> </div>
+                     </div>
+		<div class="ysSetup font_12">
+			<div class="rb_t"><strong>评论</strong> <span class="font_12 gray9">设置谁可以评论我的微博</span></div>
+            <div class="tag_tips MIB_linedot2 iv_space1">
+              <p class="pstyle gray6">
+                <input type="radio" @(Model.CurUserConfig.IsCommentMe==1?"checked":"") value="1" name="comment" id="allone">
+                <label for="allone">所有人<span class="font_12 gray9">(不包括你的黑名单用户)</span></label>
+              </p>
+              <p class="pstyle gray6">
+                <input type="radio" value="2" @(Model.CurUserConfig.IsCommentMe==2?"checked":"") name="comment" id="allone2">
+                <label for="allone2">我关注的人</label>
+              </p>
+            </div>
+			
+			<div class="rb_t"><strong>私信</strong> <span class="font_12 gray9">设置谁可以给我发私信</span></div>
+            <div class="tag_tips MIB_linedot2 iv_space1">
+              <p class="pstyle gray6">
+                <input type="radio" @(Model.CurUserConfig.IsMsgMe==1?"checked":"") value="1" name="message" id="allone3">
+                <label for="allone3">所有人<span class="font_12 gray9">(不包括你的黑名单用户)</span></label>
+              </p>
+              <p class="pstyle gray6">
+                <input type="radio" @(Model.CurUserConfig.IsMsgMe == 2 ? "checked" : "") value="2" name="message" id="allone4">
+                <label for="allone4">我关注的人</label>
+              </p>
+            </div>
+                        <div class="btn">
+				<a href="javascript:void(0);" id="submit" class="btn_normal"><em>保存</em></a>
+			</div>
+		</div>
+            
+            
+    </div>
+                            <!--/个人资料-->
+                        </div>
+                    </div>
+                </div>
+                <!--/找朋友-->
+            </div>

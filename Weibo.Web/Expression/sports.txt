@@ -1,0 +1,40 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¼ÓÓÍ','[¼ÓÓÍ]',3011,'/Expression/sports/jiayou_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¹úÆì','[¹úÆì]',3011,'/Expression/sports/flag_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('½ğÅÆ','[½ğÅÆ]',3011,'/Expression/sports/jinpai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÒøÅÆ','[ÒøÅÆ]',3011,'/Expression/sports/yinpai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Í­ÅÆ','[Í­ÅÆ]',3011,'/Expression/sports/tongpai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÉÚ×Ó','[ÉÚ×Ó]',3011,'/Expression/sports/shao.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('»ÆÅÆ','[»ÆÅÆ]',3011,'/Expression/sports/yellowcard.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ºìÅÆ','[ºìÅÆ]',3011,'/Expression/sports/redcard.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('×ãÇò','[×ãÇò]',3011,'/Expression/sports/football.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÀºÇò','[ÀºÇò]',3011,'/Expression/sports/bball_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ºÚ8','[ºÚ8]',3011,'/Expression/sports/black8_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÅÅÇò','[ÅÅÇò]',3011,'/Expression/sports/volleyball_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÓÎÓ¾','[ÓÎÓ¾]',3011,'/Expression/sports/swimming_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Æ¹ÅÒÇò','[Æ¹ÅÒÇò]',3011,'/Expression/sports/pingpong_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Í¶Àº','[Í¶Àº]',3011,'/Expression/sports/basketball_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÓğÃ«Çò','[ÓğÃ«Çò]',3011,'/Expression/sports/badminton_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÉäÃÅ','[ÉäÃÅ]',3011,'/Expression/sports/zuqiu_thumb.gif')
+
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Éä¼ı','[Éä¼ı]',3011,'/Expression/sports/shejian_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¾ÙÖØ','[¾ÙÖØ]',3011,'/Expression/sports/juzhong_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('»÷½£','[»÷½£]',3011,'/Expression/sports/jijian_thumb.gif')

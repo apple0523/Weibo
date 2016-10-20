@@ -1,0 +1,170 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>现在加入XX微博，随时随地一起分享新鲜事！</title>
+    <link href="../../Content/CSS/reguide_twice.css" type="text/css" rel="stylesheet" />
+        <!–[if IE 6]>  
+    <script type="text/javascript">
+        try {
+            document.execCommand("BackgroundImageCache", false, true);
+        } catch (err) { }        
+    </script>  
+    <![endif]–>
+    <script src="/Scripts/Common/jquery-1.10.2.min.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/Reg.js" language="javascript" type="text/javascript"></script>
+	<script src="/Scripts/JQP_ClickOther.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/JQP_EmailNote.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/App.js" language="javascript" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            $("#reg_username").JQP_TxtTips({ txt: "请输入你的常用邮箱，如：example@example.com<br />它将成为你未来的登录帐号", VailFn: checkMail, plusId: "red_reg_username" });
+            $("#reg_password").JQP_TxtTips({ txt: "密码由6-16位半角字符（字母、数字、符号）组成，区分大小写", VailFn: checkPwd, plusId: "red_reg_password" });
+            $("#reg_password2").JQP_TxtTips({ txt: "这里要重复下你的密码", VailFn: checkRePwd, plusId: "red_reg_password2" });
+            $("#door").JQP_TxtTips({ txt: "验证码是又字母和数字组成，不区分大小写", VailFn: checkVailCode, plusId: "red_door" });
+            $("#after").JQP_TxtTips({ VailFn: checkIsAgree, plusId: "red_after", isTxtInput: false });
+            $("#reg_username").JQP_EmailNote({ selfn: function () { $("#reg_username").focusout(); $("#reg_username").blur(); $("#reg_password").focusin(); $("#reg_password").focus(); } });
+            $(".jh_yanzheng").focusin(function () { $(this).attr("class", "jh_yanzhenghover"); });
+            $(".jh_yanzheng").focusout(function () { $(this).attr("class", "jh_yanzheng"); });
+            $(".r_loginbtn").bind("click", function (e) { App.showLoginDial(e); return false });
+
+            $("#submit").click(function (e) {
+                App.disableAtag($(this), "btn_ljzc_load");
+                checkIsAgree($("#after"), $("#red_after"));
+                checkMail($("#reg_username"), $("#red_reg_username"), false);
+                checkPwd($("#reg_password"), $("#red_reg_password"));
+                checkRePwd($("#reg_password2"), $("#red_reg_password2"));
+                checkVailCode($("#door"), $("#red_door"), false);
+                if (isMail && isAgree && isPwd && isRePwd && isVailCode) {
+                    App.iframeSubmit({ formMail: $("#reg_username").val(), formPwd: $("#reg_password").val() }, "RegForm", "/User/IframeReg/", "RegIframe");
+                }
+                else {
+                    App.enableAtag($(this));
+                }
+                return false;
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="cloud">
+    </div>
+    <div class="MIB_guide">
+        <a href="http://weibo.com/" class="guidelink"></a>
+        <div class="MIB_guide_t">
+        </div>
+        <div class="MIB_guideb">
+            <div class="toptip1">
+                <p>
+                    <font color="red">注册微博帐号，立即享用当下最酷最火的沟通交流工具。注册仅需30秒。</font></p>
+            </div>
+            <!--fuen 内容框-->
+            <div class="stepbg2">
+                <div class="make_login">
+                    <div class="login_left">
+                        <div class="new_construct">
+                            <div class="new_item">
+                                <div class="tit">
+                                    电子邮箱</div>
+                                <div class="bdmain">
+                                    <div class="jh_yanzheng">
+                                        <strong>
+                                            <input style="width: 230px; color: rgb(153, 153, 153);" class="textinp" id="reg_username"
+                                                 name="username" type="text" autocomplete="off" /></strong></div>
+                                </div>
+                                <div class="new_plus" id="red_reg_username" style="display: none;">
+                                    <div class="errormt">
+                                        <strong><span></span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="new_item">
+                                <div class="tit">
+                                    创建密码</div>
+                                <div class="bdmain">
+                                    <div class="jh_yanzheng">
+                                        <strong>
+                                            <input name="password" style="width: 230px; color: rgb(153, 153, 153);" id="reg_password"
+                                                class="textinp" type="password" /></strong></div>
+                                </div>
+                                <div class="new_plus" id="red_reg_password" style="display: none;">
+                                    <div class="errormt">
+                                        <strong><span></span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="new_item">
+                                <div class="tit">
+                                    密码确认</div>
+                                <div class="bdmain">
+                                    <div class="jh_yanzheng" positionleft="7">
+                                        <strong>
+                                            <input name="password2" style="width: 230px; color: rgb(153, 153, 153);" id="reg_password2"
+                                                class="textinp" type="password" /></strong></div>
+                                </div>
+                                <div class="new_plus" id="red_reg_password2" style="display: none;">
+                                    <div class="errormt">
+                                        <strong><span></span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="new_item">
+                                <div class="tit">
+                                    验证码</div>
+                                <div class="bdmain">
+                                    <div class="jh_yanzheng" positionleft="185">
+                                        <strong>
+                                            <input style="color: rgb(153, 153, 153);" id="door" name="basedoor" class="textinp"
+                                                type="text" /></strong></div>
+                                    <div class="jh_yanzhimg">
+                                        <img id="check_img"  alt="验证码" src="/User/GetCheckCode/" height="35" width="100" onclick="App.refreshCheckCode('check_img')" /><span><a
+                                            href="javascript:App.refreshCheckCode('check_img');" >换一换</a></span></div>
+                                </div>
+                                <div class="new_plus" id="red_door" style="display: none;">
+
+                                </div>
+                            </div>
+                            <div class="new_item">
+                                <div class="tit">
+                                </div>
+                                <div class="bdmain">
+                                    <div class="lf">
+                                        <input  checked="checked" name="after" value="1" id="after" class="labelbox" type="checkbox" /><label
+                                            for="after">我已看过并同意<a target="_blank" href="##">《服务使用协议》</a></label></div>
+                                </div>
+                                <div class="new_plus" id="red_after" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="btdiv padding_less">
+                                <a href="javascript:;" id="submit" class="btn_ljzc"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="login_right">
+                        <div class="r_tit">
+                            已有微博帐号？<br />
+                            请直接登录</div>
+                        <a href="javascript:void(0);" class="r_loginbtn" >登录微博</a>
+                       
+                    </div>
+                    <div class="clear">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="MIB_guide_bt">
+            <div class="MIB_guide_btb">
+                <div class="MIB_foot_new ">
+                   <div class="lf">
+                    <p class="p1">QQ:542752480</p>
+                </div>        
+                <div class="rt">
+                    <p>dev by shaojunjie</p>
+                </div>
+                    <div class="clearit">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

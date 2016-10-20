@@ -1,0 +1,29 @@
+﻿<div class="header">
+
+	<div class="head_menu">
+		<span class="menu_l">&nbsp;</span>
+		<div class="menu_c">
+			<div class="bg_menu_c">&nbsp;</div>
+			<ul>
+               <li><a href="javascript:App.showLoginDial();">我的首页</a></li><li class="line">|</li><li><a href="javascript:App.showLoginDial();">我的微博</a></li><li class="line">|</li><li ><a href="javascript:App.showLoginDial();">好友</a></li><li class="line">|</li><li><a href="javascript:App.showLoginDial();">模板</a></li>
+
+            </ul>
+			<div id="m_search" class="search">
+				<input type="text" value="搜索微博、找人" accesskey="3" title="搜索微博、找人" style="color: rgb(153, 153, 153);" autocomplete="off" id="m_keyword">
+				<a id="m_submit" href="javascript:void(0);" class="submit">搜索</a>
+			</div>
+		</div>
+		<span class="menu_r">&nbsp;</span>
+	</div>
+	<div style="display: none; z-index: 300; left: 600px; top: 99px; width: 137px;" class="resultTip" id="m_keyword_tip"><span>请选择搜索范围</span><ul id="m_keyword_tip_content"><li style="cursor:pointer" class="cur"><span act="def">搜微博</span><span act="isinput" style="display: none;">含<cite act="txt" id="m_keyword_tip_blog"></cite>的微博</span></li><li style="cursor:pointer"><span act="def">搜人</span><span act="isinput" style="display: none;">名为<cite act="txt" id="m_keyword_tip_author"></cite>的人</span></li></ul></div> 
+</div>
+<script type="text/javascript">
+
+    $("#m_submit").click(function () {
+        App.showLoginDial();
+        return false;
+    });
+    $("#m_keyword").JQP_HighLineInput2({ nullCon: "搜索微博、找人" }).click(function(){
+        App.showLoginDial();
+    });
+</script>

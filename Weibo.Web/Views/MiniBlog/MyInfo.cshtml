@@ -1,0 +1,215 @@
+﻿@model Weibo.Web.Models.MyInfoModel
+@{
+    var border = "";
+    if (Model.CurUserConfig.IsThemeDIY == 1)
+    {
+        ThemeDIY diy = Themes.GetThemeDIYByUID(Model.CurUser.ID);
+        border = diy.BorderStyle + "Bg";
+    }
+    ViewData["curBorder"] = border;
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.Title = "我的资料 XX微博-随时随地分享身边的新鲜事儿";
+}
+@section  cssInsert{
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/miniblog/index.css" />
+    <link rel="stylesheet" type="text/css" href="@Model.CurSkinCss" />
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/miniblog/layer.css" />
+}
+@section  jsInsert{
+    <script type="text/javascript">
+        var curBorder = "@border";
+    </script>
+    <script src="/Scripts/DatePicker.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            App.TimerFunArray.push(App.ajaxAtWho);
+            App.StartTimer();
+            App.bindGoTop(curBorder);
+            App.initNameCard($("#feed_list"));
+        });
+
+
+
+    </script>
+}
+<div class="MIB_blogbody">
+    <div class="MIB_mblogbgr @border">
+        <div class="MIB_mblogbgl">
+            <div class="mainR MIB_200 MIB_txtar MIB_linkar">
+                @RenderPage("~/Views/Shared/_userInfoNoAvatar.cshtml")
+                 @RenderPage("~/Views/Shared/Wedget_MyInfo.cshtml")
+                    @RenderPage("~/Views/Shared/Wedget_MyTags.cshtml")
+                @RenderPage("~/Views/Shared/Wedget_MyFan.cshtml")
+                @RenderPage("~/Views/Shared/Wedget_MyFollow.cshtml")
+                
+                @RenderPage("~/Views/Shared/Wedget_MyTopic.cshtml")
+             
+            </div>
+            <div id="profileL" class="mainL MIB_600 MIB_txtal MIB_linkal">
+                <div id="profileHead" class="MIB_mbloghead">
+                    <div id="profileHeadBg" class="MIB_mbloglist">
+                        <div class="other_headpic">
+                            <a href="#">
+                                <img title="@Model.CurUser.NickName" src="@Model.CurUser.BigAvartar"></a></div>
+                        <div class="other_info">
+                            <div class="name MIB_txtal">
+                                <span class="lf">@Model.CurUser.NickName</span> <span class="aboutwho rt"><a onclick="App.showPopMiniBlog();return false;"
+                                    href="javascript:void(0)" id="publisher">
+                                    <img align="absmiddle" title="我要发微博" class="small_icon saysomething" src="/Content/Image/transparent.gif">我要发微博</a></span>
+                            </div>
+                            <p>
+                                @{
+                                    if (string.IsNullOrEmpty(Model.CurUser.CustomSite))
+                                    {
+                                    <a href="@(BaseConfigs.GetWebDomain + "/" + Model.CurUser.ID)">@(BaseConfigs.GetWebDomain + "/" + Model.CurUser.ID)</a>
+                                    }
+                                    else
+                                    {
+                                    <a href="@(BaseConfigs.GetWebDomain + "/" + Model.CurUser.CustomSite)">@(BaseConfigs.GetWebDomain + "/" + Model.CurUser.CustomSite)</a>
+                                    }
+                                }
+                            </p>
+                            <div class="ad MIB_txtbl">
+                                <img src="/Content/Image/transparent.gif" class="small_icon @{@(Model.CurUser.Sex == TypeConfigs.GetSexFemale ? "sicon_female" : "man")}" title="@{@(Model.CurUser.Sex == TypeConfigs.GetSexFemale ? "女" : "男")}">@{@Types.GetCityTypesFullName(Model.CurUser.Location);}
+                            </div>
+                            <p class="blog MIB_txtbl">
+                                @{
+                                    if (string.IsNullOrEmpty(Model.CurUser.Blog))
+                                    {
+                                    <a href="/Setup/BaseInfo">添加</a><em style="color: #707070;">自己的博客地址</em>
+                                    }
+                                    else
+                                    {
+                                    <a href="@Model.CurUser.Blog">@Model.CurUser.Blog</a>
+                                    }
+                                }
+                            </p>
+                            @{
+                                if (!string.IsNullOrEmpty(Model.CurUser.Description))
+                                {
+                                <p class="MIB_txtbl">@Model.CurUser.Description</p>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div id="profileFeed" class="MIB_mbloglist">
+                    <div class="newFilter MIB_txtal newFilterMb0">
+                        <div class="nfTagB nfTagOff">
+                            <ul>
+                                <li><a href="/@Model.CurUser.ID/Profile">微博</a></li>
+                                <li class="current"><span>我的资料</span></li>
+                            </ul>
+                            <div class="clear">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="MindexInfoList">
+                        <dl class="indexInfoList">
+                            <dt class="MIB_fixdot font_14"><strong class="font_14">基本信息</strong>&nbsp;&nbsp;<a
+                                class="MIB_linkbl" id="uispan_edit_0" href="/Setup/BaseInfo">编辑</a></dt>
+                            <dd>
+                                <ul>
+                                    @{
+                                        if (!string.IsNullOrEmpty(Model.CurUser.RealName))
+                                        {
+                                    
+                                        <li>真实姓名：@Model.CurUser.RealName</li>}
+                                        if (Model.CurUser.BirthDay != null)
+                                        {
+                                        <li>生日：@Model.CurUser.BirthDay.Value.ToString("yyyy年MM月dd日")</li>
+                                        }
+                                        if (!string.IsNullOrEmpty(Model.CurUser.ContactEmail))
+                                        {
+                                        <li>邮箱：@Model.CurUser.ContactEmail</li>
+                                        }
+                                        if (!string.IsNullOrEmpty(Model.CurUser.QQ))
+                                        {
+                                        <li>QQ：@Model.CurUser.QQ</li>
+                                        }
+                                         if (!string.IsNullOrEmpty(Model.CurUser.MSN))
+                                        {
+                                        <li>QQ：@Model.CurUser.MSN</li>
+                                        }
+                                    }
+                                </ul>
+                            </dd>
+                        </dl>
+                        <div class="MIB_linedot_l1">
+                        </div>
+                        <dl class="indexInfoList">
+                            <dt class="font_14 MIB_fixdot"><strong class="font_14">教育信息</strong>&nbsp;&nbsp;<a
+                                class="MIB_linkbl" id="uispan_edit_1" href="/setup/education">编辑</a></dt>
+                            @{
+                                if (Model.MyEducation != null)
+                                {
+                                    foreach (var e in Model.MyEducation)
+                                    {
+                                        string schoolType = Types.GetTypeByID(e.Type).Name;
+                                <dd>
+                                    <table cellspacing="0" cellpadding="0" border="0">
+                                        <tbody>
+                                            <tr>
+                                                <th>
+                                                    @schoolType：
+                                                </th>
+                                                <td>
+                                                    <span><a href="/Search/User?School=@Utils.UrlEncode(e.SchoolName)">
+                                                        @e.SchoolName</a></span><span class="infospan">@(!string.IsNullOrEmpty(e.Remark) ? "-" + e.Remark : "")(@(!string.IsNullOrEmpty(e.StartDate) ? e.StartDate + "年" : ""))</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </dd>
+                                    }
+                                }
+                            }
+                        </dl>
+                        <div class="MIB_linedot_l1">
+                        </div>
+                        <dl class="indexInfoList">
+                            <dt class="font_14 MIB_fixdot"><strong class="font_14">职业信息</strong>&nbsp;&nbsp;<a
+                                class="MIB_linkbl" id="uispan_edit_2" href="/Setup/career">编辑</a></dt>
+                            @{
+                                if (Model.MyCareer != null)
+                                {
+                                    foreach (var c in Model.MyCareer)
+                                    {
+                            <dd>
+                                <ul>
+                                    <li><span><a href="/Search/User?Career=@Utils.UrlEncode(c.CompanyName)">@c.CompanyName</a></span>
+                                        @{
+                                                                                                       if (c.Location > 0)
+                                                                                                       {
+                                        <span class="edu_place">(@Types.GetCityTypesFullName(c.Location))</span> 
+                                                                                                       }
+                                                                                                       if (c.StartDate != null)
+                                                                                                       {
+                                        <span>@{@c.StartDate}年 - @{@(c.EndDate == "0" ? "至今" : (c.EndDate == "-1" ? "未知" : c.EndDate + "年"))}</span>
+                                                                                                       } 
+                                            }</li>
+                                            @{
+                                                                                                       if (!string.IsNullOrEmpty(c.Position))
+                                                                                                       {
+                                    <li class="MIB_txtbl">@c.Position</li>
+                                                                                                       }
+                                                }
+                                </ul>
+                            </dd>
+                                    }
+                                }
+                                }
+                        </dl>
+                        <div class="MIB_linedot_l1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

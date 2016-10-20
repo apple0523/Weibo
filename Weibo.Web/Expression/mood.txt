@@ -1,0 +1,126 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¼·ÑÛ','[¼·ÑÛ]',3001,'/Expression/mood/zy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ç×Ç×','[Ç×Ç×]',3001,'/Expression/mood/qq_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Å­Âî','[Å­Âî]',3001,'/Expression/mood/nm_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ì«¿ªÐÄ','[Ì«¿ªÐÄ]',3001,'/Expression/mood/mb_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÀÁµÃÀíÄã','[ÀÁµÃÀíÄã]',3001,'/Expression/mood/ldln_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('´ò¹þÆø','[´ò¹þÆø]',3001,'/Expression/mood/k_thumb.gif')
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Éú²¡','[Éú²¡]',3001,'/Expression/mood/sb_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Êé´ô×Ó','[Êé´ô×Ó]',3001,'/Expression/mood/sdz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ê§Íû','[Ê§Íû]',3001,'/Expression/mood/sw_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¿ÉÁ¯','[¿ÉÁ¯]',3001,'/Expression/mood/kl_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÍÚ±ÇÊº','[ÍÚ±ÇÊº]',3001,'/Expression/mood/kbs_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ºÚÏß','[ºÚÏß]',3001,'/Expression/mood/h_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('»¨ÐÄ','[»¨ÐÄ]',3001,'/Expression/mood/hs_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¿É°®','[¿É°®]',3001,'/Expression/mood/tz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÍÂ','[ÍÂ]',3001,'/Expression/mood/t_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Î¯Çü','[Î¯Çü]',3001,'/Expression/mood/wq_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë¼¿¼','[Ë¼¿¼]',3001,'/Expression/mood/sk_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¹þ¹þ','[¹þ¹þ]',3001,'/Expression/mood/laugh.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ðê','[Ðê]',3001,'/Expression/mood/x_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÓÒºßºß','[ÓÒºßºß]',3001,'/Expression/mood/yhh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('×óºßºß','[×óºßºß]',3001,'/Expression/mood/zhh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÒÉÎÊ','[ÒÉÎÊ]',3001,'/Expression/mood/yw_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÒõÏÕ','[ÒõÏÕ]',3001,'/Expression/mood/yx_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('×ö¹íÁ³','[×ö¹íÁ³]',3001,'/Expression/mood/zgl_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('°®Äã','[°®Äã]',3001,'/Expression/mood/love.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('²ö×ì','[²ö×ì]',3001,'/Expression/mood/cz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¶¥','[¶¥]',3001,'/Expression/mood/d_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ç®','[Ç®]',3001,'/Expression/mood/money_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÎûÎû','[ÎûÎû]',3001,'/Expression/mood/tooth.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('º¹','[º¹]',3001,'/Expression/mood/sweat.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ºÇºÇ','[ºÇºÇ]',3001,'/Expression/mood/smile.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë¯¾õ','[Ë¯¾õ]',3001,'/Expression/mood/sleep_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('À§','[À§]',3001,'/Expression/mood/sleepy.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('º¦Ðß','[º¦Ðß]',3001,'/Expression/mood/shame_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('±¯ÉË','[±¯ÉË]',3001,'/Expression/mood/bs_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('±ÉÊÓ','[±ÉÊÓ]',3001,'/Expression/mood/bs2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('±§±§','[±§±§]',3001,'/Expression/mood/bb_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('°Ý°Ý','[°Ý°Ý]',3001,'/Expression/mood/88_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Å­','[Å­]',3001,'/Expression/mood/angry.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('³Ô¾ª','[³Ô¾ª]',3001,'/Expression/mood/cj_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('±Õ×ì','[±Õ×ì]',3001,'/Expression/mood/bz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Àá','[Àá]',3001,'/Expression/mood/sad.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÍµÐ¦','[ÍµÐ¦]',3001,'/Expression/mood/hei_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ºß','[ºß]',3001,'/Expression/mood/hate.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÔÎ','[ÔÎ]',3001,'/Expression/mood/dizzy.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë¥','[Ë¥]',3001,'/Expression/mood/cry.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('×¥¿ñ','[×¥¿ñ]',3001,'/Expression/mood/crazy.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('·ßÅ­','[·ßÅ­]',3001,'/Expression/mood/fn_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¸ÐÃ°','[¸ÐÃ°]',3001,'/Expression/mood/gm_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¹ÄÕÆ','[¹ÄÕÆ]',3001,'/Expression/mood/gz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¿á','[¿á]',3001,'/Expression/mood/cool_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('À´','[À´]',3001,'/Expression/mood/come_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('good','[good]',3001,'/Expression/mood/good_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('haha','[haha]',3001,'/Expression/mood/ha_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('²»Òª','[²»Òª ]',3001,'/Expression/mood/no_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ok','[ok]',3001,'/Expression/mood/ok_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('È­Í·','[È­Í·]',3001,'/Expression/mood/o_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Èõ','[Èõ]',3001,'/Expression/mood/sad_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÎÕÊÖ','[ÎÕÊÖ]',3001,'/Expression/mood/ws_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÔÞ','[ÔÞ]',3001,'/Expression/mood/z2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ò®','[Ò®]',3001,'/Expression/mood/ye_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('×î²î','[×î²î]',3001,'/Expression/mood/bad_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÓÒ±§±§','[ÓÒ±§±§]',3001,'/Expression/mood/right_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('×ó±§±§','[×ó±§±§]',3001,'/Expression/mood/left_thumb.gif')

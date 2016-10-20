@@ -1,0 +1,247 @@
+﻿@model Weibo.Web.Models.IndexModel
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>XX微博-随时随地分享身边的新鲜事儿</title>
+<link href="/Content/CSS/tlogin_1.css" type="text/css" rel="stylesheet" />
+<!–[if IE 6]>  
+<script type="text/javascript">
+    try {
+        document.execCommand("BackgroundImageCache", false, true);
+    } catch (err) { }        
+</script>  
+<![endif]–>
+<script src="/Scripts/Common/jquery-1.10.2.min.js" language="javascript" type="text/javascript"></script>
+<script src="../../Scripts/Index.js" language="javascript" type="text/javascript"></script>
+<script src="../../Scripts/JQP_EmailNote.js" language="javascript" type="text/javascript"></script>
+ <script src="/Scripts/App.js" language="javascript" type="text/javascript"></script>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        index.init();
+        $("#loginname").JQP_EmailNote({ selfn: function () { $("#password_text").focus(); $("#loginname").blur(); } });
+        var ul = $("#acticle_list");
+        var lis = ul.find("li");
+        var curInterval;
+        lis.clone().appendTo(ul);
+        var hScroll = function () {
+            var li = ul.find("li:first");
+            var marginleft = parseInt(li.css("margin-left").replace("px", ""));
+            if (-marginleft == li.width() + 7) {
+                li.css("margin-left", 0);
+                li.appendTo(ul);
+            }
+            else {
+                li.css("margin-left", marginleft - 1);
+            }
+        };
+        curInterval = setInterval(hScroll, 50);
+        ul.mouseover(function () {
+            clearInterval(curInterval);
+        }).mouseout(function () {
+            curInterval = setInterval(hScroll, 50);
+        });
+        var newMiniblogs;
+        var vScrollBox = $("#txtBoxCon");
+        var speed = 5;
+        var item;
+        var height;
+        var curHeight = 0;
+        var con;
+        var curTimer;
+        var curIndex = 0;
+        var run = function () {
+            curHeight += speed;
+            if (curHeight >= height) {
+                item.height(height);
+                con.fadeIn(1000);
+                curHeight = 0;
+                curIndex++;
+                if (curIndex == newMiniblogs.length)
+                    curIndex = 0;
+                curTimer = setTimeout(vScroll, 5000);
+            }
+            else {
+                item.height(curHeight);
+                curTimer = setTimeout(run, 50);
+            }
+        }
+        function vScroll(i) {
+            item = $("<div class=\"itemt\"  ><div  class=\"twit_item MIB_linedot2\"><div class=\"twit_item_pic\"><a href=\"/{uid}\" target=\"_blank\"><img src=\"{avatar}\" title=\"{name}\" ></a></div><div class=\"twit_item_content\"> <a href=\"/{uid}\" target=\"_blank\" title=\"{name}\">{name}</a>：{content}<div class=\"twit_item_time\">{time}</div></div></div></div>".replace(/{uid}/g, newMiniblogs[curIndex].uid).replace(/{name}/g, newMiniblogs[curIndex].name).replace(/{content}/g, newMiniblogs[curIndex].content).replace(/{avatar}/g, newMiniblogs[curIndex].avatar).replace(/{time}/g, newMiniblogs[curIndex].time));
+            if (vScrollBox.find(".itemt").length >= 10) {
+                vScrollBox.find("div:last").remove();
+            }
+
+            var first = vScrollBox.find("div:first");
+            if (first[0])
+                item.insertBefore(first);
+            else
+                vScrollBox.append(item);
+            height = item.height();
+            item.height(0);
+            con = item.find("div");
+            con.hide();
+            curTimer = setTimeout(run, 50);
+        }
+        vScrollBox.mouseover(function () { clearTimeout(curTimer); }).mouseout(function () { if (curHeight == 0) { curTimer = setTimeout(vScroll, 5000); } else { curTimer = setTimeout(run, 50); } });
+        $.ajax(
+       {
+           url: "/Ajax/GetIndexMiniblog/",
+           datatype: "json",
+           cache: false,
+           data: null,
+           type: "post",
+           success: function (o) {
+               newMiniblogs = o.Data;
+               var temp = "";
+               for (var i = 4; i >=0; i--) {
+                   temp += "<div class=\"itemt\"  ><div  class=\"twit_item MIB_linedot2\"><div class=\"twit_item_pic\"><a href=\"/{uid}\" target=\"_blank\"><img src=\"{avatar}\" title=\"{name}\" ></a></div><div class=\"twit_item_content\"> <a href=\"/{uid}\" target=\"_blank\" title=\"{name}\">{name}</a>：{content}<div class=\"twit_item_time\">{time}</div></div></div></div>".replace(/{uid}/g, newMiniblogs[i].uid).replace(/{name}/g, newMiniblogs[i].name).replace(/{content}/g, newMiniblogs[i].content).replace(/{avatar}/g, newMiniblogs[i].avatar).replace(/{time}/g, newMiniblogs[i].time);
+               }
+               vScrollBox.html(temp);
+               curIndex = 5;
+               vScroll(0);
+           },
+           error: function (request) {
+
+           }
+       }
+    );
+
+    });
+</script>
+</head><body>
+<div class="MB_wrap">
+  <div class="login_top"> <a href="" class="llink"></a>
+@*    <div class="logoLink"></div>*@
+  </div>
+  <div class="login_body">
+    <div class="login_l">
+
+<div class="tit"></div>
+
+      <div class="talking"> <strong class="">正在热议：</strong>
+        <div class="coverl"></div>
+        <div class="coverr"></div>
+        <div style="overflow: hidden;" class="acticle" id="topicBoxCon">
+		<ul class="acticle_list" id="acticle_list">
+		  @{
+		if(Model.Topics!=null){
+		foreach(var topic in Model.Topics)
+		{
+		    <li><a href="/k/@{@Utils.UrlEncode(topic.TopicName)}" target="_blank">@topic.TopicName</a></li>
+		}
+		}
+		}
+</ul>
+        </div>
+      </div>
+      <div class="talking_list">
+      	<div class="tList_mdu1">
+        <dl class="manlist">
+          <dt>这些人正在用微博</dt>
+          <dd>
+            <ul class="userlist">
+			@{
+	   if(Model.UsingUsers!=null){
+           for (var i = 0; i < 9;i++ )
+           {
+<li><a href="/@Model.UsingUsers[i].ID" target="_blank"><img src="@Model.UsingUsers[i].MidAvartar"  title="@Model.UsingUsers[i].NickName" ></a><a href="/@Model.UsingUsers[i].ID" title="@Model.UsingUsers[i].NickName" target="_blank">@Model.UsingUsers[i].NickName</a></li>
+	   
+           }
+	   }
+	   }
+</ul>
+          </dd>
+        </dl>
+        <dl class="manlist">
+          <dt>新加入的人</dt>
+          <dd>
+             <ul class="userlist">
+       @{
+	   if(Model.NewUsers!=null){
+           for (var i = 0; i < 9;i++ )
+           {
+<li><a href="/@Model.NewUsers[i].ID" target="_blank"><img src="@Model.NewUsers[i].MidAvartar"  title="@Model.NewUsers[i].NickName" ></a><a href="/@Model.NewUsers[i].ID" title="@Model.NewUsers[i].NickName" target="_blank">@Model.NewUsers[i].NickName</a></li>
+	   
+           }
+	   }
+	   }
+	   </ul>
+          </dd>
+        </dl>
+        </div>
+      	<div class="tList_mdu2">
+        <dl class="twit_list">
+          <dt>大家正在说</dt>
+          <dd style="overflow: hidden;">
+              <div class="bottomcover"></div>
+              <div class="maincontent" id="txtBoxCon">
+              载入中...
+              </div>
+          </dd>
+        </dl>
+        </div>
+        <div class="clearit"></div>
+      </div>
+    </div>
+    <div class="login_r">
+      <div class="login_item">
+        <div class="regtop"> <a href="/User/Reg/" target="_blank" class="regbtn" title="立即注册微博" tabindex="7"></a>
+          <p><!--注册就有机会得充值卡--></p>
+        </div>
+        <div class="loginform" id="login_form">
+          <div class="input_bg">
+            <input value="邮箱/会员帐号/手机号"  alt="邮箱/会员帐号/手机号" style="color: rgb(153, 153, 153);" id="loginname" name="loginname" title="邮箱/会员帐号/手机号" tabindex="1" type="text" autocomplete="off" />
+          <a><img class="lgicon_del" title="删除登录名信息" src="/Content/Image/transparent.gif" /></a></div>
+          <div class="input_bg">
+            <input style="color: rgb(153, 153, 153); display:none;" id="password" name="password" tabindex="2" type="password" />
+            <input id="password_text" type="text" value="请输入密码" style="color: rgb(153, 153, 153);" />
+          </div>
+          <div class="setting">
+         <span class="lf"> <input class="labelbox" id="remusrname" tabindex="3" name="remusrname" checked="checked" type="checkbox" />
+              <label for="remusrname">下次自动登录</label></span><a class="rt" href="##" target="_blank" tabindex="4">找回密码</a>
+          </div>
+          <div class="signin"><a href="javascript:void(0);" class="sp" id="login_submit_btn" title="登录" tabindex="5"></a></div>
+        </div>
+      </div>
+      <div class="login_info ptless">
+      	<div class="leftline">            
+			 <dl>
+   <dt class="hasline"></dt>
+   <dd class="boardlist">
+     <ul class="tLoginTop10List">
+	      @{
+		   if(Model.RankUsers!=null)
+		   {
+			   for(int i=1;i<=Model.RankUsers.Count;i++){
+          <li><em class="num@{@i}"><strong></strong></em><span><a href="/@Model.RankUsers[i-1].ID"  target="_blank" title="@Model.RankUsers[i-1].NickName">@Model.RankUsers[i-1].NickName</a></span><cite>@Model.RankUsers[i-1].FocusedCount</cite></li>
+		   }
+		   }
+		   }
+          </ul>
+   </dd>
+ </dl>
+            <div class="clearit"></div>
+        </div>
+      </div>
+    </div>
+    <div class="clearit"></div>
+  </div>
+  <div class="bodybt">
+    <div class="MIB_foot_new MIB_txtbr MIB_linkbr">
+                <div class="lf">
+                    <p class="p1">QQ:542752480</p>
+                </div>        
+                <div class="rt">
+                    <p>dev by shaojunjie</p>
+                </div>
+                <div class="clearit"></div>
+            </div>
+  </div>
+</div>
+<form name="loginForm" id="loginForm" method="post" action="/User/IframeLogin"  target="loginFrame" > 
+<input  type="hidden" id="hdLoginname" name="hdLoginname"/>
+<input  type="hidden" id="hdPassword" name="hdPassword"/>
+<input  type="hidden" id="hdReUsername" name="hdReUsername"/>
+</form>
+<iframe name="loginFrame" style="display:none"></iframe>
+</body></html>

@@ -1,0 +1,46 @@
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('抚摸','[抚摸]',3007,'/Expression/hapitu/touch_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('大汗','[大汗]',3007,'/Expression/hapitu/sweat_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('大惊','[大惊]',3007,'/Expression/hapitu/suprise_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('惊哭','[惊哭]',3007,'/Expression/hapitu/supcry_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('星星眼','[星星眼]',3007,'/Expression/hapitu/stareyes_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('好困','[好困]',3007,'/Expression/hapitu/sleepy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('呕吐','[呕吐]',3007,'/Expression/hapitu/sick_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('加我一个','[加我一个]',3007,'/Expression/hapitu/plus1_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('痞痞兔耶','[痞痞兔耶]',3007,'/Expression/hapitu/pipioye_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('mua','[mua]',3007,'/Expression/hapitu/muamua_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('面抽','[面抽]',3007,'/Expression/hapitu/mianchou_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('大笑','[大笑]',3007,'/Expression/hapitu/laugh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('揉','[揉]',3007,'/Expression/hapitu/knead_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('痞痞兔囧','[痞痞兔囧]',3007,'/Expression/hapitu/jiong_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('哈尼兔耶','[哈尼兔耶]',3007,'/Expression/hapitu/honeyoye_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('开心','[开心]',3007,'/Expression/hapitu/happy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('咬手帕','[咬手帕]',3007,'/Expression/hapitu/handkerchief_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('去','[去]',3007,'/Expression/hapitu/go_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('晕死了','[晕死了]',3007,'/Expression/hapitu/dizzy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('大哭','[大哭]',3007,'/Expression/hapitu/cry_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('扇子遮面','[扇子遮面]',3007,'/Expression/hapitu/coverface_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('怒气','[怒气]',3007,'/Expression/hapitu/angery_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('886','[886]',3007,'/Expression/hapitu/886_thumb.gif')

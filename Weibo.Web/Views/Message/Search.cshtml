@@ -1,0 +1,128 @@
+﻿@model Weibo.Web.Models.MesgSearchModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "我的私信 XX微博-随时随地分享身边的新鲜事儿";
+ }
+  @section  cssInsert{
+    <link href="/Content/CSS/privatemsg.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+    <script type="text/javascript">
+        $(function () {
+            App.TimerFunArray.push(App.ajaxAtWho);
+            App.StartTimer();
+            App.initNameCard($("#msg_list"));
+            var searchBox = $("#searchkeyword").JQP_HighLineInput2({ nullCon: "搜索私信内容" }).keyup(function (e) {
+                if (e.which == 13) {
+                    window.location.href = "/Message/Search?Key=" + encodeURIComponent($.trim(this.value));
+                }
+            });
+            $("#search_btn").click(function () {
+
+                if (searchBox.val() == "搜索私信内容")
+                    return false;
+                else {
+                    window.location.href = "/Message/Search?Key=" + encodeURIComponent($.trim(searchBox.val()));
+                    return false;
+                }
+            });
+        });
+
+    </script>
+}
+
+			<!--/顶托盘-->
+			<!--正文-->
+			<div class="MIB_blogbody">
+				<div class="MIB_mblogbgr">
+					<div class="MIB_mblogbgl">
+						<!--右栏内容 -->
+						<div class="mainR MIB_200 MIB_txtar MIB_linkar">
+							<!--个人信息-->
+							@RenderPage("~/Views/Shared/_userInfo.cshtml")
+						</div>
+						<!--/右栏内容 -->
+						<!--左栏内容 -->
+						<div class="mainL MIB_600 MIB_txtal MIB_linkal ssdh_wrap">
+							<div class="msg_lf clearFix titmg10">
+								<div class="titmg10">
+                                <a href="/Message/Index"><em>&lt;&lt;&nbsp;</em>返回所有私信</a>
+                                </div>
+								<div class="lf">
+									<a class="newbbtngrn" id="msg_publisher_submit" onclick="App.showMessageBox()"
+										href="javascript:void(0);"><em>发私信</em></a></div>
+								<div class="rt">
+									<div class="chdd">
+										<label>
+											<input id="searchkeyword" name="searchkeyword" style="color: rgb(153, 153, 153);"class="txt_s2" value="搜索私信内容"  type="text">
+											<a id="search_btn" href="javascript:void(0)" class="btn_normal btnxs"><em>搜索</em></a>
+										</label>
+									</div>
+								</div>
+							</div>
+                            <div class="total_msg"> 共有<span class="key">@{@Model.RecordCount}条</span>含有<span class="key">@{@Model.Key}</span>条搜索结果 </div>
+							<ul id="msg_list" class="MIB_msg">
+                              @{
+                                  if (Model.Messages != null)
+                                  {
+                                      foreach (Message message in Model.Messages)
+                                      {
+                                          
+                                              if (message.Direction ==2)
+                                              {
+                                                  User user = Users.GetUserByID(message.ToUID);
+                                          if (user != null)
+                                          {
+                                              
+				  											<li class="MIB_msg_l">
+														<div class="head_pic"> <a href="/@{@message.ToUID}" >
+                                                    <img src="@{@user.MidAvartar;}" 
+                                                    title="@{@user.NickName;}" class="picborder_l" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" /></a></div>
+														<div class="MIB_msg_c">
+							  <div class="rd_tr"></div>
+							  <div class="rd_tl"></div>
+							  <p class="msg_detail gray6"><a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" >@{@user.NickName;}</a>：@(MvcHtmlString.Create(string.IsNullOrEmpty(Model.Key) ? Messages.TransformContent(message.Content) : HighLineHelper.HighLine(Messages.TransformContent(message.Content), Model.Key)))<span class="gray9">(@DateSpan.Get(message.CreateTime))</span></p>
+							  <div class="feed_ch"><a href="/message/talklist?uid=@user.ID">查看与TA的全部对话</a><span class="line_ch">|</span><a onclick="App.showMessageBox('@user.NickName')" href="javascript:void(0);">回复</a></div>
+							  <div class="rd_br"></div>
+							  <div class="rd_bl"></div>
+							</div>
+						  </li>
+                                              }
+
+                                              }
+                                          else
+                                          {
+                                             
+				  											<li class="MIB_msg_r">
+														<div class="head_pic"> <a href="/@{@message.UID}" >
+                                                    <img src="@{@Model.CurUser.MidAvartar;}" 
+                                                    title="@{@Model.CurUser.NickName;}" class="picborder_l" uid="@{@Model.CurUser.ID;}" namecard="true" uname="@{@Model.CurUser.NickName;}" /></a></div>
+														<div class="MIB_msg_c">
+							  <div class="rd_tr"></div>
+							  <div class="rd_tl"></div>
+							  <p class="msg_detail gray6"><a href="/@{@Model.CurUser.ID;}" uid="@{@Model.CurUser.ID;}" namecard="true" uname="@{@Model.CurUser.NickName;}" >@{@Model.CurUser.NickName;}</a>：@(MvcHtmlString.Create(string.IsNullOrEmpty(Model.Key) ? Messages.TransformContent(message.Content) : HighLineHelper.HighLine(Messages.TransformContent(message.Content), Model.Key)))<span class="gray9">(@DateSpan.Get(message.CreateTime))</span></p>
+							  <div class="feed_ch"></div>
+							  <div class="rd_br"></div>
+							  <div class="rd_bl"></div>
+							</div>
+						  </li>
+                                              }
+                                          }
+                                      }
+                                  }
+                                  
+									  			</ul>
+							<div class="sper_page">
+								<div class="ftop lf">
+									<a href="#">
+										<img class="small_icon returntop" src="/Content/Image/transparent.gif" title="">返回顶部</a></div>
+                                @Html.Pager(Model.Page, Model.RecordCount, Model.PageSize)
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+

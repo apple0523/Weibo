@@ -1,0 +1,18 @@
+﻿<div id="wedget_othertags"><!--标签-->
+@{
+    var otherUser = Model.OtherUser;
+    IList<UserTag> tags = Tags.GetUserTagsByUID(otherUser.ID);
+<div class="f_pro">
+		<div class="title font_14 MIB_linkcr">TA的标签</div>
+			<div id="module_tags" class="tags">
+                @{
+                    if(tags!=null){
+                  foreach(var t in tags){      
+				<a class="font_@((t.ID%5+6)*2) fb" href="/Search/User?tag=@t.TagName" weight="2" >@t.TagName</a>
+                    }
+                    }
+                    }
+                    </div>
+		</div>
+    }
+<!--/标签--></div>

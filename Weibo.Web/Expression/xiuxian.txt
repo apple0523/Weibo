@@ -1,0 +1,133 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('围脖','[围脖]',3003,'/Expression/xiuxian/weijin_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('温暖帽子','[温暖帽子]',3003,'/Expression/xiuxian/wennuanmaozi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('手套','[手套]',3003,'/Expression/xiuxian/shoutao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('红包','[红包]',3003,'/Expression/xiuxian/hongbao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('喜','[喜]',3003,'/Expression/xiuxian/xi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('礼物','[礼物]',3003,'/Expression/xiuxian/liwu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('蛋糕','[蛋糕]',3003,'/Expression/xiuxian/cake.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('钻戒','[钻戒]',3003,'/Expression/xiuxian/r_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('钻石','[钻石]',3003,'/Expression/xiuxian/diamond_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('大巴','[大巴]',3003,'/Expression/xiuxian/dynamicbus_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('飞机','[飞机]',3003,'/Expression/xiuxian/travel_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('自行车','[自行车]',3003,'/Expression/xiuxian/zxc_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('汽车','[汽车]',3003,'/Expression/xiuxian/jc_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('手机','[手机]',3003,'/Expression/xiuxian/sj2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('照相机','[照相机]',3003,'/Expression/xiuxian/camera_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('药','[药]',3003,'/Expression/xiuxian/y_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('电脑','[电脑]',3003,'/Expression/xiuxian/dn_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('手纸','[手纸]',3003,'/Expression/xiuxian/sz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('落叶','[落叶]',3003,'/Expression/xiuxian/yellowMood_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('圣诞树','[圣诞树]',3003,'/Expression/xiuxian/christree_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('圣诞帽','[圣诞帽]',3003,'/Expression/xiuxian/chrishat_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('圣诞老人','[圣诞老人]',3003,'/Expression/xiuxian/chrisfather_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('圣诞铃铛','[圣诞铃铛]',3003,'/Expression/xiuxian/chrisbell_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('圣诞袜','[圣诞袜]',3003,'/Expression/xiuxian/chrisocks_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('康乃馨','[康乃馨]',3003,'/Expression/xiuxian/muqinjie_thumb.png')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('图片','[图片]',3003,'/Expression/xiuxian/tupianimage_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('六芒星','[六芒星]',3003,'/Expression/xiuxian/liumangxing_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('地球一小时','[地球一小时]',3003,'/Expression/xiuxian/diqiuxiuxiyixiaoshi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('植树节','[植树节]',3003,'/Expression/xiuxian/zhishujie_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('粉蛋糕','[粉蛋糕]',3003,'/Expression/xiuxian/nycake_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('糖果','[糖果]',3003,'/Expression/xiuxian/candy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('万圣节','[万圣节]',3003,'/Expression/xiuxian/nanguatou2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('火炬','[火炬]',3003,'/Expression/xiuxian/hj_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('酒壶','[酒壶]',3003,'/Expression/xiuxian/wine_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('月饼','[月饼]',3003,'/Expression/xiuxian/mooncake3_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('满月','[满月]',3003,'/Expression/xiuxian/moon1_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('脚印','[脚印]',3003,'/Expression/xiuxian/qkl_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('酒','[酒]',3003,'/Expression/xiuxian/jy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('狗','[狗]',3003,'/Expression/xiuxian/g_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('工作','[工作]',3003,'/Expression/xiuxian/gz3_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('档案','[档案]',3003,'/Expression/xiuxian/gz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('叶子','[叶子]',3003,'/Expression/xiuxian/green_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('钢琴','[钢琴]',3003,'/Expression/xiuxian/gq_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('印迹','[印迹]',3003,'/Expression/xiuxian/foot_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('钟','[钟]',3003,'/Expression/xiuxian/clock_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('茶','[茶]',3003,'/Expression/xiuxian/cha_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('西瓜','[西瓜]',3003,'/Expression/xiuxian/watermelon.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('雨伞','[雨伞]',3003,'/Expression/xiuxian/umb_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('电视机','[电视机]',3003,'/Expression/xiuxian/tv_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('电话','[电话]',3003,'/Expression/xiuxian/tel_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('太阳','[太阳]',3003,'/Expression/xiuxian/sun.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('星','[星]',3003,'/Expression/xiuxian/star_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('哨子','[哨子]',3003,'/Expression/xiuxian/shao.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('话筒','[话筒]',3003,'/Expression/xiuxian/m_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('音乐','[音乐]',3003,'/Expression/xiuxian/music_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('电影','[电影]',3003,'/Expression/xiuxian/movie_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('月亮','[月亮]',3003,'/Expression/xiuxian/moon.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('唱歌','[唱歌]',3003,'/Expression/xiuxian/ktv_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('冰棍','[冰棍]',3003,'/Expression/xiuxian/ice.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('房子','[房子]',3003,'/Expression/xiuxian/house_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('帽子','[帽子]',3003,'/Expression/xiuxian/hat_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('足球','[足球]',3003,'/Expression/xiuxian/football.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('鲜花','[鲜花]',3003,'/Expression/xiuxian/flower_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('花','[花]',3003,'/Expression/xiuxian/flower.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('风扇','[风扇]',3003,'/Expression/xiuxian/fan.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('干杯','[干杯]',3003,'/Expression/xiuxian/cheer.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('咖啡','[咖啡]',3003,'/Expression/xiuxian/cafe_thumb.gif')

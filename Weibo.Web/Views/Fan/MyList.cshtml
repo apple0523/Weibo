@@ -1,0 +1,156 @@
+﻿@model Weibo.Web.Models.FanListModel
+ @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "关注我的人 XX微博-随时随地分享身边的新鲜事儿";
+ }
+  @section  cssInsert{
+	<link href="/Content/CSS/connect.css" type="text/css" rel="stylesheet">
+}
+ @section  jsInsert{
+    <script src="/Scripts/Friend.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            App.initNameCard($("#att_wrap"));
+            App.TimerFunArray.push(App.autoCompleteTimerEvent);
+            App.TimerFunArray.push(App.ajaxAtWho);
+            App.StartTimer();
+
+            var searchBox = $("#fans_and_follow_filter_input").JQP_HighLineInput2({ nullCon: "输入昵称" }).keyup(function (e) {
+                if (e.which == 13) {
+                    window.location.href = "/Fan/Search?Key=" + encodeURIComponent($.trim(this.value));
+                }
+            });
+            App.autoComplete(searchBox, function (id, name) {
+                window.location.href = "/Fan/Search?Key=" + encodeURIComponent(name);
+            }, "GetFanListByKey");
+            $("#fans_and_follow_filter_submit").click(function () {
+
+                if (searchBox.val() == "输入昵称")
+                    return false;
+                else {
+                    window.location.href = "/Fan/Search?Key=" + encodeURIComponent($.trim(searchBox.val()));
+                }
+            });
+        });
+    </script>
+  }
+
+			<!--/顶托盘-->
+			<!--正文-->
+			<div class="MIB_blogbody">
+				<div class="MIB_mblogbgr ">
+					<div class="MIB_mblogbgl">
+						<!--右栏内容 -->
+						<div class="mainR MIB_200 MIB_txtar MIB_linkar">
+							@RenderPage("~/Views/Shared/_FollowRightNav.cshtml")
+						</div>
+						<!--/右栏内容 -->
+						<!--左栏内容 -->
+						<div class="mainL MIB_600 MIB_txtal MIB_linkal">
+							<div class="cetSearch">
+								<!-- 我的粉丝和关注页 -->
+								<!--评论区 -->
+								<div class="btmTit_wrap csTitle">
+									<div class="lf">
+										已有@{@Model.CurUser.FocusedCount}人关注你 
+									</div>
+									<div class="rt">
+										<label>
+											<input type="text" value="输入昵称" id="fans_and_follow_filter_input" class="txt_s1"
+												maxlength="20" style="color: rgb(153, 153, 153);">
+											<a id="fans_and_follow_filter_submit" class="btn_normal btnxs" href="#"><em>搜索</em></a>
+										</label>
+									</div>
+								</div>
+								<div class="newFilter MIB_txtal">
+									<div class="nfBox clearFix">
+										<div class="chgz_tit">
+											排序方式：</div>
+										<ul class="chgz_tag">
+											<li class="@{@(Model.OrderBy == "CreateTime" ? "current" : "")}"><a @{@(Model.OrderBy == "CreateTime" ? "" : "href=/"+Model.CurUser.ID+"/fan?OrderBy=CreateTime")} class="btn_chBlue"><em>关注时间</em></a></li>
+											<li class="@{@(Model.OrderBy == "LastContactTime" ? "current" : "")}"><a @{@(Model.OrderBy == "LastContactTime" ? "" : "href=/" + Model.CurUser.ID + "/fan?OrderBy=LastContactTime")} 
+												class="btn_chBlue"><em>最近联系</em></a></li>
+											<li class="@{@(Model.OrderBy == "FocusedCount" ? "current" : "")}"><a @{@(Model.OrderBy == "FocusedCount" ? "" : "href=/" + Model.CurUser.ID + "/fan?OrderBy=FocusedCount")} 
+												class="btn_chBlue"><em>粉丝数</em></a></li>
+										</ul>
+									</div>
+								</div>
+								<!--内容区 -->
+								<!-- /我的粉丝关注页结束 -->
+								<!-- 他人的粉丝关注页 -->
+								<!-- /他人的粉丝关注页 -->
+								<div class="box_gr1">
+									<ul popcontainer="true" id="att_wrap" class="concernBox">
+                                        @{
+                                            if (Model.Fans != null)
+                                            {
+                                                foreach (Fans fan in Model.Fans)
+                                                {
+										<li id="@fan.ID" onmouseover="App.showExtendBtn(this);" onmouseout="App.hideExtendBtn(this);"
+											class="MIB_linedot_l">
+											<div class="conBox_l">
+												<a href="/@fan.ID" uid="@fan.ID" namecard="true" uname="@fan.NickName" >
+													<img title="@fan.NickName"  src="@fan.MidAvartar"></a></div>
+											<div class="conBox_c">
+												<span class="name"><a uid="@fan.ID" namecard="true" uname="@fan.NickName" href="/@fan.ID" title="@fan.NickName">@fan.NickName</a></span>
+												<p class="address">
+													<img src="/Content/Image/transparent.gif" class="small_icon @{@(fan.Sex == TypeConfigs.GetSexFemale ? "sicon_female" : "man")}" title="@{@(fan.Sex == TypeConfigs.GetSexFemale ? "女" : "男")}">@{@Types.GetCityTypesFullName(fan.Location);}
+													<span>粉丝<strong>@fan.FocusedCount</strong>人</span></p>
+												<div class="content MIB_linkbl">
+													<a href="/@fan.ID" class="ms">@{@fan.LastMContent}(@{@(fan.LastUpdateDate != null ? DateSpan.Get(fan.LastUpdateDate.Value) : "未知")})</a>
+												</div>
+											</div>
+											<div class="conBox_r @{@(fan.FriendShip != 1 ? "conBox_rZw" : "")}">
+												@{
+                              if (fan.FriendShip != 1)
+                              {
+                                                <p>
+													<a class="addFollow" onclick="App.FriendManage.follow(@fan.ID,'@fan.NickName',this);return false;"
+														href="javascript:void(0);">
+														<img class="ico_addBlu" title="她已关注你" src="/Content/Image/transparent.gif"
+															alt=""><span class="addnew">+</span>加关注</a></p>
+                              }
+                              else
+                              {
+											    <p class="mutual"><img class="small_icon sicon_atteo" title="互相关注中" src="/Content/Image/transparent.gif"></p>
+                              }
+											}
+												<p id="cancel_@{@fan.ID}" extend="true" style=" visibility:hidden;">
+													<a onclick="App.FriendManage.cancelFan(@fan.ID,'@fan.NickName',this);return false;" href="javascript:void(0);">
+														移除粉丝</a></p>
+												<p id="message_@{@fan.ID}" extend="true" style=" visibility:hidden;">
+													<a onclick="App.showMessageBox('@fan.NickName');return false;" href="javascript:void(0);">发私信</a></p>
+												<p id="report_@{@fan.ID}" extend="true" style=" visibility:hidden;">
+													<a onclick="App.showReportBox(this,@fan.ID,@TypeConfigs.GetComplaint_user,@fan.ID);return false;"
+														href="javascript:;">举报</a></p>
+											</div>
+											<div class="clearit">
+											</div>
+										</li>
+                                                }
+                                            }
+                                            }
+										
+									</ul>
+								</div>
+								<div class="MIB_bobar">
+                                    <div class="ftop lf">
+										<a href="#">
+											<img title="返回顶部" src="/Content/Image/transparent.gif" class="small_icon returntop">返回顶部</a>
+									</div>
+									<!--翻页-->
+									@Html.Pager(Model.Page, Model.RecordCount, Model.PageSize)
+									<!--翻页-->
+								</div>
+								<!--/内容区 -->
+							</div>
+						</div>
+						<!--/左栏内容 -->
+					</div>
+				</div>
+			</div>
+			<!--/正文-->
+			<!--尾-->
+

@@ -1,0 +1,564 @@
+﻿@model Weibo.Web.Models.EducationModel
+            @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "教育信息 XX微博-随时随地分享身边的新鲜事儿";
+ }
+  @section  cssInsert{
+    <link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+    <script src="/Scripts/Setup.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var education = {};
+        education.curSchoolType =@{@(TypeConfigs.GetSchoolRoot+1)};
+        education.curLetter = "";
+         education.action = "create";
+        education.curEducation = -1;
+        education.createHtml = "";
+        education.initCreateBox = function (cobject) {
+            var schoolType=$("select[name='school_type']");
+            var isVisible=$("select[name='privacy']");
+            var schoolName=$("#txtSchool");
+            var schoolID=schoolName.next();
+            var startDate=$(".setup_sel");
+            var remark=$("#remark");
+            if (cobject) {
+                schoolType.val(cobject.Type);
+                isVisible.val(cobject.IsVisible);
+                schoolName.val(cobject.SchoolName);
+                schoolID.val(cobject.SchoolID);
+                startDate.val(cobject.StartDate);
+                remark.val(cobject.Remark);
+            }
+            App.Setup.BindInput(remark, "可以填写学院、班级、系列等信息，70个字以内", App.Setup.checkRemark);
+            App.Setup.BindInput(startDate,"完整的入学年份，能够为你找到更多同届校友",null);
+            $("#save").click(function () { education.submit(this); });
+            App.Setup.BindSelect(isVisible);
+          schoolName.focus(function(){education.showSchoolBox($(this));}).keydown(function(){return false;});
+          schoolType.change(function(){
+               education.curSchoolType=$(this).val();
+           });
+        }
+        education.init = function () {
+            var box = $("#schoolBox");
+            var city = $("#city");
+            var province = $("#province");
+            var loadSchool = function () {
+                var location = parseInt(city.val()) > 0 ? city.val() : (parseInt(province.val()) > 0 ? province.val():-1);
+                $.ajax({
+                    dataType: "json",
+                    data: { letter:education.curLetter , location: location,type:education.curSchoolType
+                    },
+                    url: "/Ajax/GetShoolsByLetLocType/",
+                    cache: false,
+                    type: "post",
+                    success: function (o) {
+                        if (o.Code == "A00003")
+                            App.fullTip(CodeList[o.Code], 1000, null, 1);
+                        else if (o.Code == "A00017") {
+                            $("#noschool").show();
+                            $("#schoolUl").hide();
+                        }
+                        else {
+                            $("#noschool").hide();
+                            var schlist = $("#schoolUl").show();
+                            schlist.html("");
+                            $.each(o.Data, function () {
+                                var item = $("<li  trueId='" + this.ID + "' title='" + this.Name + "'><a href='javascript:void(0);'>" + this.Name + "</a></li>");
+                                item.click(function () {
+                                    education.schoolTxtBox.val(item.attr("title"));
+                                    education.schoolTxtBox.next().val(item.attr("trueId"));
+                                    box.hide();
+                                     App.hideMash();
+                                });
+                               schlist .append(item);
+                            });
+
+                        }
+                    },
+                    error: function () { App.fullTip(CodeList["A00003"], 1000, null, 1); }
+                });
+            };
+            $("#btnClose").add($(".close")).click(function () {
+                box.hide();
+                App.hideMash();
+                return false;
+            });
+            box.find("a[letter='1']").click(function () {
+                 if($("a[letter='2']")[0]==this){
+                    education.curLetter="";
+                     this.style.backgroundColor="";
+                     $(this).attr("letter",1);
+                  
+                 }
+                 else{
+                 if($("a[letter='2']")[0]){        
+                $("a[letter='2']")[0].style.backgroundColor="";
+                 $("a[letter='2']").attr("letter",1);
+                }
+                    education.curLetter=$(this).attr("title");
+                    this.style.backgroundColor="rgb(204, 190, 190)";
+                    $(this).attr("letter",2);
+                 }
+                    loadSchool();
+                return false;
+            });
+            App.BindCityCtrl(province, "province", 1, function () {
+                App.BindCityCtrl(city, "City", province.val(), function () {
+                }, "/Ajax/GetCity1/");
+                province.hide();
+                city.hide();
+                province.show();
+                city.show();
+                loadSchool();
+            }, "/Ajax/GetCity1/");
+            province.change(function () {
+                App.BindCityCtrl(city, "City", province.val(), function () { loadSchool(); }, "/Ajax/GetCity1/");
+            });
+            city.change(function () { loadSchool(); });
+            var quiSearch = $("#quiSearch");
+            App.autoComplete(quiSearch, function (id, name) {
+                education.schoolTxtBox.val(name);
+                education.schoolTxtBox.next().val(id);
+                box.hide();
+                 App.hideMash();
+            });
+            this.createHtml = $("#divCreate .info_tab01").html();
+           this.initCreateBox();
+          
+               $("#btnCreate a").click(function () {
+        $("div[edit='1']").html("");
+        $("#divCreate").show().append("<div class='info_tab01'>" + education.createHtml + "</div>");
+        education.initCreateBox();
+        $("#btnCreate").hide();
+        education.action = "create";
+        education.curEducation = -1;
+    });
+
+        };
+        education.showSchoolBox = function (ctrl) {
+            var box = $("#schoolBox");
+            var position = App.centerInScreen(box);
+            box.css("left", position.left).css("top", position.top);
+            App.showMash();
+            this.schoolTxtBox = ctrl;
+            box.show();
+        };
+        education.submit = function (alink) {
+          var schoolType=$("select[name='school_type']");
+            var isVisible=$("select[name='privacy']");
+            var schoolName=$("#txtSchool");
+            var startDate=$(".setup_sel");
+            var remark=$("#remark");
+             var educationList = $("#educationList");
+            App.Setup.checkRemark(remark);
+            if ($.trim(schoolName.val())!="" && App.Setup.isRemark && !alink.locked) {
+                alink.locked = true;
+                $.ajax(
+       {
+           url: this.action == "create" ? "/Ajax/CreateEducation" : "/Ajax/EditEducation",
+           datatype: "json",
+           cache: false,
+           data: { educationId: education.curEducation,  isVisible: isVisible.val(),schoolType:schoolType.val(),schoolId:schoolName.next().val(),schoolName:schoolName.val(),startdate:startDate.val(),remark:$.trim(remark.val()) },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+               }
+               else {
+                   App.FullMiniTip(CodeList[o.Code], alink, 1000, 3);
+                   if (education.action == "create") {
+                       if (o.Data != "") {
+                           var first = educationList.find("div:first");
+                           if (first[0])
+                               $(o.Data).insertBefore(first);
+                           else
+                               educationList.html(o.Data);
+                       }
+                   }
+                   else {
+                       if (o.Data != "") {
+                           curEduItem = $("#education_" + education.curEducation)
+                           $(o.Data).insertBefore(curEduItem);
+                           curEduItem.remove();
+                       }
+                   }
+               }
+               alink.locked = false;
+           },
+           error: function (request) {
+               App.FullMiniTip(CodeList["A00003"], alink, 2000, 1);
+               alink.locked = false;
+           }
+       });
+            }
+            else{
+            education.showSchoolBox(schoolName);
+            }
+        }
+education.del = function (id) {
+    App.confirm("是否真的删除？", function () {
+        $.ajax(
+       {
+           url: "/Ajax/DelEducation",
+           datatype: "json",
+           cache: false,
+           data: { educationId: id },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.alert(CodeList["A00003"]);
+               }
+               else {
+                   $("#education_" + id).remove();
+               }
+           },
+           error: function (request) {
+               App.alert(CodeList["A00003"]);
+           }
+       });
+    });
+
+}
+education.edit = function (id) {
+    $.ajax(
+       {
+           url: "/Ajax/getEducationDetail",
+           datatype: "json",
+           cache: false,
+           data: { educationId: id },
+           type: "post",
+           success: function (o) {
+               if (o.Code == "A00001") {
+                   App.showLoginDial();
+               }
+               else if (o.Code == "A00003") {
+                   App.alert(CodeList["A00003"]);
+               }
+               else {
+                   $("div[edit='1']").html("");
+                   var editElem = $("#educationEdit_" + id);
+                   $("#divCreate").hide().find(".info_tab01").remove();
+                   editElem.html("<div class='info_tab01'>" + education.createHtml + "</div>");
+                   $("#btnCreate").show();
+                   education.initCreateBox(o.Data);
+                   education.action = "edit";
+                   education.curEducation = id;
+               }
+           },
+           error: function (request) {
+               App.alert(CodeList["A00003"]);
+           }
+       });
+
+}
+        education.schoolTxtBox = null;
+        $(function () {
+            education.init();
+            App.TimerFunArray.push(App.autoCompleteTimerEvent);
+            App.curGetLink = "autoCompleteSchool";
+            App.StartTimer();
+        });
+    </script>
+    }
+
+            <!--正文-->
+            <div class="MIB_blogbody">
+                <!--找朋友-->
+                <div class="MIB_column">
+                    <div class="MIB_main_cont">
+                        <div class="MIB_setup">
+                            <!--页签-->
+                            <div class="PY_tag">
+                                <ul>
+                                    <li>
+                                        <div class="PY_tago">
+                                            <span class="bold">个人资料</span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/myface">修改头像</a></span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/privacy">隐私设置</a></span></div>
+                                    </li>
+                                    <li>
+                                        <div class="PY_tagn">
+                                            <span><a href="http://account.weibo.com/setting/notice">个性设置</a></span></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--/页签-->
+                            <div id="system_information" style="display: none">
+                            </div>
+                            <!--个人资料-->
+                            <div class="setup_main">
+                                <div class="infoTop  MIB_line1">
+                                    <div class="infoTop_nav">
+                                        <span><a href="/Setup/baseinfo">基本信息</a></span> <span class="navBorder gray9">|</span>
+                                        <span><a href="/Setup/EditPwd">修改密码</a></span> <span class="navBorder gray9">|</span>
+                                        <span class="edutop_cur">教育信息</span> <span class="navBorder gray9">|</span> <span><a
+                                            href="/Setup/career">职业信息</a></span> <span class="navBorder gray9">|</span>
+                                        <span><a href="http://account.weibo.com/setting/tag">个人标签</a></span> <span class="navBorder gray9">
+                                            |</span> <span><a href="http://account.weibo.com/setting/mysite">个性域名</a></span>
+                                    </div>
+                                </div>
+                                <div id="educationList">
+                                    @{
+                                        if (Model.Educations != null)
+                                        {
+                                            foreach (Education education in Model.Educations)
+                                            {
+                            
+                                        <div  id="education_@{@education.ID}" onmouseout="$(this).find('.infoTable').removeClass('hover_table');App.hideExtendBtn(this);return false" onmouseover="$(this).find('.infoTable').addClass('hover_table');App.showExtendBtn(this);return false" class="infoTableBox MIB_line1">
+                                            <ul class="infoTable                                                                                                                                                                                                                                                                                                                            ">
+                                                <li class="lf"><span class="font_14"><a href="/Search/User/?School= @education.SchoolName">
+                                                    @education.SchoolName</a> </span><span class="edu_conn_place">
+                                                        @{@Types.GetTypeByID(education.Type).Name}
+                                                        @{@(!string.IsNullOrEmpty(education.StartDate) && Convert.ToInt32(education.StartDate) > 0 ? "-" + education.StartDate + "年" : "") }
+                                                        @{@(!string.IsNullOrEmpty(education.Remark) ? "-" + education.Remark : "")}
+                                                    </span></li>
+                                                <li class="rt" style=""><span extend="true" class="pri_content" style="visibility: hidden;">
+                                                    <img title="隐私" class="small_icon privacy_icon" src="/Content/Image/transparent.gif">
+                                                    @{@(education.IsVisible == 1 ? "所有人可见" : (education.IsVisible == 2 ? "我关注的人可见" : "仅自己可见"))} </span><span class="info_tools"><a onclick="education.edit(@education.ID);return false;" extend="true" href="javascript:;" style="visibility: hidden;">
+                                                        <img src="/Content/Image/transparent.gif" class="small_icon edit_icon" title="修改">修改</a>
+                                                        <a onclick="education.del(@education.ID);return false;" href="javascript:;" extend="true" style="visibility: hidden;">
+                                                            <img src="/Content/Image/transparent.gif" class="small_icon del_icon" title="删除">删除</a>
+                                                        <a target="_blank" href="/Search/User/?School= @education.SchoolName">
+                                                            <img src="/Content/Image/transparent.gif" class="small_icon search_icon" title="找同学">
+                                                            <span>找同学</span> </a></span></li>
+                                            </ul>
+                                            <div id="educationEdit_@{@education.ID}" edit="1">
+                                            </div>
+                                            <div node-type="con_search" style="display: none;">
+                                            </div>
+                                        </div>
+                                                }
+                                            }
+                                        
+                                    }
+                                </div>
+                                <div style="display: none;"  id="btnCreate" class="btn btn1" value="0">
+                                    <a href="javascript:;" class="btn_green" ><em>添加教育信息</em></a></div>
+                                <div id="divCreate">
+                                    <div class="title MIB_linedot2 title1" style="">
+                                        <span class="fb">添加教育信息</span></div>
+                                    <div class="info_tab01">
+                                        <form>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="gray6">
+                                                        学校类型：
+                                                    </th>
+                                                    <td class="info_tab_vm">
+                                                        <select name="school_type">
+                                                        @{
+                                                            IList<Weibo.Entity.Type> types = Types.GetTypesByPID(TypeConfigs.GetSchoolRoot);
+                                                            if(types!=null)
+                                                            {
+                                                                foreach(Weibo.Entity.Type type in types)
+                                                                {
+                                                                <option value="@type.ID">@type.Name</option>
+                                                            }
+                                                            }
+                                                            }
+                                                        </select>
+                                                        <select style="display: none;" class="info_tabTip" name="privacy">
+                                                            <option value="1" selected="selected">所有人可见</option>
+                                                            <option value="2">我关注的人可见</option>
+                                                            <option value="3">仅自己可见</option>
+                                                        </select>
+                                                    </td>
+                                                    <td node-type="tip">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="gray6">
+                                                        <em class="error_color">*</em> 学校名称：
+                                                    </th>
+                                                    <td>
+                                               
+                                                        <input type="text" class="PY_input gray9" name="name" id="txtSchool">
+                                                        <input type="hidden" name="school_id" id="school_id" value="">
+                                                        <select class="setup_sel" name="start">
+                                                            <option value="-1" selected="selected">请选择</option>
+                                                             @{
+                                                                 for(int i=DateTime.Now.Year;i>=1900;i--)
+                                                                 {
+                                                                     <option value="@i">@i</option>
+                                                                 }
+                                                             }
+                                                        </select>
+                                                    </td>
+                                                    <td >
+                                                        <div  class="setup_info" style="display: none;">
+                                                            <div class="info_tip2">
+                                                                <img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3">
+                                                            </div>
+                                                            <div  class="info_tip1">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th class="gray6">
+                                                        <span >院系：</span>
+                                                    </th>
+                                                    <td>
+                                                        <input type="text" class="PY_input"   name="remark" id="remark"
+                                                            style="">
+                                                    </td>
+                                                    <td >
+                                                        <div  class="setup_info" style="display: none;">
+                                                            <div class="info_tip2">
+                                                                <img title="" alt="" src="/Content/Image/transparent.gif" class="tipicon tip3">
+                                                            </div>
+                                                            <div class="info_tip1">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <th>
+                                                    </th>
+                                                    <td>
+                                                        <a href="javascript:;" class="newabtngrn" id ="save"><em>保存</em></a> <a href="javascript:;"
+                                                            class="btn_normal btns" node-type="cancel"><em>取消</em></a>
+                                                    </td>
+                                                    <td>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/个人资料-->
+                        </div>
+                    </div>
+                </div>
+                <!--/找朋友-->
+            </div>
+            <!--/正文-->
+ @section  conSupplement{
+    <table id="schoolBox" class="mBlogLayer" style="position: absolute; z-index: 1000;
+		box-shadow: 0px 0px 100px rgb(255, 255, 255); display:none;">
+		<tbody>
+			<tr>
+				<td class="top_l">
+				</td>
+				<td class="top_c">
+				</td>
+				<td class="top_r">
+				</td>
+			</tr>
+			<tr>
+				<td class="mid_l">
+				</td>
+				<td class="mid_c">
+					<div class="layerBox">
+						<div class="layerBoxTop">
+							<div class="topCon">
+								<strong>学校名称搜索</strong> <a title="关闭" class="close" href="javascript:void(0)"></a>
+								<div class="clearit">
+								</div>
+							</div>
+						</div>
+						<div style="width: 590px; height: auto;" class="layerBoxCon">
+							<div class="schSearchLayer">
+								<div class="sch_letter clearFix">
+									<p style="position: relative">
+										快速搜索<input type="text" id="quiSearch" class="txt" style="width: 180px; background: none repeat scroll 0% 0% rgb(249, 251, 240);">
+										<span style="display: none;" class="intromsg">请输入并点选你要找的学校信息</span>
+									</p>
+									<div class="sch_form">
+										学校所在地<select id="province">
+										</select>
+										<select id="city">
+										</select>
+									</div>
+								</div>
+								<div class="sch_letter clearFix">
+									<ul>
+										<li><a title="A" href="javascript:void(0);" letter="1" style="">A</a></li><li><a
+											title="B" href="javascript:void(0);" letter="1" style="">B</a></li><li><a title="C"
+												href="javascript:void(0);" letter="1" style="">C</a></li><li><a title="D" href="javascript:void(0);"
+													letter="1" style="">D</a></li><li><a title="E" href="javascript:void(0);" letter="1"
+														style="">E</a></li><li><a title="F" href="javascript:void(0);" letter="1" style="">F</a></li><li>
+															<a title="G" href="javascript:void(0);" letter="1" style="">G</a></li><li><a title="H"
+																href="javascript:void(0);" letter="1" style="">H</a></li><li><a title="I" href="javascript:void(0);"
+																	letter="1" style="">I</a></li><li><a title="J" href="javascript:void(0);" letter="1"
+																		style="">J</a></li><li><a title="K" href="javascript:void(0);" letter="1" style="">K</a></li><li>
+																			<a title="L" href="javascript:void(0);" letter="1" style="">L</a></li><li><a title="M"
+																				href="javascript:void(0);" letter="1" style="">M</a></li><li><a title="N" href="javascript:void(0);"
+																					letter="1" style="">N</a></li><li><a title="O" href="javascript:void(0);" letter="1"
+																						style="">O</a></li><li><a title="P" href="javascript:void(0);" letter="1" style="">P</a></li><li>
+																							<a title="Q" href="javascript:void(0);" letter="1" style="">Q</a></li><li><a title="R"
+																								href="javascript:void(0);" letter="1" style="">R</a></li><li><a title="S" href="javascript:void(0);"
+																									letter="1" style="">S</a></li><li><a title="T" href="javascript:void(0);" letter="1"
+																										style="">T</a></li><li><a title="U" href="javascript:void(0);" letter="1" style="">U</a></li><li>
+																											<a title="V" href="javascript:void(0);" letter="1" style="">V</a></li><li><a title="W"
+																												href="javascript:void(0);" letter="1" style="">W</a></li><li><a title="X" href="javascript:void(0);"
+																													letter="1" style="">X</a></li><li><a title="Y" href="javascript:void(0);" letter="1"
+																														style="">Y</a></li><li><a title="Z" href="javascript:void(0);" letter="1" style="">Z</a></li></ul>
+								</div>
+								<div class="sch_list clearFix">
+									<div class="sch_listBrd">
+										<div class="commonLayer2" id="noschool" style="width: 240px; margin: 55px auto 0pt; display:none;">
+											<div class="layerL">
+												<img src="/Content/Image/PY_ib.gif" class="PY_ib PY_ib_1"></div>
+											<div class="layerR">
+												<p class="txt font_14">
+													还没找到符合条件的学校</p>
+											</div>
+											<div class="clearit">
+											</div>
+										</div>
+										<ul id="schoolUl">
+										</ul>
+									</div>
+								</div>
+								<div class="MIB_btn sch_btn">
+									<a href="javascript:void(0)" class="btn_normal" id="btnClose"><em>关闭</em></a></div>
+							</div>
+						</div>
+					</div>
+				</td>
+				<td class="mid_r">
+				</td>
+			</tr>
+			<tr>
+				<td class="bottom_l">
+				</td>
+				<td class="bottom_c">
+				</td>
+				<td class="bottom_r">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+    }
+

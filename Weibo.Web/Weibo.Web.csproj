@@ -1,0 +1,489 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3F8B0303-DDC0-4B56-99EC-D19491A15B77}</ProjectGuid>
+    <ProjectTypeGuids>{E53F8FEA-EAE0-44A6-8774-FFD645390401};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Weibo.Web</RootNamespace>
+    <AssemblyName>Weibo.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages" />
+    <Reference Include="System.Web.Helpers" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\AjaxController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FanController.cs" />
+    <Compile Include="Controllers\FollowController.cs" />
+    <Compile Include="Controllers\HomePageController.cs" />
+    <Compile Include="Controllers\JsonpController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\MiniBlogController.cs" />
+    <Compile Include="Controllers\MusicController.cs" />
+    <Compile Include="Controllers\NormalController.cs" />
+    <Compile Include="Controllers\NoticeController.cs" />
+    <Compile Include="Controllers\PicUploadController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\SetupController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VideoController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="HtmlExtention\HtmlExtention.cs" />
+    <Compile Include="Models\AjaxComplaintContentModel.cs" />
+    <Compile Include="Models\AjaxGetCommentModel.cs" />
+    <Compile Include="Models\AjaxGetPagerCommentModel.cs" />
+    <Compile Include="Models\AjaxGetVoteFeedModel.cs" />
+    <Compile Include="Models\AtCmtModel.cs" />
+    <Compile Include="Models\AtMeModel.cs" />
+    <Compile Include="Models\BaseInfoModel.cs" />
+    <Compile Include="Models\BlackListModel.cs" />
+    <Compile Include="Models\CareerModel.cs" />
+    <Compile Include="Models\CommentListModel.cs" />
+    <Compile Include="Models\DetailsModel.cs" />
+    <Compile Include="Models\DiyCssModel.cs" />
+    <Compile Include="Models\EditNoticeModel.cs" />
+    <Compile Include="Models\EducationModel.cs" />
+    <Compile Include="Models\FanListModel.cs" />
+    <Compile Include="Models\FavoriteModel.cs" />
+    <Compile Include="Models\FollowListModel.cs" />
+    <Compile Include="Models\IndexModel.cs" />
+    <Compile Include="Models\MbIndexModel.cs" />
+    <Compile Include="Models\MesgSearchModel.cs" />
+    <Compile Include="Models\MessageDetailsModel.cs" />
+    <Compile Include="Models\MessageIndexModel.cs" />
+    <Compile Include="Models\JsonModel.cs" />
+    <Compile Include="Models\MyInfoModel.cs" />
+    <Compile Include="Models\MySiteModel.cs" />
+    <Compile Include="Models\MySkinModel.cs" />
+    <Compile Include="Models\NameCardModel.cs" />
+    <Compile Include="Models\NoticeListModel.cs" />
+    <Compile Include="Models\MyMiniBlogModel.cs" />
+    <Compile Include="Models\OtherInfoModel.cs" />
+    <Compile Include="Models\SchMiniblogModel.cs" />
+    <Compile Include="Models\SchUserModel.cs" />
+    <Compile Include="Models\SetTagModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\VotesModel.cs" />
+    <Compile Include="Models\CommentRecModel.cs" />
+    <Compile Include="Models\CommentSendModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\CSS\connect.css" />
+    <Content Include="Content\CSS\layer.css" />
+    <Content Include="Content\CSS\layout.css" />
+    <Content Include="Content\CSS\login.css" />
+    <Content Include="Content\CSS\miniblog\com_manage.css" />
+    <Content Include="Content\CSS\miniblog\index.css" />
+    <Content Include="Content\CSS\miniblog\layer.css" />
+    <Content Include="Content\CSS\miniblog\user_settings.css" />
+    <Content Include="Content\CSS\privatemsg.css" />
+    <Content Include="Content\CSS\reguide_twice.css" />
+    <Content Include="Content\CSS\regv4.css" />
+    <Content Include="Content\CSS\tlogin_1.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\App.js" />
+    <Content Include="Scripts\CodeList.js" />
+    <None Include="Scripts\Common\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\Common\jquery-1.10.2.js" />
+    <Content Include="Scripts\Common\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\Common\jquery.bgiframe.min.js" />
+    <Content Include="Scripts\DatePicker.js" />
+    <Content Include="Scripts\Friend.js" />
+    <Content Include="Scripts\Index.js" />
+    <Content Include="Scripts\JQP_ClickOther.js" />
+    <Content Include="Scripts\JQP_EmailNote.js" />
+    <Content Include="Scripts\JQP_HighLineInput.js" />
+    <Content Include="Scripts\Login.js" />
+    <Content Include="Scripts\MiniBlog.js" />
+    <Content Include="Scripts\Reg.js" />
+    <Content Include="Scripts\Setup.js" />
+    <Content Include="Scripts\Skin.js" />
+    <Content Include="Scripts\Top.js" />
+    <Content Include="Swfupload\fileprogress.js" />
+    <Content Include="Swfupload\handler.js" />
+    <Content Include="Swfupload\public_btn_01.png" />
+    <Content Include="Swfupload\swfupload.cookies.js" />
+    <Content Include="Swfupload\swfupload.js" />
+    <Content Include="Swfupload\swfupload.queue.js" />
+    <Content Include="Swfupload\swfupload.swf" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Common\jquery-1.4.4-vsdoc.js" />
+    <Content Include="Scripts\Common\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\Common\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\Common\jquery.validate.js" />
+    <Content Include="Scripts\Common\jquery.validate.min.js" />
+    <Content Include="Scripts\Common\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\Common\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Common\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\Common\jquery-ui.js" />
+    <Content Include="Scripts\Common\jquery-ui.min.js" />
+    <Content Include="Scripts\Common\MicrosoftAjax.js" />
+    <Content Include="Scripts\Common\MicrosoftAjax.debug.js" />
+    <Content Include="Scripts\Common\MicrosoftMvcAjax.js" />
+    <Content Include="Scripts\Common\MicrosoftMvcAjax.debug.js" />
+    <Content Include="Scripts\Common\MicrosoftMvcValidation.js" />
+    <Content Include="Scripts\Common\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
+    <Folder Include="Content\Image\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Login.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\Reg.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\HomePage\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\RegSuccess.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Weibo.Business\Weibo.Business.csproj">
+      <Project>{63A9E287-9CB6-4F8F-82EC-055A203E2636}</Project>
+      <Name>Weibo.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weibo.Common\Weibo.Common.csproj">
+      <Project>{F23CA868-16A2-4172-8579-8BCFB5FFE3E9}</Project>
+      <Name>Weibo.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weibo.Config\Weibo.Config.csproj">
+      <Project>{0B962445-D7E6-4FB3-B844-AE3BE0419181}</Project>
+      <Name>Weibo.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weibo.Entity\Weibo.Entity.csproj">
+      <Project>{FDE14159-C92A-4556-866C-CF2809D7F529}</Project>
+      <Name>Weibo.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\FullInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\User\EmailValidate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\MyProfile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetCommentsHtml.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetCommentListHtml.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetPagerCommentsHtml.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetPagerCommentsList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\My.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\Fav.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetVoteDiaHtml.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetVoteFeedHtml.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\atme.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Comment\atmecmt.cshtml" />
+    <Content Include="Views\Comment\Receive.cshtml" />
+    <Content Include="Views\Comment\Send.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\MySkin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\DiyCss.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Follow\MyList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fan\MyList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\NameCard.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Message\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Message\TalkList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Notice\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\BaseInfo.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\EditPwd.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\Career.cshtml" />
+    <Content Include="Views\Setup\Education.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetCareerHtml.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\ChangeAvatar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetEducationHtml.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\Tag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\BlackList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\MySite.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Bottom.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Search\MiniBlog.cshtml" />
+    <Content Include="Views\Search\User.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Jsonp\Unread.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\OthersProfile.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_MainHeader.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_schLayout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\MyInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\OtherInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\Privacy.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Setup\Notice.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fan\Search.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Follow\Search.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Message\Search.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_userInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_rightNav.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_userInfoNoAvatar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_otherInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_otherInfoNoAvatar.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_FollowRightNav.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ajax\GetComplaintContent.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Fan\OtherList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Follow\OtherList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\Nologin.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_NoLoginHeader.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_MyFollow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_MyFan.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_OtherFollow.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_OtherFan.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_HotTopic.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_MyInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_OtherInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_OtherTopic.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_MyTopic.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_OtherTags.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\Wedget_MyTags.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\MyAjaxMiniBlog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\OthersAjaxMiniBlog.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\MiniBlog\MyAjaxProfile.cshtml" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>1234</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

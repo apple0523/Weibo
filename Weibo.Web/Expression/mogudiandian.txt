@@ -1,0 +1,18 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('眨眨眼','[眨眨眼]',3014,'/Expression/mogudiandian/zy2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('杂技','[杂技]',3014,'/Expression/mogudiandian/zs_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('多问号','[多问号]',3014,'/Expression/mogudiandian/wh2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('跳绳','[跳绳]',3014,'/Expression/mogudiandian/ts_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('强吻','[强吻]',3014,'/Expression/mogudiandian/q3_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('不活了','[不活了]',3014,'/Expression/mogudiandian/lb2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('磕头','[磕头]',3014,'/Expression/mogudiandian/kt_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('呜呜','[呜呜]',3014,'/Expression/mogudiandian/bya_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('不','[不]',3014,'/Expression/mogudiandian/bx2_thumb.gif')
+

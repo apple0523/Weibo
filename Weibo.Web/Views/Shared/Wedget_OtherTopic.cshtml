@@ -1,0 +1,26 @@
+﻿<div id="wedget_othertopic"><!--关注话题-->
+@{
+    Weibo.Entity.User user = Model.OtherUser;
+    IList<UserTopic> uts = Topics.GetUserTopicByUID(user.ID);
+    
+<div id="att_topic" class="f_pro">
+	<div id="topic_list_title" class="title font_14 MIB_linkcr">关注的话题<span class="MIB_txtbr">(@(uts!=null?uts.Count:0))</span></div>
+
+			<ul id="list_topic_box" class="conlist list_hover MIB_txtbr">
+            @{
+                if(uts!=null)
+                {
+                    foreach(var ut in uts)
+                    {
+						<li onmouseout="this.className=''" onmouseover="this.className='list_hover'" ><a href="/k/@ut.TopicName">@ut.TopicName</a>
+						</li>
+                }
+                }
+                else{
+                    <li class="no_dot MIB_txtbr">TA还没有关注任何话题</li>
+                }
+                }
+					</ul>
+							</div>
+    }
+<!--/ 关注话题--></div>

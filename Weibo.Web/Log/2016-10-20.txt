@@ -1,0 +1,70 @@
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 14:55:03
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/favicon.ico' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 14:59:47
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Content/Image/guidembg_714beta.gif' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:00:35
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.10.2.min.map' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:06:14
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.10.2.min.map' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:10:14
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.10.2.min.map' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:10:20
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.10.2.min.map' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:10:27
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.10.2.min.map' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:10:34
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.10.2.min.map' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:10:41
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.10.2.min.map' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:10:42
+来源：System.Web.Mvc.DefaultControllerFactory.GetControllerInstance
+内容：The controller for path '/Scripts/Common/jquery-1.10.2.min.map' was not found or does not implement IController.
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:29:56
+来源：Weibo.Business.Types.GetCityTypesFullName
+内容：不存在类别
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:31:58
+来源：Weibo.Business.Types.GetCityTypesFullName
+内容：不存在类别
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:32:28
+来源：Weibo.Business.Types.GetCityTypesFullName
+内容：不存在类别
+---------------------------------------------------
+类型：错误日志
+时间：2016/10/20 15:33:07
+来源：Weibo.Business.Types.GetCityTypesFullName
+内容：不存在类别

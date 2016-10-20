@@ -1,0 +1,112 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>登录 XX微博-随时随地分享身边的新鲜事儿</title>
+    <link href="../../Content/CSS/login.css" type="text/css" rel="stylesheet" />
+            <!–[if IE 6]>  
+    <script type="text/javascript">
+        try {
+            document.execCommand("BackgroundImageCache", false, true);
+        } catch (err) { }        
+    </script>  
+    <![endif]–>
+    <script src="/Scripts/Common/jquery-1.10.2.min.js" language="javascript" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript" src="../../Scripts/Login.js"></script>
+    <script src="../../Scripts/JQP_EmailNote.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/App.js" language="javascript" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            index.init();
+            $("#loginname").JQP_EmailNote({ selfn: function () { $("#password_text").focus(); $("#loginname").blur(); } });
+        });
+    </script>
+</head>
+<body style="background: url('../../Content/Image/zlogin3.jpg') no-repeat scroll center 461px rgb(196, 239, 244);">
+    <div class="loginWarp">
+        <div class="warpB1">
+        </div>
+        <div class="warpC">
+            <div class="loginMain">
+                <div class="loginMain2" id="login_form">
+                    <table class="regTab">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    还没有微博帐号？
+                                </th>
+                                <td class="regBg">
+                                    <a href="/User/Reg/">
+                                        立即注册</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="loginTable">
+                        <tbody>
+                            <tr>
+                                <th>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    登录名：
+                                </th>
+                                <td>
+                                    <div class="input_login">
+                                        <input alt="邮箱/会员帐号/手机号" title="邮箱/会员帐号/手机号" style="color: rgb(153, 153, 153);" id="loginname"
+                                            name="loginname" value="邮箱/会员帐号/手机号" tabindex="1" type="text" autocomplete="off"><a><img class="lgicon_del"
+                                                title="删除登录名信息" src="../../Content/Image/transparent.gif"></a></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    密码：
+                                </th>
+                                <td>
+                                    <div class="input_login">
+                                        <input style="color: rgb(153, 153, 153);display:none;" class="input_login" id="password" value=""
+                                            name="password" tabindex="2" type="password"> <input id="password_text" type="text" value="请输入密码" style="color: rgb(153, 153, 153);" />
+<a href="##"
+                                                class="linlk">取回密码</a></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                </th>
+                                <td>
+                                    <input id="remusrname" name="isremember"  tabindex="3" checked="checked"
+                                        class="saveLoginStatus labelbox" type="checkbox"><label for="remusrname">记住登录状态</label><span
+                                            class="ts">(建议在网吧/公用电脑上取消该选项)</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin: 7px 0pt 0pt 67px;">
+                        <a href="javascript:;" id="login_submit_btn" style="float: left;">
+                            <img src="../../Content/Image/btn.jpg"></a> </p>
+                   
+                </div>
+            </div>
+        </div>
+        <div class="bottomLinks">
+            <div class="MIB_foot_new MIB_txtbr MIB_linkbr">
+ <div class="lf">
+                    <p class="p1">QQ:542752480</p>
+                </div>        
+                <div class="rt">
+                    <p>dev by shaojunjie</p>
+                </div>
+                <div class="clearit">
+                </div>
+            </div>
+        </div>
+    </div>
+  <form name="loginForm" id="loginForm" method="post" action="/User/IframeLogin"  target="loginFrame" > 
+<input  type="hidden" id="hdLoginname" name="hdLoginname"/>
+<input  type="hidden" id="hdPassword" name="hdPassword"/>
+<input  type="hidden" id="hdReUsername" name="hdReUsername"/>
+</form>
+<iframe name="loginFrame" style="display:none"></iframe>
+</body>
+</html>

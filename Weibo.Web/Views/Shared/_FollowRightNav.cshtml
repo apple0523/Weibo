@@ -1,0 +1,101 @@
+﻿                            <div class="cetUsIn">
+                                <div class="user_head">
+                                    <div class="picborder_r">
+                                        <a href="/@Model.CurUser.ID/profile">
+                                            <img src="@Model.CurUser.MidAvartar" title="@Model.CurUser.NickName"></a></div>
+                                    <div class="lf">
+                                        <p class="font_14">
+                                            <a href="/@Model.CurUser.ID/profile">@Model.CurUser.NickName</a></p>
+                                        <p>
+                                            <em>@Types.GetCityTypesFullName(Model.CurUser.Location)</em></p>
+                                    </div>
+                                </div>
+                                <div class="user_atten">
+                                    <ul>
+                                        <li class="MIB_line_r">
+                                            <div class="num">
+                                               
+                                                <a id="attentions" href="/@Model.CurUser.ID/Follow">@Model.CurUser.FocusCount</a></div>
+                                            <a href="/@Model.CurUser.ID/Follow">关注</a></li>
+                                        <li class="MIB_line_r">
+                                            <div class="num">
+                                                <a id="myfans" href="/@Model.CurUser.ID/Fan">@Model.CurUser.FocusedCount</a></div>
+                                            <a href="/@Model.CurUser.ID/Fan">粉丝</a></li>
+                                        <li class="">
+                                              <div class="num">
+                                                <a id="mblog" href="/@Model.CurUser.ID/profile">@Model.CurUser.MiniBlogCount</a></div>
+                                            <a href="/@Model.CurUser.ID/profile">微博</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            @{
+                                
+                                string controler = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+                                if (controler == "follow")
+                                {
+                                <div class="cetUsLtTit cutcurr">
+                                <h3>
+                                    <a href="/@Model.CurUser.ID/follow">我的关注</a></h3>
+                                <div class="linedot">
+                                </div>
+                            </div>
+                            <div class="cetUsLt_2nd">
+                                <ul class="">
+                                @{
+                                    if (Request["gid"] == null && Request["NoGroup"] == null && Request["FriendShip"] == null)
+                                    {
+                                    <li class="current">&gt;<span>全部</span></li>
+                                    }
+                                    else
+                                    {
+                                        <li>&gt;<a href="/@Model.CurUser.ID/Follow">全部</a></li>
+                                    }
+                                    if (Request["FriendShip"] != null)
+                                    {
+                                    <li class="current">&gt;<span>互相关注</span></li>
+                                    }
+                                    else
+                                    {
+                                    <li>&gt;<a href="/@Model.CurUser.ID/follow?friendship=1">互相关注</a></li>
+                                    }
+                                }
+                                    </ul>
+                                <div class="linedot">
+                                </div>
+                            </div>
+                                }
+                                else
+                                {
+                                <div class="cetUsLtTit">
+                                <h3>
+                                    <a href="/@Model.CurUser.ID/follow">我的关注</a></h3>
+                                <div class="linedot">
+                                </div>
+                            </div>
+                            
+                                }
+                                if (controler == "fan")
+                                {
+                            <div class="cetUsLtTit  cutcurr">
+                                <h3>
+                                    <a href="/@Model.CurUser.ID/fan">我的粉丝</a></h3>
+                                <div class="linedot">
+                                </div>
+                            </div>
+                                }
+                                else
+                                {
+                                  <div class="cetUsLtTit">
+                                <h3>
+                                    <a href="/@Model.CurUser.ID/fan">我的粉丝</a></h3>
+                                <div class="linedot">
+                                </div>
+                            </div>
+                                }
+                            <div class="cetUsLtTit">
+                                <h3 class="text_r">
+                                    <a class="font_12" href="/Setup/BlackList">管理我的黑名单</a><em></em></h3>
+                                <div class="linedot">
+                                </div>
+                            </div>
+                                }

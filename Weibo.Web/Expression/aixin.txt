@@ -1,0 +1,7 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('粉红丝带','[粉红丝带]',3002,'/Expression/aixin/pink_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('爱心传递','[爱心传递]',3002,'/Expression/aixin/axcd_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('心','[心]',3002,'/Expression/aixin/heart.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('绿丝带','[绿丝带]',3002,'/Expression/aixin/green.gif')

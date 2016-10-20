@@ -1,0 +1,1054 @@
+﻿@model Weibo.Web.Models.MbIndexModel
+@{
+    var border = "";
+    if (Model.CurUserConfig.IsThemeDIY == 1)
+    {
+        ThemeDIY diy = Themes.GetThemeDIYByUID(Model.CurUser.ID);
+        border = diy.BorderStyle + "Bg";
+    }
+    ViewData["curBorder"] = border;
+     Group g = null;
+                                                
+                                                if (Model.gid != null)
+                                                {
+                                                    g = Groups.GetGroupByID(Convert.ToInt64(Model.gid));
+                                                }
+
+    IList<Group> allGroups = Groups.GetGroupsByUID(Model.CurUser.ID);
+    IList<Group> barGroups = null;
+    IList<Group> popListGroups = null;
+ }
+
+ @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "我的首页 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/miniblog/index.css" />
+    <link rel="stylesheet" type="text/css" href="@Model.CurSkinCss" />
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/miniblog/layer.css" />
+ }
+ @section  jsInsert{
+    <script type="text/javascript">
+        curBorder = "@border";
+    </script>
+    <script src="/Swfupload/swfupload.js" type="text/javascript"></script>
+    <script src="/Swfupload/swfupload.cookies.js" type="text/javascript"></script>
+    <script src="/Swfupload/swfupload.queue.js" type="text/javascript"></script>
+    <script src="/Swfupload/fileprogress.js" type="text/javascript" charset="GB2312"></script>
+    <script src="/Swfupload/handler.js" type="text/javascript" charset="GB2312"></script>
+    <script src="/Scripts/DatePicker.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var curTxt = "";
+        var publish_editor = null;
+        var checkTxtLen = function () {
+            if (curTxt != publish_editor.value) {
+                curTxt = publish_editor.value;
+                var normal = "你还可以输入<span class=\"pipsLim\">0</span>字";
+                var error = "<div class=\"word_c\"><img class=\"tipicon tip2\" alt=\"\" title=\"\" src=\"/Content/Image/transparent.gif\"><strong>已超出<span>1</span>字</strong></div><b class=\"rcorner\"></b>";
+                var curLen = App.getTxtLen($("#publish_editor"));
+                if (curLen <= 280) {
+                    $("#publisher_info").html(normal);
+                    $("#publisher_info").find(".pipsLim").html(parseInt((280 - curLen) / 2));
+                    $("#publisher_info").removeClass("error");
+                    if (curLen != 0) {
+                        $(".postBtnBg").removeClass("bgColorA_No");
+                    }
+                    else {
+                        $(".postBtnBg").addClass("bgColorA_No");
+                    }
+                    return true;
+                }
+                else {
+                    $("#publisher_info").html(error);
+                    $("#publisher_info").find("span").html(parseInt((curLen - 280 + 1) / 2));
+                    $("#publisher_info").addClass("error");
+                    $(".postBtnBg").addClass("bgColorA_No");
+                    return false;
+                }
+
+            }
+        };
+        var bufferCount = 0;
+        var isLoaded = true;
+
+        var ajaxGetMiniBlog = function (ishashchange,isBufferRetry) {
+            var url;
+            if (!window.location.hash || window.location.hash.indexOf('#!') < 0) {
+                url = window.location.href;
+                if (ishashchange) {
+                    $(window).scrollTop(0);
+                    $("a[action]").removeClass("current");
+                    $("a[action='all']").attr("class", "current");
+                    var oriUrl = window.location.href.replace(App.config.Domain, "").replace(/#/g, "");
+                    var curTab = $("li[isall='1']"); var preTab = $(".nfTagB .current");
+                    if (!preTab.attr("isall")) {
+                        if (curTab[0]) {
+                            if (preTab.attr("isfriend")) {
+                                $('<li isfriend="1"><a href="#!' + oriUrl + '?IsFriendShip=1">相互关注</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                preTab.remove();
+                            } else {
+                                var preGid = preTab.attr("gid");
+                                var preTxt = preTab.find("span").text();
+                                $('<li gid="' + preGid + '"><a href="#!' + oriUrl + '?gid=' + preGid + '">' + preTxt + '</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                preTab.remove();
+                            }
+                        }
+                        $('<li class="current" isall="1"><span>所有分组</span></li>').insertAfter(curTab.next());
+                        curTab.next().remove();
+                        curTab.remove();
+                        $("a[action]").each(function () {
+                            if ($(this).attr("action") != "all")
+                                $(this).attr("href", "#!" + oriUrl + "?" + $(this).attr("action") + "=1");
+                            else
+                                $(this).attr("href", "#");
+                        });
+                    }
+                }
+            }
+            else {
+                url = window.location.href.replace(App.config.Domain, "").split('!')[1];
+                if (ishashchange) {
+                    $(window).scrollTop(0);
+                    var urlJson = App.UlrToJson(url);
+
+                    $("a[action]").removeClass("current");
+                    if (!urlJson) {
+                        $("a[action='all']").attr("class", "current");
+                    }
+                    else {
+                        if (!urlJson["IsAdvanced"]) {
+                            var isAll = 1;
+
+
+                            for (var p in urlJson) {
+                                var elem = $("a[action='" + p + "']");
+                                if (elem[0]) {
+                                    isAll = 0;
+                                    elem.attr("class", "current");
+                                }
+                            }
+                            if (isAll)
+                                $("a[action='all']").attr("class", "current");
+                            else
+                                $("a[action='all']").removeClass("current");
+                        }
+
+                        if (urlJson["gid"]) {
+                            var curTab = $("li[gid='" + urlJson["gid"] + "']");
+                            var oriUrl = url.split('?')[0];
+                            if (curTab[0]) {
+                                if (!curTab.attr("pop")) {
+                                    if (!curTab.attr("class")) {
+                                        var preTab = $(".nfTagB .current");
+                                        if (preTab[0]) {
+
+                                            if (preTab.attr("isall")) {
+                                                $('<li isall="1"><a href="#">所有分组</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                                preTab.remove();
+                                            }
+                                            else if (preTab.attr("isfriend")) {
+                                                $('<li isfriend="1"><a href="#!' + oriUrl + '?IsFriendShip=1">相互关注</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                                preTab.remove();
+                                            }
+                                            else {
+                                                var preGid = preTab.attr("gid");
+                                                var preTxt = preTab.find("span").text();
+                                                $('<li gid="' + preGid + '"><a href="#!' + oriUrl + '?gid=' + preGid + '">' + preTxt + '</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                                preTab.remove();
+                                            }
+                                        }
+
+                                        var txt = curTab.find("a").text();
+                                        $('<li gid="' + urlJson["gid"] + '" class="current"><span title="' + txt + '">' + txt + '<a class="arrow" onclick="$(this).parent().next().show();return false;" id="btnManageGroup" href="javascript:void(0);"><cite class="arr_m"></cite></a></span><ul style="display: none;" class="sltmenu"><li><a href="' + App.config.curUid + '/Follow?gid=' + urlJson["gid"] + '"><img src="/Content/Image/transparent.gif" class="iconsetup" title="管理分组">管理分组</a></li></ul></li>').insertAfter(curTab.next());
+                                        curTab.next().remove();
+                                        curTab.remove();
+
+                                        App.elemBlur($(".sltmenu"), $("#btnManageGroup"));
+                                    }
+                                }
+                                else {
+                                    var preTab = $(".nfTagB .current");
+                                    if (preTab[0]) {
+                                        if (preTab.attr("isall")) {
+                                            $('<li isall="1"><a href="#">所有分组</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                            preTab.remove();
+                                        }
+                                        else if (preTab.attr("isfriend")) {
+                                            $('<li isfriend="1"><a href="#!' + oriUrl + '?IsFriendShip=1">相互关注</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                            preTab.remove();
+                                        }
+                                        else {
+                                            var preGid = preTab.attr("gid");
+                                            var preTxt = preTab.find("span").text();
+                                            $('<li gid="' + preGid + '"><a href="#!' + oriUrl + '?gid=' + preGid + '">' + preTxt + '</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                            preTab.remove();
+                                        }
+                                    }
+
+                                    var more = $("li[tip='1']");
+                                    var curTxt = curTab.find("a").text();
+                                    var lastGid = more.prev().prev().attr("gid");
+                                    var lastTxt = more.prev().prev().find("a").text();
+                                    more.prev().remove(); more.prev().remove();
+                                    $('<li gid="' + urlJson["gid"] + '" class="current"><span title="' + curTxt + '">' + curTxt + '<a class="arrow" onclick="$(this).parent().next().show();return false;" id="btnManageGroup" href="javascript:void(0);"><cite class="arr_m"></cite></a></span><ul style="display: none;" class="sltmenu"><li><a href="' + App.config.curUid + '/Follow?gid=' + urlJson["gid"] + '"><img src="/Content/Image/transparent.gif" class="iconsetup" title="管理分组">管理分组</a></li></ul></li>').insertBefore(more);
+                                    App.elemBlur($(".sltmenu"), $("#btnManageGroup"));
+
+                                    $('<li class="txt" gid="' + lastGid + '" pop="1"><a href="#!' + oriUrl + '?gid=' + lastGid + '">' + lastTxt + '</a></li>').insertBefore(curTab);
+                                    curTab.remove();
+                                }
+                                $("a[action]").each(function () {
+                                    if ($(this).attr("action") != "all")
+                                        $(this).attr("href", "#!" + oriUrl + "?" + $(this).attr("action") + "=1&gid=" + urlJson["gid"]);
+                                    else
+                                        $(this).attr("href", "#!" + oriUrl + "?" + "gid=" + urlJson["gid"]);
+                                });
+                            }
+                        }
+
+                        if (urlJson["IsFriendShip"]) {
+                            var oriUrl = url.split('?')[0];
+                            var curTab = $("li[isfriend='1']"); var preTab = $(".nfTagB .current");
+                            if (curTab[0]) {
+                                if (!curTab.attr("class")) {
+                                    if (preTab.attr("isall")) {
+                                        $('<li isall="1"><a href="#">所有分组</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                        preTab.remove();
+                                    } else {
+                                        var preGid = preTab.attr("gid");
+                                        var preTxt = preTab.find("span").text();
+                                        $('<li gid="' + preGid + '"><a href="#!' + oriUrl + '?gid=' + preGid + '">' + preTxt + '</a></li><li class="MIB_line_l">|</li>').insertAfter(preTab);
+                                        preTab.remove();
+                                    }
+
+                                    $('<li class="current" isfriend="1"><span>相互关注</span></li>').insertAfter(curTab.next());
+                                    curTab.next().remove();
+                                    curTab.remove();
+                                    $("a[action]").each(function () {
+                                        if ($(this).attr("action") != "all")
+                                            $(this).attr("href", "#!" + oriUrl + "?" + $(this).attr("action") + "=1&IsFriendShip=1");
+                                        else
+                                            $(this).attr("href", "#!" + oriUrl + "?IsFriendShip=1");
+                                    });
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            var loadMB = $("#loadMB");
+            var loadError = $("#loadError");
+            var loadNoResult = $("#loadNoresult");
+
+            var loadMB1 = $("#loadMB1");
+            var loadError1 = $("#loadError1");
+            var loadNoResult1 = $("#loadNoresult1");
+            if (ishashchange) {
+                bufferCount = 0;
+                loadMB.show();
+                loadError.hide();
+                loadNoResult.hide();
+            }
+            else {
+                if(!isBufferRetry)
+                bufferCount++;
+                loadMB1.show();
+                loadError1.hide();
+                loadNoResult1.hide();
+            }
+            url = App.AddQueryToUrl(url.replace(/#/g, ""), "Buffer", bufferCount);
+            isLoaded = false;
+            $.ajax({
+                dataType: "json",
+                url: url,
+                cache: false,
+                type: "get",
+                success: function (o) {
+                    if (o.Code == "A00005") {
+                        if (ishashchange) {
+                            loadMB.hide();
+                            $(".MIB_feed").remove();
+                            $("#page").remove();
+                            $(o.Data).insertAfter(loadNoResult);
+                            App.initMedia();
+                            App.initNameCard($("#feed_list"));
+                            loadMB1.remove();
+                            loadNoResult1.remove();
+                            loadError1.remove();
+                        }
+                        else {
+                            $(o.Data).insertAfter(loadNoResult1);
+                            App.initMedia("feed_list" + bufferCount);
+                            App.initNameCard($("#feed_list" + bufferCount));
+                            loadMB1.remove();
+                            loadNoResult1.remove();
+                            loadError1.remove();
+                        }
+                    }
+                    else {
+                        if (ishashchange) {
+                            loadMB.hide();
+                            loadNoResult.show();
+                        }
+                        else {
+                            loadMB1.hide();
+                            loadNoResult1.show();
+                        }
+                    }
+                    isLoaded = true;
+                },
+                error: function () {
+                    if (ishashchange) {
+                        loadMB.hide();
+                        loadNoResult.hide();
+                        loadError.show();
+                    }
+                    else {
+                        loadMB1.hide();
+                        loadNoResult1.hide();
+                        loadError1.show();
+                    }
+                    isLoaded = true;
+                }
+            });
+        };
+        $(document).ready(function () {
+            publish_editor = $("#publish_editor")[0];
+            $("#publisher_faces").click(function (e) {
+                e.stopPropagation();
+                return App.showExpression($("#publish_editor"), this);
+            });
+
+            $("#publisher_pic").click(function (e) {
+                e.stopPropagation();
+                return App.showPicUpload(this);
+            });
+
+
+            $("#publisher_video").click(function (e) {
+                e.stopPropagation();
+                return App.ShowVideoDiaDiv($("#publish_editor"), this);
+            });
+            $("#publisher_music").click(function () {
+                return App.showMusicDiaDiv($("#publish_editor"), this);
+            });
+            $("#publisher_vote").click(function () {
+                return App.showVote($("#publish_editor"), this);
+            });
+            App.bindTxtarea($("#publish_editor")[0]);
+            $("#publisher_topic").click(function () {
+                App.insertTopic($("#publish_editor")[0]);
+            });
+            $("#publisher_submit").click(function () {
+                if ($("#publish_editor").val() == "") {
+                    App.highLineTxtBox($("#publish_editor"));
+                    return;
+                }
+                curTxt = "";
+                if (!checkTxtLen()) {
+                    App.alert("超过字数了");
+                    return;
+                }
+                App.disableAtag($(this));
+                App.CreateOriginalMiniBlog($("#publish_editor"), function () {
+                    App.tip("发布成功", 1000, window.location.href);
+                    $("#publish_editor").val("");
+                }, function () {
+                    App.enableAtag($("#publisher_submit"));
+                });
+            });
+
+
+
+            App.TimerFunArray.push(checkTxtLen);
+            App.TimerFunArray.push(App.ajaxAtWho);
+            App.StartTimer();
+            App.bindGoTop(curBorder);
+
+            $(window).hashchange(ajaxGetMiniBlog);
+            ajaxGetMiniBlog(true);
+            $(window).scroll(function () {
+                if ($("#loadMB1")[0]) {
+                    if ($(this).scrollTop() + $(this).height() > $("#loadMB1").offset().top) {
+                        if (bufferCount < 3 && isLoaded) {
+                            ajaxGetMiniBlog();
+                        }
+                    }
+                }
+            });
+        });
+
+        window.onload = function () {
+            var voteItems = $("div[type='vote']");
+            for (var i = 0; i < voteItems.length; i++) {
+                var img = $(voteItems[i]).find("img")[0];
+                var img1 = $(voteItems[i]).find("img")[1];
+
+                $(img1).css("left", parseInt(($(img).width() - 33) / 2)).css("top", parseInt(($(img).height() - 33) / 2)).css("position", "absolute");
+                $(img1).show();
+            }
+        };
+
+    </script>
+}
+
+
+ 
+ @section  conSupplement{
+    <div class="nfTaglay" style="z-index: 99; position: absolute; display: none;">	
+		<ul class="sltmenu_m">
+        @{
+            if (popListGroups != null)
+            {
+                for (int i = 0; i < popListGroups.Count; i++)
+                {
+						<li pop="1"  gid="@popListGroups[i].ID" class="txt"><a href="@("#!" + Utils.AddQueryToUrl(Request.Url.AbsolutePath, "gid", popListGroups[i].ID.ToString()))">@popListGroups[i].Name</a></li>
+                }
+            }
+            }
+						<li class="MIB_linedot2"></li>
+			<li><a id="MIB_creategroup" href="javaScript:void(0);"><img title="创建分组" class="iconadd" src="/Content/Image/transparent.gif">创建分组</a></li>						<li><a id="Adjust_group_order" href="javaScript:void(0);"><img title="调整分组顺序" class="iconord" src="/Content/Image/transparent.gif">调整分组顺序</a></li>
+						<li><a href="@Model.CurUser.ID/follow"><img title="管理分组" class="iconsetup" src="/Content/Image/transparent.gif">管理分组</a></li>
+		</ul>
+	</div>
+	    <script type="text/javascript">
+	        var btnMore = $(".moreti");
+	        var groupList = $(".nfTaglay");
+	        var groupItem = $(".sltmenu");
+	        var btnMagGroup = $("#btnManageGroup");
+	        if (groupItem[0] != null && btnMagGroup[0] != null) {
+	            groupItem.JQP_ClickOther(function () {
+	                groupItem.hide();
+	            });
+	            btnMagGroup.click(function (e) {
+	                e.stopPropagation();
+	                groupItem.show();
+	            });
+	        }
+	        $("#MIB_creategroup").click(function () {
+	            App.popGroupDiv();
+	        });
+	        
+	        App.lazyEvent(btnMore, "mouseenter", "mouseleave", 500, function () {
+	            groupList.css("left", $(btnMore).offset().left - 25).css("top", $(btnMore).offset().top + 20).show()
+	        }, function () { App.lazyFunction(function () { groupList.hide(); }, 500) });
+	        App.lazyEvent(groupList, "mouseleave", "mouseenter", 500, function () {
+	            groupList.hide();
+	        });
+	        var GroupSortCon = '<div class="layerBox"><div class="layerBoxTop"><div class="topCon"><strong>调整分组顺序</strong><a title="关闭" class="close" href="javascript:;"></a><div class="clear"></div></div></div><div class="layerBoxCon" style="width: 440px; height: auto;"><div class="friexpicbor">				  <div class="friexpic">					<h3>首页分组显示预览</h3>					<div class="fbTagB">					  <ul id="ul_oriderLists"><li class="current"><span>所有分组 </span></li><li>更多</li></ul>					 </div>					</div>				</div><div class="friLayBox">                <div class="frileft">                  <ul class="frititle" id="mpop_ul_frititle">                    <li>分组名</li>                  </ul>                  <div class="friList">					<ul id="group_ul_lists">载入中。。。</ul>                  </div>                </div>                <div class="friright">                  <a class="btn_notclick" href="javascript:void(0)" id="orderup"><em><img title="" class="chupdwn_icon dch_icon" src="/Content/Image/transparent.gif">上移</em></a>                  <a class="btn_notclick" href="javascript:void(0)" id="orderdown"><em><img src="/Content/Image/transparent.gif" class="chupdwn_icon uch_icon" title="">下移</em></a>               </div>                <p class="btn" id="mpop_p_btn"><a class="newabtngrn" href="javascript:void(0)" id="gosave"><em>保存</em></a><a class="btn_normal btns" href="javascript:void(0)" id="gocancel"><em>取消</em></a></p>              </div>			</div></div>';
+	        $("#Adjust_group_order").click(function () {
+	            if (App.initDialDiv("GroupSortBox", dialDiv, false, null)) {
+	                var groupDiv = $("#GroupSortBox");
+	                groupDiv.removeClass("4CancelAllLayer");
+	                groupDiv.find(".mid_c").html(GroupSortCon);
+	                $("#GroupSortBox .close").add($("#gocancel")).click(function () {
+	                    groupDiv.remove();
+	                    App.hideMash();
+	                    return false;
+	                });
+	                var position = App.centerInScreen(groupDiv);
+	                groupDiv.css("left", position.left + "px");
+	                groupDiv.css("top", position.top + "px");
+	                App.showMash(true);
+	                $.ajax({
+	                    dataType: "json",
+	                    url: "/Ajax/GetAllGroup/",
+	                    cache: false,
+	                    data: { fuid: 0 },
+	                    type: "post",
+	                    success: function (o) {
+	                        if (o.Code == "A00005") {
+	                            var groupCount = o.Data.length;
+	                            var up = $("#orderup").click(function () {
+	                                if (this.className != "btn_notclick") {
+	                                    var sel = list.find(".down").parent();
+	                                    var clone = sel.clone()
+	                                    clone.insertBefore(sel.prev()).find("a").mousedown(mouseDown);
+	                                    sel.remove();
+	                                    preview();
+	                                    enableBtn(clone);
+	                                }
+	                                return false;
+	                            });
+	                            var down = $("#orderdown").click(function () {
+	                                if (this.className != "btn_notclick") {
+	                                    var sel = list.find(".down").parent();
+	                                    var clone = sel.clone();
+	                                    clone.insertAfter(sel.next()).find("a").mousedown(mouseDown);
+	                                    sel.remove();
+	                                    preview();
+	                                    enableBtn(clone);
+	                                }
+	                                return false;
+	                            });
+	                            $("#gosave").click(function () {
+	                                if (this.locked)
+	                                    return false;
+	                                this.locked = true;
+	                                alink = this;
+	                                var as = list.find("a");
+	                                var gids = "";
+	                                for (var i = 0; i < as.length; i++) {
+	                                    gids += $(as[i]).attr("gid") + ",";
+	                                }
+	                                $.ajax({
+	                                    dataType: "json",
+	                                    url: "/Ajax/SortGroup/",
+	                                    cache: false,
+	                                    data: { gids: gids },
+	                                    type: "post",
+	                                    success: function (o) {
+	                                        if (o.Code == "A00004") {
+	                                            App.fullTip(CodeList["A00004"], 1000, window.location.href.replace("#",""), 3);
+	                                        }
+	                                        else if (o.Code == "A00001") {
+	                                            App.showLoginDial();
+	                                        }
+	                                        else {
+	                                            App.fullTip(CodeList["A00003"], 1000, null, 1);
+	                                        }
+	                                        alink.locked = false;
+	                                    },
+	                                    error: function () {
+	                                        App.fullTip(CodeList["A00003"], 1000, null, 1);
+	                                        alink.locked = false;
+	                                    }
+	                                });
+	                                return false;
+	                            });
+	                            var top = $("#ul_oriderLists");
+	                            var list = $("#group_ul_lists");
+	                            var preview = function () {
+	                                var as = list.find("a");
+	                                if (as.length <= 3) {
+	                                    for (var i = 0; i < as.length; i++) {
+	                                        $(top.find("li")[2 * i + 1]).text($(as[i]).text());
+	                                    }
+	                                }
+	                                else {
+	                                    for (var i = 0; i < 3; i++) {
+	                                        $(top.find("li")[2 * i + 1]).text($(as[i]).text());
+	                                    }
+	                                }
+	                            }
+	                            var enableBtn = function ($elems) {
+	                                var index = list.find("li").index($elems);
+	                                if (index == 0) {
+	                                    up.attr("class", "btn_notclick");
+	                                }
+	                                else {
+	                                    up.attr("class", "btn_normal");
+	                                }
+	                                if (index == groupCount - 1) {
+	                                    down.attr("class", "btn_notclick");
+	                                }
+	                                else {
+	                                    down.attr("class", "btn_normal");
+	                                }
+	                            }
+	                            var mouseDown = function (e) {
+	                                list.find("a").attr("class", "").bind("mousemove", mouseMove);
+	                                $(".frititle  li").bind("mousemove", mouseMove);
+	                                this.className = "down";
+	                                enableBtn($(this).parent());
+	                                $(document).bind("mouseup", mouseUp);
+	                                if (this.style)
+	                                    this.style.MozUserSelect = "none";
+	                                return false;
+	                            }
+	                            var mouseMove = function (e) {
+	                                if ($(e.target).attr("tagName") == "LI") {
+	                                    if (list.find("li:first").prev().attr("tagName") != "DIV") {
+	                                        list.find("div").remove();
+	                                        $('<div style="cursor: move; height: 3px; background-color: rgb(51, 102, 255); overflow: hidden;"></div>').insertBefore(list.find("li:first"));
+	                                    }
+	                                }
+	                                else {
+	                                    if ($(this).parent().next().attr("tagName") != "DIV") {
+	                                        list.find("div").remove();
+	                                        $('<div style="cursor: move; height: 3px; background-color: rgb(51, 102, 255); overflow: hidden;"></div>').insertAfter($(this).parent());
+	                                    }
+	                                }
+
+	                            }
+	                            var mouseUp = function (e) {
+	                                list.find("a").unbind("mousemove", mouseMove);
+	                                $(".frititle li").unbind("mousemove", mouseMove);
+	                                $(document).unbind("mouseup", mouseUp);
+	                                var drag = list.find("div");
+	                                if (drag[0]) {
+	                                    var selone = list.find(".down").parent();
+	                                    var clone = selone.clone();
+	                                    selone.remove();
+
+	                                    clone.insertAfter(drag).find("a").mousedown(mouseDown);
+	                                    drag.remove();
+	                                    preview();
+	                                    enableBtn(list.find(".down").parent());
+	                                }
+	                                if (this.style)
+	                                    this.style.MozUserSelect = "";
+	                            }
+	                            list.html("");
+	                            if (o.Data.length > 0) {
+	                                for (var i = 0; i < o.Data.length; i++) {
+	                                    var li = $('<li><a gid="{id}" href="javascript:void(0)"  style="">{name}</a></li>'.replace(/\{name\}/g, o.Data[i].Name).replace(/\{id\}/g, o.Data[i].ID));
+	                                    list.append(li);
+	                                    li.find("a").mousedown(mouseDown);
+	                                    if (i < 3) {
+	                                        var li1 = $('<li>{name}</li><li class="MIB_line_l">|</li>'.replace(/\{name\}/g, o.Data[i].Name));
+	                                        li1.insertBefore(top.find("li:last"));
+	                                    }
+	                                }
+	                            }
+	                        }
+	                        else if (o.Code == "A00001") {
+	                            App.showLoginDial();
+	                        }
+	                        else {
+	                            App.fullTip(CodeList["A00003"], 1000, null, 1);
+	                        }
+	                    },
+	                    error: function () {
+	                        App.fullTip(CodeList["A00003"], 1000, null, 1);
+	                    }
+	                });
+	            }
+
+	        });
+    </script>
+}
+
+
+            <div class="MIB_blogbody">
+                <div class="MIB_mblogbgr @border">
+                    <div class="MIB_mblogbgl">
+                        <div class="mainR MIB_200 MIB_txtar MIB_linkar">
+                             @RenderPage("~/Views/Shared/_userInfo.cshtml")
+                             @RenderPage("~/Views/Shared/_rightNav.cshtml") 
+                             @RenderPage("~/Views/Shared/Wedget_HotTopic.cshtml")
+                             @RenderPage("~/Views/Shared/Wedget_MyFan.cshtml")
+                             @RenderPage("~/Views/Shared/Wedget_MyFollow.cshtml")
+                        </div>
+                        <div id="indexMainL" class="mainL MIB_600 MIB_txtal MIB_linkal">
+                            <div class="MIB_mbloghead">
+                                <div class="MIB_mblogbox">
+                                    <div class="postWrap">
+                                        <div class="pngBg">
+                                            <div class="postOptionBg">
+                                            </div>
+                                            <div class="pngGuidBg">
+                                            </div>
+                                            <div class="pngAreaBg">
+                                            </div>
+                                        </div>
+                                        <div class="connBg">
+                                            <div id="publisher_info" class="wordNumBg">
+                                                你还可以输入<span class="pipsLim">140</span>字</div>
+                                            <div class="postOptionBg">
+                                                <div id="publisher_faces" class="OnTit">
+                                                    <img title="表情" class="small_icon faceicon" src="/Content/Image/transparent.gif">
+                                                    <a tabindex="2" href="javascript:void(0)">表情</a>
+                                                </div>
+                                                <div id="publisher_pic" class="OnPic">
+                                                    <span poptype="1" pop="true" id="publisher_image">
+                                                        <img title="图片" class="small_icon picnormal" src="/Content/Image/fbqimgclose.gif"><a
+                                                            tabindex="3" href="####">图片</a> </span>
+                                                </div>
+                                                <div id="publisher_video" class="OnTit">
+                                                    <img class="small_icon videoicon" title="视频" src="/Content/Image/transparent.gif"><a
+                                                        tabindex="4" href="javascript:void(0);">视频</a>
+                                                </div>
+                                                <div id="publisher_music" class="OnTit">
+                                                    <img class="small_icon musicico" title="音乐" src="/Content/Image/transparent.gif"><a
+                                                        tabindex="5" href="javascript:void(0);">音乐</a>
+                                                </div>
+                                                <div id="publisher_topic" class="OnTit">
+                                                    <img class="small_icon askico" title="话题" src="/Content/Image/transparent.gif"><a
+                                                        tabindex="6" href="javascript:void(0);">话题</a>
+                                                </div>
+                                                <div class="OnTit" id="publisher_vote">
+                                                    <img src="/Content/Image/transparent.gif" class="small_icon voteicon" title="投票"><a
+                                                        tabindex="7" href="javascript:void(0);">投票</a>
+                                                </div>
+                                            </div>
+                                            <div class="postBtnBg bgColorA_No">
+                                                <a title="" tabindex="8" id="publisher_submit" href="javascript:void(0);"></a>
+                                            </div>
+                                            <div style="display: block" class="inputarea">
+                                                <label style="display: none;" for="publish_editor">
+                                                    微博输入框</label>
+                                                <textarea title="" id="publish_editor" rows="" cols="" name="" accesskey="1" tabindex="1"
+                                                    style="font-family: Tahoma,宋体; border-style: solid; border-width: 0px; word-wrap: break-word;
+                                                    font-size: 14px; line-height: 18px; overflow-x: hidden;" range="0&0"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="MIB_mbloglist">
+                                <div id="MIB_newFilter" class="newFilter MIB_txtal">
+                                    <div class="nfTagB nfTagOn">
+                                                                              <ul>
+                                            @{
+                                              
+                                                if (g != null||Model.IsFriendShip>0)
+                                                {
+                                                        <li isAll="1"><a href="#">所有分组</a></li><li class="MIB_line_l">|</li>
+                                                }
+
+                                                else
+                                                {
+                                            <li  isAll="1" class="current"><span>所有分组</span></li>
+                                                }
+                                                if(Model.IsFriendShip>0){
+                                                    
+                                            <li  isfriend="1" class="current"><span>相互关注</span></li>
+                                                }
+                                                else
+                                                {
+                                                    <li isfriend="1"><a href="@("#!" + Utils.AddQueryToUrl(Request.Url.AbsolutePath, "IsFriendShip", "1"))">相互关注</a></li><li class="MIB_line_l">|</li>
+                                                }
+
+                                                if (allGroups != null && allGroups.Count > 3)
+                                                {
+                                                    barGroups = new List<Group>();
+                                                    popListGroups = new List<Group>();
+                                                    for (int i = 0; i < allGroups.Count; i++)
+                                                    {
+                                                        if (g != null && allGroups[i].ID == g.ID && i >= 3)
+                                                        {
+
+                                                            Group tmp = barGroups[2];
+
+                                                            barGroups[2] = g;
+
+                                                            popListGroups.Insert(0, tmp);
+                                                        }
+
+                                                        else
+                                                        {
+
+                                                            if (i < 3)
+                                                            {
+
+                                                                barGroups.Add(allGroups[i]);
+
+                                                            }
+
+                                                            else
+                                                            {
+
+                                                                popListGroups.Add(allGroups[i]);
+
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                                else if (allGroups != null && allGroups.Count <= 3)
+                                                {
+                                                    barGroups = new List<Group>();
+                                                    for (int i = 0; i < allGroups.Count; i++)
+                                                    {
+                                                        barGroups.Add(allGroups[i]);
+                                                    }
+                                                }
+                                                if (barGroups != null)
+                                                {
+                                                    for (int i = 0; i < barGroups.Count; i++)
+                                                    {
+                                                        if (g != null && barGroups[i].ID == g.ID)
+                                                        {
+														
+                                                            <li gid="@barGroups[i].ID" class="current"><span title="@barGroups[i].Name" >@barGroups[i].Name<a href="javascript:void(0);" id="btnManageGroup" onclick="$(this).parent().next().show();return false;" class="arrow"><cite class="arr_m"></cite></a></span>
+	                    	<ul class="sltmenu" style="display: none;">
+	                    		<li><a href="@Model.CurUser.ID/Follow?gid=@barGroups[i].ID"><img title="管理分组" class="iconsetup" src="/Content/Image/transparent.gif">管理分组</a></li>
+	                    	</ul>
+	                    </li>
+                                                        }
+                                                        else
+                                                        {
+
+                                            <li  gid="@barGroups[i].ID"><a title="@barGroups[i].Name" href="@("#!"+Utils.AddQueryToUrl(Request.Url.AbsolutePath, "gid", barGroups[i].ID.ToString()))">@barGroups[i].Name</a></li><li
+                                                class="MIB_line_l">|</li>
+                                                        }
+                                                    }
+                                                }
+                                            <li tip="1"><a href="#" class="moreti"><span class="txt">更多</span><span class="more"></span></a>
+                                            </li>
+							
+                                                }
+                                          
+                                        </ul>
+                                        <div class="clear">
+                                        </div>
+                                    </div>
+                                    <div style="" class="nfBox">
+                                        <div id="filter_key_panel" class="nfBoxSim" style="display: @(Model.IsAdvanced>0?"none":"block");">
+                                            <div class="left">
+                                                @{
+                                                    var u = Request.Url.AbsolutePath;
+                                                    u = "#!" + u; 
+                                                    if (Model.IsHaveMusic != 1 && Model.IsHavePic != 1 && Model.IsHaveVideo != 1 && Model.IsHaveVote != 1 && Model.IsOri != 1)
+                                                {
+                                                <a title="全部" href="@u" action="all" class="current">
+                                                    全部</a>
+                                                    }
+                                                    else{
+                                                     <a title="全部" action="all" href="@u">
+                                                    全部</a>
+                                                    } 
+                                                    if(Model.IsOri==1){
+                                                        <a title="原创" action="IsOri" href="@(Utils.AddQueryToUrl(u, "IsOri", "1"))" class="current">原创</a>
+                                                    }
+                                                    else{
+                                                        <a title="原创" action="IsOri" href="@(Utils.AddQueryToUrl(u, "IsOri", "1"))">原创</a>
+                                                    }
+                                                    if(Model.IsHavePic==1){
+                                                          <a title="图片" action="IsHavePic" href="@(Utils.AddQueryToUrl(u, "IsHavePic", "1"))"  class="current">图片</a>
+                                                    }
+                                                    else
+                                                    {
+                                                          <a title="图片" action="IsHavePic" href="@(Utils.AddQueryToUrl(u, "IsHavePic", "1"))">图片</a>
+                                                    }
+                                              if(Model.IsHaveVideo==1){
+                                                          <a title="视频" action="IsHaveVideo" href="@(Utils.AddQueryToUrl(u, "IsHaveVideo", "1"))"  class="current">视频</a>
+                                              }
+                                              else
+                                              {
+                                                       <a title="视频"  action="IsHaveVideo" href="@(Utils.AddQueryToUrl(u, "IsHaveVideo", "1"))">视频</a>
+                                              }
+                                               if(Model.IsHaveMusic==1){
+                                                        <a title="音乐" action="IsHaveMusic" href="@(Utils.AddQueryToUrl(u, "IsHaveMusic", "1"))" class="current">音乐</a>
+                                               }
+                                               else
+                                               {
+                                                       <a title="音乐" action="IsHaveMusic" href="@(Utils.AddQueryToUrl(u, "IsHaveMusic", "1"))">音乐</a>
+                                               }
+                                             if(Model.IsHaveVote==1){
+                                                          <a title="投票" action="IsHaveVote" href="@(Utils.AddQueryToUrl(u, "IsHaveVote", "1"))" class="current">投票</a>
+                                             }
+                                             else
+                                             {
+                                                         <a title="投票" action="IsHaveVote" href="@(Utils.AddQueryToUrl(u, "IsHaveVote", "1"))">投票</a>
+                                             }
+                                           
+                                                    }
+                                            </div>
+                                            <div class="right">
+                                                <div class="lf searchbg">
+                                                    <input type="text" class="input" value="@(string.IsNullOrEmpty(Model.Key) ? "搜索关注人说的话" : Model.Key)" id="filter_mkey_input"
+                                                        name="filter_search" style="color: rgb(153, 153, 153);">
+                                                    <a href="#" class="searcheck" id="filter_mkey_btn">搜索</a><a class="searchadv" href="#"
+                                                        id="filter_adv_show">高级搜索</a></div>
+                                            </div>
+                                            <div class="clear">
+                                            </div>
+                                        </div>
+                                       
+                                        <!-- 高级-->
+                                        <div style="display: @(Model.IsAdvanced>0?"block":"none");" id="filter_adv_panel" class="nfAdv">
+                                            <div class="close">
+                                                <a id="filter_adv_hide" class="rt" href="#">关闭高级搜索</a></div>
+                                          
+                                            <input type="hidden" id="gid" name="gid" value="0">
+                                            <input type="hidden" id="filter_adv_search" name="filter_adv_search" value="1">
+                                            <dl class="dll1 clearFix">
+                                                <dt class="MIB_txtbl">类&nbsp;&nbsp;&nbsp;&nbsp;型：</dt>
+                                                <dd>
+                                                    <div class="subdl">
+                                                        <label for="filter_ori">
+                                                            <input type="checkbox" id="filter_ori" name="filter_ori" value="1" @(Model.IsOri>0?"checked":"") />原创</label>
+                                                        <label for="filter_ret">
+                                                            <input type="checkbox" id="filter_ret" name="filter_ret" value="1"  @(Model.IsRet>0?"checked":"")>转发</label>
+                                                    </div>
+                                                    <div class="subdl">
+                                                        <label for="filter_text">
+                                                            <input type="checkbox" id="filter_text" name="filter_text" value="1"  @(Model.IsHaveLink>0?"checked":"")>含短链</label>
+                                                        <label for="filter_pic">
+                                                            <input type="checkbox" id="filter_pic" name="filter_pic" value="1"  @(Model.IsHavePic>0?"checked":"")>含图片</label>
+                                                        <label for="filter_video">
+                                                            <input type="checkbox" id="filter_video" name="filter_video" value="1"  @(Model.IsHaveVideo>0?"checked":"")>含视频</label>
+                                                        <label for="filter_music">
+                                                            <input type="checkbox" id="filter_music" name="filter_music" value="1" @(Model.IsHaveMusic>0?"checked":"")>含音乐</label>
+                                                            <label for="filter_vote">
+                                                            <input type="checkbox" id="filter_vote" name="filter_vote" value="1"  @(Model.IsHaveVote>0?"checked":"")>含投票</label>
+                                                    </div>
+                                                </dd>
+                                            </dl>
+                                            <dl class="dll1 dll2 clearFix MIB_linedot2">
+                                                <dt class="MIB_txtbl">关键字：</dt>
+                                                <dd>
+                                                    <input type="text" style="color: rgb(153, 153, 153);" name="filter_search" 
+                                                        id="filter_adv_input" class="swidth" value="@(string.IsNullOrEmpty(Model.Key) ? "搜索关注人说的话" : Model.Key)">
+                                                </dd>
+                                                <dt class="MIB_txtbl">时&nbsp;&nbsp;&nbsp;&nbsp;间：</dt>
+                                                <dd>
+                                                    <input type="text" value="@(Model.StartTime!=null?Model.StartTime.Value.ToString("yyyy-MM-dd"):"选择日期")" class="tinp" id="filter_adv_stime" def="选择日期" name="starttime"
+                                                        style="color: rgb(153, 153, 153);" readonly="">
+                                                    <span>至</span>
+                                                    <input type="text" value="@(Model.EndTime != null ? Model.EndTime.Value.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))" class="tinp" id="filter_adv_etime" def="选择日期"
+                                                        name="endtime" style="color: rgb(153, 153, 153);" readonly="">
+                                                </dd>
+                                            </dl>
+                                            <dl class="dll1 dll3 clearFix">
+                                                <dt>&nbsp;</dt>
+                                                <dd>
+                                                    <a id="filter_adv_btn" class="btn_normal btnxs" href="#"><em>搜索</em></a></dd>
+                                            </dl>
+                                            
+                                        </div>
+                                        <!-- /高级 -->
+                                    </div>
+                                     <script type="text/javascript">
+                                         $("#filter_adv_show").click(function () {
+                                             $("#filter_adv_panel").fadeIn();
+                                             $("#filter_key_panel").hide();
+                                             return false;
+                                         });
+                                         $("#filter_adv_hide").click(function () {
+
+                                             $("#filter_adv_panel").fadeOut(function () { $("#filter_key_panel").show(); });
+                                             return false;
+                                         });
+                                         $("#filter_mkey_input").JQP_HighLineInput2({ nullCon: "搜索关注人说的话" }).keyup(function (e) {
+                                             if (e.which == 13) {
+                                                 if (this.value && this.value != "搜索关注人说的话") {
+                                                     var url;
+                                                     if (window.location.href.indexOf("#!") >= 0) {
+                                                         url = "#!" + window.location.href.replace(App.config.Domain, "").split('!')[1];
+                                                     }
+                                                     else {
+                                                         url = "#!" + window.location.href.replace(App.config.Domain, "");
+                                                     }
+                                                     url = App.RemoveQueryFromUrl(window.location.href, "page");
+                                                     window.location.href = App.AddQueryToUrl(url, "Key", encodeURIComponent($.trim($(this).val()))); ;
+                                                 }
+                                             }
+                                         });
+                                         var advSearch = function () {
+                                             var url;
+                                             if (window.location.href.indexOf("#!") >= 0) {
+                                                 url = "#!" + window.location.href.replace(App.config.Domain, "").split('!')[1];
+                                             }
+                                             else {
+                                                 url = "#!" + window.location.href.replace(App.config.Domain, "");
+                                             }
+                                              url = App.RemoveQueryFromUrl(window.location.href, "page");
+                                             url = App.AddQueryToUrl(url, "IsAdvanced", "1");
+                                             if (App.E("filter_ori").checked) {
+                                                 url = App.AddQueryToUrl(url, "IsOri", "1");
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "IsOri");
+                                             }
+                                             if (App.E("filter_ret").checked) {
+                                                 url = App.AddQueryToUrl(url, "IsRet", "1");
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "IsRet");
+                                             }
+                                             if (App.E("filter_text").checked) {
+                                                 url = App.AddQueryToUrl(url, "IsHaveLink", "1");
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "IsHaveLink");
+                                             }
+                                             if (App.E("filter_pic").checked) {
+                                                 url = App.AddQueryToUrl(url, "IsHavePic", "1");
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "IsHavePic");
+                                             }
+                                             if (App.E("filter_video").checked) {
+                                                 url = App.AddQueryToUrl(url, "IsHaveVideo", "1");
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "IsHaveVideo");
+                                             }
+                                             if (App.E("filter_music").checked) {
+                                                 url = App.AddQueryToUrl(url, "IsHaveMusic", "1");
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "IsHaveMusic");
+                                             }
+                                             if (App.E("filter_vote").checked) {
+                                                 url = App.AddQueryToUrl(url, "IsHaveVote", "1");
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "IsHaveVote");
+                                             }
+
+                                             if (App.E("filter_adv_input").value && App.E("filter_adv_input").value != "搜索关注人说的话") {
+                                                 url = App.AddQueryToUrl(url, "Key", encodeURIComponent($.trim(App.E("filter_adv_input").value)));
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "Key");
+                                             }
+                                             if (App.E("filter_adv_stime").value && App.E("filter_adv_stime").value != "选择日期") {
+                                                 url = App.AddQueryToUrl(url, "StartTime", App.E("filter_adv_stime").value);
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "StartTime");
+                                             }
+                                             if (App.E("filter_adv_etime").value && App.E("filter_adv_etime").value != "选择日期") {
+                                                 url = App.AddQueryToUrl(url, "EndTime", App.E("filter_adv_etime").value);
+                                             }
+                                             else {
+                                                 url = App.RemoveQueryFromUrl(url, "EndTime");
+                                             }
+                                             window.location.href = url;
+                                         }
+                                         $("#filter_adv_input").JQP_HighLineInput2({ nullCon: "搜索关注人说的话" }).keyup(function (e) {
+                                             if (e.which == 13) {
+                                                 advSearch();
+                                             }
+                                         });
+                                         $("#filter_adv_stime").JQP_HighLineInput2({ nullCon: "选择日期" }).JQP_DatePicker({ curDate: new Date() });
+                                         $("#filter_adv_etime").JQP_DatePicker({ curDate: new Date() });
+
+                                         $("#filter_mkey_btn").click(function () {
+                                             if ($("#filter_mkey_input").val() != "搜索关注人说的话") {
+                                                 var url;
+                                                 if (window.location.href.indexOf("#!") >= 0) {
+                                                     url = "#!" + window.location.href.replace(App.config.Domain, "").split('!')[1];
+                                                 }
+                                                 else {
+                                                     url = "#!" + window.location.href.replace(App.config.Domain, "");
+                                                 }
+                                                url = App.RemoveQueryFromUrl(window.location.href, "page");
+                                                 window.location.href = App.AddQueryToUrl(url, "Key", encodeURIComponent($.trim($("#filter_mkey_input").val())));
+                                             }
+                                             return false;
+                                         });
+                                         $("#filter_adv_btn").click(function () {
+                                             advSearch();
+                                             return false;
+                                         });
+                                        </script>
+                                    <div style="display:@(string.IsNullOrEmpty(Model.Key)&&Model.IsAdvanced==0?"none":"block");" class="nfresult MIB_linedot2">
+                                        <div class="lf">
+                                            共搜索到<span class="spetxt">@Model.RecordCount</span>条微博</div>
+                                        <div class="rt">
+                                            <a href="@(g != null ? Request.Url.AbsolutePath + "?gid=" + g.ID : Request.Url.AbsolutePath)"><em>&lt;&lt;</em>返回@(g!=null?g.Name:"全部")</a></div>
+                                    </div>
+                                </div>
+                  <div id="loadMB"  class="feed_lding MIB_txtbl">
+                                    <em class="icon_lding"></em>正在加载，请稍候...</div>
+
+                            <div id="loadError"  style="display:none;"  class="feed_lding MIB_txtbl">
+                                    <em class="icon_lding"></em>加载失败，<a  href="javascript:ajaxGetMiniBlog(true);">请重试</a>...</div>
+
+                            <div id="loadNoresult" style="display:none;" class="feed_lding MIB_txtbl">
+                                    <em class="icon_lding"></em>此人很懒...</div>
+                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>

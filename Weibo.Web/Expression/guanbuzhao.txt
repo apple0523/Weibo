@@ -1,0 +1,128 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('欢欢','[欢欢]',3005,'/Expression/guanbuzhao/liaobuqi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('乐乐','[乐乐]',3005,'/Expression/guanbuzhao/guanbuzhao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('管不着爱','[管不着爱]',3005,'/Expression/guanbuzhao/2guanbuzhao1_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('爱','[爱]',3005,'/Expression/guanbuzhao/ai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('了不起爱','[了不起爱]',3005,'/Expression/guanbuzhao/2liaobuqiai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('有点困','[有点困]',3005,'/Expression/guanbuzhao/youdiankun_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('yes','[yes]',3005,'/Expression/guanbuzhao/yes_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('咽回去了','[咽回去了]',3005,'/Expression/guanbuzhao/yanhuiqule_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('鸭梨很大','[鸭梨很大]',3005,'/Expression/guanbuzhao/yalihenda_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('羞羞','[羞羞]',3005,'/Expression/guanbuzhao/xiuxiu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('喜欢你','[喜欢你]',3005,'/Expression/guanbuzhao/xihuang_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('小便屁','[小便屁]',3005,'/Expression/guanbuzhao/xiaobianpi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('无奈','[无奈]',3005,'/Expression/guanbuzhao/wunai22_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('兔兔','[兔兔]',3005,'/Expression/guanbuzhao/tutu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('吐舌头','[吐舌头]',3005,'/Expression/guanbuzhao/tushetou_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('头晕','[头晕]',3005,'/Expression/guanbuzhao/touyun_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('听音乐','[听音乐]',3005,'/Expression/guanbuzhao/tingyinyue_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('睡大觉','[睡大觉]',3005,'/Expression/guanbuzhao/shuijiao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('闪闪紫','[闪闪紫]',3005,'/Expression/guanbuzhao/shanshanzi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('闪闪绿','[闪闪绿]',3005,'/Expression/guanbuzhao/shanshanlu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('闪闪灰','[闪闪灰]',3005,'/Expression/guanbuzhao/shanshanhui_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('闪闪红','[闪闪红]',3005,'/Expression/guanbuzhao/shanshanhong_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('闪闪粉','[闪闪粉]',3005,'/Expression/guanbuzhao/shanshanfen_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('咆哮','[咆哮]',3005,'/Expression/guanbuzhao/paoxiao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('摸头','[摸头]',3005,'/Expression/guanbuzhao/motou_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('真美好','[真美好]',3005,'/Expression/guanbuzhao/meihao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('脸红自爆','[脸红自爆]',3005,'/Expression/guanbuzhao/lianhongzibao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('哭泣女','[哭泣女]',3005,'/Expression/guanbuzhao/kuqinv_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('哭泣男','[哭泣男]',3005,'/Expression/guanbuzhao/kuqinan_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('空','[空]',3005,'/Expression/guanbuzhao/kong_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('尽情玩','[尽情玩]',3005,'/Expression/guanbuzhao/jinqingwan_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('惊喜','[惊喜]',3005,'/Expression/guanbuzhao/jingxi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('惊呆','[惊呆]',3005,'/Expression/guanbuzhao/jingdai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('胡萝卜','[胡萝卜]',3005,'/Expression/guanbuzhao/huluobo_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('欢腾去爱','[欢腾去爱]',3005,'/Expression/guanbuzhao/huangtengquai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('感冒了','[感冒了]',3005,'/Expression/guanbuzhao/ganmao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('怒了','[怒了]',3005,'/Expression/guanbuzhao/fennu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('我要奋斗','[我要奋斗]',3005,'/Expression/guanbuzhao/fendou123_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('发芽','[发芽]',3005,'/Expression/guanbuzhao/faya_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('春暖花开','[春暖花开]',3005,'/Expression/guanbuzhao/chunnuanhuakai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('抽烟','[抽烟]',3005,'/Expression/guanbuzhao/chouyan_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('昂','[昂]',3005,'/Expression/guanbuzhao/ang_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('啊','[啊]',3005,'/Expression/guanbuzhao/aa_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('自插双目','[自插双目]',3005,'/Expression/guanbuzhao/zichashuangmu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('咦','[咦]',3005,'/Expression/guanbuzhao/yiwen_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('嘘嘘','[嘘嘘]',3005,'/Expression/guanbuzhao/xu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('我吃','[我吃]',3005,'/Expression/guanbuzhao/wochiwode_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('喵呜','[喵呜]',3005,'/Expression/guanbuzhao/weiqu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('v5','[v5]',3005,'/Expression/guanbuzhao/v5_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('调戏','[调戏]',3005,'/Expression/guanbuzhao/tiaoxi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('打牙','[打牙]',3005,'/Expression/guanbuzhao/taihaoxiaole_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('手贱','[手贱]',3005,'/Expression/guanbuzhao/shoujian_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('色','[色]',3005,'/Expression/guanbuzhao/se_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('喷','[喷]',3005,'/Expression/guanbuzhao/pen_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('你懂的','[你懂的]',3005,'/Expression/guanbuzhao/nidongde_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('喵','[喵]',3005,'/Expression/guanbuzhao/miaomiao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('美味','[美味]',3005,'/Expression/guanbuzhao/meiwei_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('惊恐','[惊恐]',3005,'/Expression/guanbuzhao/jingkong_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('感动','[感动]',3005,'/Expression/guanbuzhao/gandong_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('放开','[放开]',3005,'/Expression/guanbuzhao/fangkai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('痴呆','[痴呆]',3005,'/Expression/guanbuzhao/chidai_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('扯脸','[扯脸]',3005,'/Expression/guanbuzhao/chelian_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('不知所措','[不知所措]',3005,'/Expression/guanbuzhao/buzhisuocuo_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('白眼','[白眼]',3005,'/Expression/guanbuzhao/baiyan_thumb.gif')
+

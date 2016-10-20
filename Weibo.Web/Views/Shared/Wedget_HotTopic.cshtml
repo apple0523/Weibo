@@ -1,0 +1,22 @@
+﻿<div id="wedget_hotTopic">
+    @{
+        IList<StatisticTopic> st = Topics.GetTopStaticTopic(DateTime.Now.AddMonths(-1), DateTime.Now, 10);
+    <div class="f_pro">
+        <div class="title font_14"><a href="javascript:void(0);">热门话题</a>
+        </div>
+        <div id="topic_region">
+            <ul class="conlist MIB_txtbr">
+            @{
+                if(st!=null)
+                {
+                foreach(var t in st){
+                <li><a target="_blank" href="/k/@t.TopicName">
+                    @t.TopicName</a> <em>(@t.RefCount)</em> </li>
+                }
+                }
+                }
+            </ul>
+        </div>
+    </div>
+        }
+</div>

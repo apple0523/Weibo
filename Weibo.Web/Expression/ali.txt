@@ -1,0 +1,22 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¿ñÐ¦','[¿ñÐ¦]',3015,'/Expression/ali/zk_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ô©','[Ô©]',3015,'/Expression/ali/wq2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('òé','[òé]',3015,'/Expression/ali/q2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÃÀºÃ','[ÃÀºÃ]',3015,'/Expression/ali/mh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÀÖºÍ','[ÀÖºÍ]',3015,'/Expression/ali/m2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¾¾¶ú¶ä','[¾¾¶ú¶ä]',3015,'/Expression/ali/j3_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('»Î','[»Î]',3015,'/Expression/ali/h2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('high','[high]',3015,'/Expression/ali/f_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('²ä','[²ä]',3015,'/Expression/ali/c_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('±§Õí','[±§Õí]',3015,'/Expression/ali/bz3_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('²»¹«Æ½','[²»¹«Æ½]',3015,'/Expression/ali/bgp_thumb.gif')
+

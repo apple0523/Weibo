@@ -1,0 +1,124 @@
+﻿@model Weibo.Web.Models.BlackListModel
+            @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "黑名单 XX微博-随时随地分享身边的新鲜事儿";
+ }
+ @section  cssInsert{
+	<link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+	<script src="/Scripts/Setup.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var blackList = {};
+		blackList.remove = function (alink, bid) {
+			if (alink.locked)
+				return false;
+
+			App.confirm("真的要解除？", function () {
+			    alink.locked = true;
+        $.ajax(
+       {
+       	url: "/Ajax/DelBlackList",
+       	datatype: "json",
+       	cache: false,
+       	data: { bid: bid },
+       	type: "post",
+       	success: function (o) {
+       		if (o.Code == "A00001") {
+       			App.showLoginDial();
+       		}
+       		else if (o.Code == "A00003") {
+       			App.alert(CodeList["A00003"]);
+       		}
+       		else {
+       		    $(alink).parent().parent().remove();
+       			App.fullTip(CodeList[o.Code], 2000, window.location.href, 3);
+       		}
+       		alink.locked = false;
+
+       	}, error: function (request) {
+       		App.alert(CodeList["A00003"]);
+       		alink.locked = false;
+       	}
+       });
+       });
+		};
+	</script>
+    }
+
+
+
+
+			<div class="MIB_blogbody">
+				<!--找朋友-->
+				<div class="MIB_column">
+					<div class="MIB_main_cont">
+						<div class="MIB_setup">
+							<!--页签-->
+							<div class="PY_tag">
+								<ul>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="/Setup/baseinfo">个人资料</a></span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="/Setup/changeavatar">修改头像</a></span></div>
+									</li>
+									<li>
+										<div class="PY_tago">
+											<span  class="bold">隐私设置</span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/notice">个性设置</a></span></div>
+									</li>
+								</ul>
+							</div>
+							<!--/页签-->
+							<div id="system_information" style="display: none">
+							</div>
+							<!--个人资料-->
+							<div class="setup_main">
+								<div class="infoTop MIB_line1">
+                        <div class="infoTop_nav"> <span class="edutop_cur"><a href="http://account.weibo.com/setting/privacy">隐私设置</a></span> <span class="navBorder gray9">|</span> <span class="edutop_cur">黑名单</span> </div>
+                     </div>
+					 <div class="info_tip gray6" style="visibility: hidden;"><span class="error_color">*</span></div>
+					 <div class="blacklist_title font_14">被加入黑名单的用户将无法关注你、评论你。如果你已经关注他，也会自动解除关系。</div>
+					 @{
+						 if (Model.BlackLists != null)
+						 {
+					 <div class="blacklist">
+                        <ul class="list">
+						    @{
+			                  foreach(var blackList in Model.BlackLists)
+							  {
+								  User pulledUser = Users.GetUserByID(blackList.PulledUID);
+								  if (pulledUser != null)
+								  {
+						    <li class="MIB_linedot2"> <span class="opt"><a href="javascript:;" onclick="blackList.remove(this,'@blackList.ID')">解除</a></span><span class="time gray9">@{@DateSpan.Get(blackList.CreateTime)}</span>
+                              <div class="con"><a uid="@pulledUser.ID" title="@pulledUser.NickName" href="/@pulledUser.ID">@pulledUser.NickName</a></div>
+                           </li>
+								  }
+			                  }
+						 }
+			  </ul>
+                        <!--翻页-->
+                        @Html.Pager(Model.PageIndex, Model.RecordCount, Model.PageSize)
+                        <!--翻页-->
+                     </div>
+		  }
+		  else{
+			  <p>还没有人被你拉入黑名单呢。</p>
+		  }
+		  }
+							</div>
+							<!--/个人资料-->
+						</div>
+					</div>
+				</div>
+				<!--/找朋友-->
+			</div>
+

@@ -1,0 +1,46 @@
+﻿<div class="right_nav"> 
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+                                <ul>
+                               
+                                    @{
+                                        if (action == "index")
+                                        {
+                                    <li  class="cur MIB_txtar"><a href="/">我的首页</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a href="/">我的首页</a></li>
+                                    }
+                                    }
+                                </ul>
+                                
+                                     <ul>
+                                   @{ 
+                                        if(action=="atmecmt"||action=="atme")
+                                        {
+                                    <li  class="cur MIB_txtar">@@提到我的</li>
+                                        }
+                                        else{
+                                        <li><a href="/miniblog/atme">@@提到我的</a></li>
+                                        }
+                                     if(action=="receive"||action=="send")
+                                     {
+                                    <li   class="cur MIB_txtar">我的评论</li>
+                                        }
+                                        else{
+                                      <li ><a href="/comment/receive">我的评论</a></li>   
+                                        }
+                                        if(action=="fav")
+                                     {
+                                    <li   class="cur MIB_txtar">我的收藏</li>
+                                     }
+                                        else
+                                        {
+                                      <li ><a href="/miniblog/fav">我的收藏</a></li>   
+                                        }
+                                       }  
+                               </ul>
+    }
+                                   
+                            </div>

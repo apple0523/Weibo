@@ -1,0 +1,27 @@
+﻿<div id="wedget_myfollow">
+<div class="f_pro">
+    @{
+        Weibo.Entity.User curUser = Model.CurUser;
+        int rowcount = 0;
+        IList<Follow> follows = Users.GetMyFollowByPager(curUser.ID, 1, 9, "", "CreateTime", ref rowcount);
+	<div class="title font_14 MIB_linkcr"><a href="/@curUser.ID/follow">我关注的(@rowcount)</a></div>
+		<ul class="user_recom">
+        @{
+            if(follows!=null)
+            {
+            foreach(var follow in follows)
+            {
+				<li>
+		<a href="/@follow.ID"  ><img uid="@follow.ID" namecard="true" uname="@follow.NickName" title="@follow.NickName"  src="@follow.MidAvartar"></a>
+		<div class="name"><a href="/@follow.ID" uid="@follow.ID" namecard="true" uname="@follow.NickName" >@follow.NickName</a></div>
+		</li>
+            }
+            }
+            }
+			</ul>
+		<div class="txt_right"><a href="/@curUser.ID/follow">更多<em>&gt;&gt;</em></a></div>
+        }
+        </div></div>
+<script type="text/javascript">
+    $(function () { App.initNameCard($("#wedget_myfollow")); });
+</script>

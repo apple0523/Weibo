@@ -1,0 +1,167 @@
+﻿@model Weibo.Web.Models.MessageIndexModel
+@{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "我的私信 XX微博-随时随地分享身边的新鲜事儿";
+ }
+  @section  cssInsert{
+    <link href="/Content/CSS/privatemsg.css" rel="stylesheet" type="text/css" />
+    }
+ @section  jsInsert{
+    <script type="text/javascript">
+        $(function () {
+            App.TimerFunArray.push(App.ajaxAtWho);
+            App.StartTimer();
+            App.initNameCard($("#msg_list"));
+            var searchBox = $("#searchkeyword").JQP_HighLineInput2({ nullCon: "搜索私信内容" }).keyup(function (e) {
+                if (e.which == 13) {
+                    window.location.href = "/Message/Search?Key=" + encodeURIComponent($.trim(this.value));
+                }
+            });
+            $("#search_btn").click(function () {
+
+                if (searchBox.val() == "搜索私信内容")
+                    return false;
+                else {
+                    window.location.href = "/Message/Search?Key=" + encodeURIComponent($.trim(searchBox.val()));
+                    return false;
+                }
+            });
+        });
+        var DelContact = function (alink, uid, toUid) {
+            App.confirm("是否删除跟TA的所有联系", function () {
+                if (alink.locked)
+                    return false;
+                alink.locked = true;
+
+                App.DelMessageByUID(uid, toUid, function () {
+                    $("li[touid='" + toUid + "']").fadeOut();
+                }, function () {
+                    alink.locked = false;
+
+                })
+            });
+        }
+    </script>
+}
+
+			<!--/顶托盘-->
+			<!--正文-->
+			<div class="MIB_blogbody">
+				<div class="MIB_mblogbgr">
+					<div class="MIB_mblogbgl">
+						<!--右栏内容 -->
+						<div class="mainR MIB_200 MIB_txtar MIB_linkar">
+							<!--个人信息-->
+							@RenderPage("~/Views/Shared/_userInfo.cshtml")
+						</div>
+						<!--/右栏内容 -->
+						<!--左栏内容 -->
+						<div class="mainL MIB_600 MIB_txtal MIB_linkal ssdh_wrap">
+							<div class="msg_lf clearFix titmg10">
+								<div class="titmg10">
+									<span class="font_14 fb">我的私信</span>&nbsp; <span class="gray6">(已有@{@Model.RecordCount}个联系人)</span>
+								</div>
+								<div class="lf">
+									<a class="newbbtngrn" id="msg_publisher_submit" onclick="App.showMessageBox()"
+										href="javascript:void(0);"><em>发私信</em></a></div>
+								<div class="rt">
+									<div class="chdd">
+
+										<label>
+											<input id="searchkeyword" name="searchkeyword" style="color: rgb(153, 153, 153);"
+												class="txt_s2" value="搜索私信内容" type="text">
+											<a id="search_btn" href="javascript:void(0)" class="btn_normal btnxs"><em>搜索</em></a>
+										</label>
+
+									</div>
+								</div>
+							</div>
+							<ul class="MIB_feed" id="msg_list">
+								<!-- 直接加 -->
+                                @{
+                                    if(Model.Contacts!=null)
+                                    {
+                                    foreach (Contact contact in Model.Contacts)
+                                    {
+                                        User contactUser = Users.GetUserByID(contact.ToUID);
+                                         if (contactUser != null)
+                                            {
+                                             if (contact.Direction == 1)
+                                        {
+                                            
+                                           
+								<li touid="@contact.ToUID" class="MIB_linedot_l" onmouseover="App.showExtendBtn(this);" onmouseout="App.hideExtendBtn(this);">
+									<div class="user_pic user_Stat">
+										<div class="head_pic">
+                                                     <a href="/@{@contactUser.ID;}" >
+                                                    <img src="@{@contactUser.MidAvartar;}" 
+                                                    title="@{@contactUser.NickName;}" class="picborder_l" uid="@{@contactUser.ID;}" namecard="true" uname="@{@contactUser.NickName;}" /></a>
+                                                    </div>
+									</div>
+									<div class="MIB_feed_c">
+										<div  style=" visibility:hidden" class="rt icon_closel" extend="true" title="删除">
+											<a href="javascript:void(0);" onclick="DelContact(this, @contact.UID,  @contact.ToUID)" class="close">x</a></div>
+										<p class="letter">
+                                             <a href="/@{@Model.CurUser.ID;}" uid="@{@Model.CurUser.ID;}" namecard="true" uname="@{@Model.CurUser.NickName;}" >@{@Model.CurUser.NickName;}</a> 发送给 <a href="/@{@contactUser.ID;}" uid="@{@contactUser.ID;}" namecard="true" uname="@{@contactUser.NickName;}" >@{@contactUser.NickName;}</a> ：@MvcHtmlString.Create(Messages.TransformContent(contact.LastMContent))
+										</p>
+										<div class="feed_att MIB_linkbl">
+											<div class="lf">
+												<span class="gray9">@DateSpan.Get(contact.LastContactTime)</span> 
+											</div>
+											<div class="rt">
+												<a href="/message/talklist?uid=@contact.ToUID">共@{@contact.MessageCount}条对话</a><span class="MIB_line_l">|</span><a
+													href="javascript:void(0);" onclick="App.showMessageBox('@contactUser.NickName')">回复</a></div>
+										</div>
+									</div>
+								</li>
+                                            }
+                                            
+                                            else
+                                            {
+                                           <li  touid="@contact.ToUID" class="MIB_linedot_l" onmouseover="App.showExtendBtn(this);" onmouseout="App.hideExtendBtn(this);">
+									<div class="user_pic user_Stat">
+										<div class="head_pic">
+                                                     <a href="/@{@contactUser.ID;}"  >
+                                                    <img src="@{@contactUser.MidAvartar;}" 
+                                                    title="@{@contactUser.NickName;}" class="picborder_l" uid="@{@contactUser.ID;}" namecard="true" uname="@{@contactUser.NickName;}" /></a>
+                                                    </div>
+									</div>
+									<div class="MIB_feed_c">
+										<div class="rt icon_closel" style=" visibility:hidden"  extend="true" title="删除">
+											<a href="javascript:void(0);" onclick="DelContact(this, @contact.UID,  @contact.ToUID)" class="close">x</a></div>
+										<p class="letter">
+                                            <a href="/@{@contactUser.ID;}" uid="@{@contactUser.ID;}" namecard="true" uname="@{@contactUser.NickName;}" >@{@contactUser.NickName;}</a> ：@MvcHtmlString.Create(Messages.TransformContent(contact.LastMContent))
+										</p>
+										<div class="feed_att MIB_linkbl">
+											<div class="lf">
+												<span class="gray9">@DateSpan.Get(contact.LastContactTime)</span> <em style=" visibility:hidden" extend="true" class="reportBtn"><span  class="MIB_line_l">
+													|</span> <a extend="true" href="javascript:;"onclick="App.showReportBox(this,@contact.ToUID,@TypeConfigs.GetComplaint_msg,@contact.LastMID);return false;">
+														举报 </a></em>
+											</div>
+											<div class="rt">
+												<a href="/message/talklist?uid=@contact.ToUID">共@{@contact.MessageCount}条对话</a><span class="MIB_line_l">|</span><a
+													href="javascript:void(0);" onclick="App.showMessageBox('@contactUser.NickName')">回复</a></div>
+										</div>
+									</div>
+								</li>
+                                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                    }
+							</ul>
+							<div class="sper_page">
+								<div class="ftop lf">
+									<a href="#">
+										<img class="small_icon returntop" src="/Content/Image/transparent.gif" title="">返回顶部</a></div>
+                                @Html.Pager(Model.PageIndex,Model.RecordCount,Model.PageSize)
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+

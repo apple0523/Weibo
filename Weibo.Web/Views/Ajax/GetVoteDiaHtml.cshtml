@@ -1,0 +1,304 @@
+﻿ @model Weibo.Web.Models.VotesModel
+<div class="layerBox">
+    <div class="layerBoxCon1">
+        <div class="layervote">
+            <div class="layerArrow">
+            </div>
+            <div class="layerMedia_close">
+                <a  href="javascript:void(0);" class="close" title="关闭"></a>
+            </div>
+            <div class="lv_nav">
+                <ul>
+                    <li nav="new" class="cur"><span>新建投票</span></li>
+                    <li nav="list"><span>我的投票库</span></li>
+                </ul>
+            </div>
+            <div class="lv_form" tab="new" style="">
+                <fieldset>
+                    <div id="voteError" class="errorLayer" style="display:none;">
+                        <div class="top">
+                        </div>
+                        <div class="mid">
+                            <div class="close">
+                                x</div>
+                            <div class="conn">
+                                <p class="bigtxt">
+                                    </p>
+                                <p class="stxt">
+                                    </p>
+                            </div>
+                        </div>
+                        <div class="bot">
+                        </div>
+                    </div>
+                    <p>
+                        创建标题：<span class="gray9">标题最多25个汉字</span></p>
+                    <p>
+                        <input type="text" class="lv_input3" name="title" act="title"></p>
+                    <div class="lv_mgb">
+                        <div class="lf">
+                            <span class="lv_icon1"></span><a onclick="$('.lv_textarea').show();" href="javascript:void(0);">添加投票说明</a>
+                        </div>
+                        <span class="MIB_line_l lf">|</span>
+                        <input id="voteImgID" type="hidden" name="pid">
+                        <div class="lf lv_addpics" id="addPic">
+                            <iframe id="uploadimg_iframe" name="uploadimg_iframe" src="about:blank" style="display: none"></iframe>
+                            <form action="/PicUpload/VoteDiaUpload/" id ="voteForm"
+                            method="POST" enctype="multipart/form-data" target="uploadimg_iframe">
+                            <span class="lv_icon2"></span><a href="javascript:void(0);">插入图片</a>
+                            <input id="voteFile" type="file" tabindex="-1" name="pic1">
+                            </form>
+                        </div>
+                        <div class="lf lv_addpics" id ="delPic" style="display: none;">
+                            <span class="lv_icon2"></span><span id="votePicName"></span>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)"><span
+                                class="lv_icon4"></span>删除</a>
+                        </div>
+                        <div style="display: none;">
+                            <form action="http://picupload.t.sina.com.cn/interface/pic_upload.php?marks=0&amp;s=rdxt&amp;rq=http%3A%2F%2Fphoto.i.t.sina.com.cn%2Fpic%2Fadd.php%3Fapp%3D53&amp;app=miniblog&amp;cb=http://weibo.com/upimgback.html"
+                            method="POST" enctype="multipart/form-data" target="uploadimg_iframe_8998">
+                            <div class="lf lv_addpics">
+                                <span class="lv_icon3"></span><span class="error_color">上传失败</span>&nbsp;&nbsp;&nbsp;&nbsp;<a
+                                    href="javascript:void(0);">重试</a>
+                                <input type="file" class="lv_file1" tabindex="-1" name="pic1">
+                            </div>
+                            <div class="lf lv_rmlt">
+                                &nbsp;<a href="javascript:void(0)">取消</a>
+                            </div>
+                            </form>
+                        </div>
+                        <div class="lf lv_addpics" id="uploadingPic" style="display: none;">
+                            <img width="16" height="16" src="/Content/Image/loading.gif"
+                                alt="" title="" class="lv_ldpic">正在上传&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)">取消</a>
+                        </div>
+                    </div>
+                    <p>
+                        <textarea class="lv_textarea" act="info" style="display: none"></textarea></p>
+                    <p class="lv_mt">
+                        投票选项：<span class="gray9">可设置20项，每项最多20个汉字</span></p>
+                    <p class="lv_inputsub">
+                        <span>1.</span><input type="text" name="items"></p>
+                    <p class="lv_inputsub">
+                        <span>2.</span><input type="text" name="items"></p>
+                    <p class="lv_inputsub">
+                        <span>3.</span><input type="text" name="items" ></p>
+                    <p class="lv_inputsub">
+                        <span>4.</span><input type="text" name="items" ></p>
+                    <p class="lv_inputsub">
+                        <span>5.</span><input type="text" name="items" ></p>
+                    <p>
+                        <span class="vote_addicon"></span><a href="javascript:void(0);">增加选项</a></p>
+                    <p>
+                        <span class="lv_results">投票结果：</span>
+                        <input type="radio" act="v_item" name="vote_result" value="1" checked="" class="lv_input2"><label
+                            for="result" class="label12">任何人可见</label>
+                        <input type="radio" act="v_item" name="vote_result" value="0" class="lv_input2"><label
+                            for="result" class="label12">投票后可见</label>
+                    </p>
+                    <p>
+                        <label for="">
+                            单选/多选：</label>
+                        <select id="optionType"  name="type">
+                            <option  value="1">单选</option>
+                            <option  value="2">多选</option>
+                        </select>
+                        <select id="optionNum" name="num" style="display:none;">
+                            <option  value="1">1项</option>
+                            <option  value="2">2项</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="">
+                            截止时间：</label>
+                        <input type="text" value="@{@DateTime.Now.AddDays(7).ToString("yyyy-MM-dd")}" class="lv_calendar" name="date">
+                        <select  name="hh">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                        </select>时
+                        <select  name="mm">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                            <option value="31">31</option>
+                            <option value="32">32</option>
+                            <option value="33">33</option>
+                            <option value="34">34</option>
+                            <option value="35">35</option>
+                            <option value="36">36</option>
+                            <option value="37">37</option>
+                            <option value="38">38</option>
+                            <option value="39">39</option>
+                            <option value="40">40</option>
+                            <option value="41">41</option>
+                            <option value="42">42</option>
+                            <option value="43">43</option>
+                            <option value="44">44</option>
+                            <option value="45">45</option>
+                            <option value="46">46</option>
+                            <option value="47">47</option>
+                            <option value="48">48</option>
+                            <option value="49">49</option>
+                            <option value="50">50</option>
+                            <option value="51">51</option>
+                            <option value="52">52</option>
+                            <option value="53">53</option>
+                            <option value="54">54</option>
+                            <option value="55">55</option>
+                            <option value="56">56</option>
+                            <option value="57">57</option>
+                            <option value="58">58</option>
+                            <option value="59">59</option>
+                        </select>分</p>
+                    <div class="lv_btn">
+                        <a href="javascript:void(0);" id="PublishVote" class="btn_normal"><em>发起</em></a><span class="gray9">保存后可增加选项，不可修改。</span></div>
+                </fieldset>
+            </div>
+            @{
+                if (Model.Votes != null)
+                {
+            <div class="myvote" style="display: none" tab="list">
+                <h3>
+                    下面是你发起的投票，可以选择某个投票添加到微博：</h3>
+                    <input id="pageNum" value="@{@(Model.Votes.Count/10+1)}" type="hidden" />
+                    <input id="pageIndex" value="1" type="hidden"/>
+                    <div>
+                    <div>
+                <ul id="voteList" class="lv_textlist">
+                @{
+                    for(int i=0;i<Model.Votes.Count;i++)
+                    {
+                       int page=(i+1)/10+1;
+                       if((i+1)/10==0)
+                       {
+                   <li page="@{@page}" >
+                   <input class="lv_input2" id="radio@{@Model.Votes[i].ID}" type="radio" value="@Model.Votes[i].ID" name="VoteList" title="@Model.Votes[i].Title" >
+                   <label class="label12" for="result">@Model.Votes[i].Title</label>
+                   </li>
+                    }
+                       else
+                       {
+                           <li page="@{@page}" style="display:none;">
+                     <input class="lv_input2" id="radio@{@Model.Votes[i].ID}" type="radio" value="@Model.Votes[i].ID" name="VoteList" title="@Model.Votes[i].Title" >
+                   <label class="label12" for="result">@Model.Votes[i].Title</label>
+                           </li>
+                       }
+                    }
+                }
+                </ul>
+               </div></div>
+                <div class="lv_page">
+                    <a id="pagePrev" href="javascript:void(0);"  style="display: none;"><em>&lt;&lt;</em>上一页</a>
+                     @{
+                         if(Model.Votes.Count>9)
+                         {
+                     <a id="pageNext" href="javascript:void(0); ">下一页<em>&gt;&gt;</em></a>
+                         }
+                         else
+                         {
+                             <a id="pageNext" href="javascript:void(0);" style="display: none;">下一页<em>&gt;&gt;</em></a>
+                         }
+                         }
+                </div>
+                <div class="MIB_linedot1">
+                </div>
+                <div class="lv_btn">
+                    <a id="voteInsert" href="javascript:void(0);" class="btn_normal"><em>添加</em></a></div>
+            </div>
+                }
+                else
+                {
+            <div class="lvtip"  style="display: none" tab="list">
+                <div class="lvtip_cont">
+                    <img align="absmiddle" title="" alt="" src="/Content/Image/PY_ib.gif"
+                        class="PY_ib PY_ib_1">
+                    <div class="lvtip_conttext">
+                        <p>
+                            你还没有发起过投票呢</p>
+                    </div>
+                </div>
+            </div>
+                }
+                }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#pagePrev").click(function () {
+        $("li[page='" + $("#pageIndex").val() + "']").hide();
+        $("#pageIndex").val(parseInt($("#pageIndex").val()) - 1);
+        $("li[page='" + $("#pageIndex").val() + "']").show();
+        if (1 != parseInt($("#pageIndex").val())) {
+            $(this).show();
+        } else
+            $(this).hide();
+        $("#pageNext").show();
+    });
+    $("#pageNext").click(function () {
+        $("li[page='" + $("#pageIndex").val() + "']").hide();
+        $("#pageIndex").val(parseInt($("#pageIndex").val()) + 1);
+        $("li[page='" + $("#pageIndex").val() + "']").show();
+        if ($("#pageNum").val() != parseInt($("#pageIndex").val())) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+        $("#pagePrev").show();
+    });
+    $("#voteInsert").click(function () {
+        var inputs = $("#voteList").find("input");
+        for (var i = 0; i < inputs.length; i++) {
+            var check = inputs[i];
+            if (check.checked)
+                App.insertTxt2Txtarea(App.TargetTextarea, "我发起了一个投票【" + $(check).attr("title") + "】，地址 @{@BaseConfigs.GetWebDomain}/Vote/" + check.value);
+        }
+    });
+</script>

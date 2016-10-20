@@ -1,0 +1,294 @@
+﻿@model Weibo.Web.Models.SetTagModel
+            @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "设置标签 XX微博-随时随地分享身边的新鲜事儿";
+ }
+  @section  cssInsert{
+	<link href="/Content/CSS/setup.css" rel="stylesheet" type="text/css" />
+    }
+     @section  jsInsert{
+	<script src="/Scripts/Setup.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var setTag = {};
+		setTag.curTagCount=@{@(Model.UserTags==null?0:Model.UserTags.Count)};
+		setTag.addTag = function (alink) {
+		    if(this.curTagCount==10){
+			    App.FullMiniTip("最多可添加10个标签", alink, 1000, 1);
+				return false;
+			}
+			if (alink.locked) {
+				return false;
+			}
+			alink.locked = true;
+						$.ajax(
+       {
+       	url: "/Ajax/AddTagByID",
+       	datatype: "json",
+       	cache: false,
+       	data: { tagid: $(alink).attr("tagid") },
+       	type: "post",
+       	success: function (o) {
+       		if (o.Code == "A00001") {
+       			App.showLoginDial();
+       		}
+       		else if (o.Code == "A00003") {
+       			App.FullMiniTip(CodeList["A00003"], alink, 1000, 1);
+       		}
+			else if (o.Code == "A00021") {
+       			App.FullMiniTip(CodeList["A00021"], alink, 1000, 1);
+       		}
+			else if (o.Code == "A00022") {
+       			App.FullMiniTip(CodeList["A00022"], alink, 1000, 1);
+       		}
+       		else {
+			    $(alink).remove();
+				setTag.addHtmlItem(o.Data.ID,o.Data.TagName);
+                setTag.curTagCount++;
+       		}
+       		alink.locked = false;
+       	},
+       	error: function (request) {
+       		App.FullMiniTip(CodeList["A00003"], alink, 1000, 1);
+       		alink.locked = false;
+       	}
+       });
+		};
+		setTag.addTags = function (txt, alink) {
+			var tags = $.trim(txt.val());
+			if(this.curTagCount==10){
+			    App.FullMiniTip("最多可添加10个标签", alink, 1000, 1);
+				return false;
+			}
+			if (tags=="多个标签词之间请用空格分开"||!tags) {
+				App.FullMiniTip("请输入1到14个字符的标签", alink, 1000, 1);
+				return false;
+			}
+			if (!/^[\u4E00-\u9FA50-9A-Za-z\s]*$/.test(tags)) {
+				App.FullMiniTip("存在非法字符", alink, 1000, 1);
+				return false;
+			}
+			
+			tags = tags.split(' ');
+			for (var i in tags) {
+				if (App.byteLength(tags[i]) > 14) {
+					App.FullMiniTip("请输入1到14个字符的标签", alink, 1000, 1);
+					return false;
+				}
+			}
+			if (alink.locked) {
+				return false;
+			}
+			alink.locked = true;
+			tags = tags.join(',');
+			$.ajax(
+       {
+       	url: "/Ajax/AddTags",
+       	datatype: "json",
+       	cache: false,
+       	data: { tags: tags },
+       	type: "post",
+       	success: function (o) {
+       		if (o.Code == "A00001") {
+       			App.showLoginDial();
+       		}
+       		else if (o.Code == "A00003") {
+       			App.FullMiniTip(CodeList["A00003"], alink, 1000, 1);
+       		}
+       		else if (o.Code == "A00021") {
+       			App.FullMiniTip(CodeList["A00021"], alink, 1000, 1);
+       		}
+			else {
+			    var data=o.Data;
+				$.each(data,function(){
+				   setTag.addHtmlItem(this.ID,this.TagName);
+				});
+                setTag.curTagCount+=data.length;
+       		}
+       		alink.locked = false;
+       	},
+       	error: function (request) {
+       		App.FullMiniTip(CodeList["A00003"], alink, 1000, 1);
+       		alink.locked = false;
+       	}
+       });
+
+		};
+		setTag.delTag = function (alink) { 
+		if (alink.locked) {
+				return false;
+			}
+			alink.locked = true;
+	$.ajax(
+       {
+       	url: "/Ajax/DelUserTag",
+       	datatype: "json",
+       	cache: false,
+       	data: { tagId: $(alink).attr("tagid") },
+       	type: "post",
+       	success: function (o) {
+       		if (o.Code == "A00001") {
+       			App.showLoginDial();
+       		}
+       		else if (o.Code == "A00003") {
+       			App.FullMiniTip(CodeList["A00003"], alink, 1000, 1);
+       		}
+       		else {
+			    $(alink).parent().remove();
+                setTag.curTagCount--;
+       		}
+       		alink.locked = false;
+       	},
+       	error: function (request) {
+       		App.FullMiniTip(CodeList["A00003"], alink, 1000, 1);
+       		alink.locked = false;
+       	}
+       });
+		}; 
+    setTag.htmlTemplate="<li onmouseout=\"this.className='';\" onmouseover=\"this.className='bg';\" title=\"{name}\"><a href=\"/Search/User/?tag={name}\" class=\"a1\">{name}</a><a onclick=\"setTag.delTag(this);return false\" href=\"javascript:void(0);\" tagid=\"{id}\" title=\"删除标签\" class=\"a2\"><img src=\"/Content/Image/transparent.gif\"></a></li>";
+	setTag.addHtmlItem=function(id,name){
+	   var taglist=$("#tag_list")
+	   var tmp=this.htmlTemplate.replace(/{id}/g,id).replace(/{name}/g,name);
+	   var first=taglist.find("li:first");
+	   if(first[0]){
+	      $(tmp).insertBefore(first);
+	   }
+	   else{
+	      $("#mytagshow1").show();
+		  $("#mytagshow2").show();
+		  taglist.html(tmp);
+	   }
+	};
+	setTag.chageInterestTag=function(){
+	  var instTags=$(".setupTag_list01");
+	  instTags.hide();
+      instTags[parseInt((instTags.length*Math.random()))].style.display="block";
+	};
+	$(function(){
+	   $("#tag_input").JQP_HighLineInput2({ nullCon: "多个标签词之间请用空格分开" });
+	});
+	</script>
+    }
+
+			<div class="MIB_blogbody">
+				<!--找朋友-->
+				<div class="MIB_column">
+					<div class="MIB_main_cont">
+						<div class="MIB_setup">
+							<!--页签-->
+							<div class="PY_tag">
+								<ul>
+									<li>
+										<div class="PY_tago">
+											<span class="bold">个人资料</span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/myface">修改头像</a></span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/privacy">隐私设置</a></span></div>
+									</li>
+									<li>
+										<div class="PY_tagn">
+											<span><a href="http://account.weibo.com/setting/notice">个性设置</a></span></div>
+									</li>
+								</ul>
+							</div>
+							<!--/页签-->
+							<div id="system_information" style="display: none">
+							</div>
+							<!--个人资料-->
+							<div class="setup_main">
+								<div class="infoTop">
+									<div class="infoTop_nav">
+										<span><a href="/Setup/baseinfo">基本信息</a></span> <span class="navBorder gray9">|</span>
+										<span><a href="/Setup/EditPwd">修改密码</a></span> <span class="navBorder gray9">|</span>
+										<span><a href="/Setup/Education">教育信息</a></span> <span class="navBorder gray9">|</span>
+										<span><a href="/Setup/Career">职业信息</a></span> <span class="navBorder gray9">|</span>
+										<span class="edutop_cur">个人标签</span> <span class="navBorder gray9">|</span> <span><a
+											href="/Setup/MySite">个性域名</a></span>
+									</div>
+								</div>
+								<div class="setupTag">
+									<p class="setup_tag1">
+										添加描述自己职业、兴趣爱好等方面的词语，让更多人找到你，让你找到更多同类</p>
+									<div class="setupTag_box">
+										<div class="setupTag_boxL">
+											<div class="setupTag_input">
+												<input type="text" value="多个标签词之间请用空格分开" id="tag_input" class="setupTag_txt" style=""><a onclick="setTag.addTags($(this).prev(),this);return false;"
+													class="btn_normal" href="javascript:;" id="add_tag" ><em>添加标签</em></a>
+											</div>
+										</div>
+										<div class="setupTag_boxR">
+											<p class="setupTag_tip2">
+												<span class="rt lightblue"><a onclick="setTag.chageInterestTag();return false;" href="javascript:void(0);">换一换</a></span>你可能感兴趣的标签：</p>
+												@{
+			                                      if(Model.InterestTags!=null)
+												  {
+													  int page=Model.InterestTags.Count/10;
+                                                      if (Model.InterestTags.Count % 10 != 0) {
+                                                 
+                                                          page++;
+                                                      }
+													  for(int i=0;i<page;i++)
+													  {
+											<div class="setupTag_list01" style="display:@{@(i==0?"block":"none")}">
+											         @{
+						                              for(int j=i*10;j<(i+1)*10;j++)
+													  {
+														  try{long temp =Model.InterestTags[j].ID;}catch{break;}
+												<a tagid="@Model.InterestTags[j].ID" href="javascript:void(0)" onclick="setTag.addTag(this);" title="添加标签"><em>+</em>@Model.InterestTags[j].Name</a>
+						                              }
+						                              }
+											</div>
+			                                         }
+				                                   }
+				                                }
+										</div>
+									</div>
+
+									<div id="mytagshow1" class="setupTag_tit MIB_linedot" style="display:@{@(Model.UserTags != null ? "block" : "none")}">
+										<a id="recommendtag" href="javascript:void(0);" class="rt">将我的标签推荐给朋友</a><em class="font_14">我已经添加的标签：</em></div>
+									<div class="setupTag_list02" id="mytagshow2" style="display:@{@(Model.UserTags != null ? "block" : "none")}">
+										<ul class="tagList" id="tag_list">
+										@{
+											if (Model.UserTags != null)
+											{
+												foreach(UserTag userTag in Model.UserTags)
+												{
+											<li onmouseout="this.className='';" onmouseover="this.className='bg';" title="@userTag.TagName"><a href="/Search/User/?tag=@userTag.TagName" class="a1">@userTag.TagName</a><a
+													onclick="setTag.delTag(this);return false;" href="javascript:void(0);" tagid="@userTag.ID" title="删除标签" class="a2"><img
+														src="/Content/Image/transparent.gif"></a></li>
+			                                     }
+														
+											}
+											}
+											</ul>
+										<div class="clear">
+										</div>
+									</div>
+					
+			 <div class="setupTag_tit gray6 MIB_linedot">
+										关于标签：</div>
+									<div class="setupTag_txtList gray9">
+										<p>
+											·标签是自定义描述自己职业、兴趣爱好的关键词，让更多人找到你，让你找到更多同类。</p>
+										<p>
+											·已经添加的标签将显示在“我的微博”页面右侧栏中，方便大家了解你。</p>
+										<p>
+											·在此查看你自己添加的所有标签，还可以方便地管理，最多可添加10个标签。
+										</p>
+										<p>
+											·点击你已添加的标签，可以搜索到有同样兴趣的人。</p>
+									</div>
+								</div>
+							</div>
+							<!--/个人资料-->
+						</div>
+					</div>
+				</div>
+				<!--/找朋友-->
+			</div>

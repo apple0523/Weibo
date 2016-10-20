@@ -1,0 +1,890 @@
+﻿@model Weibo.Web.Models.SchMiniblogModel
+           @{
+     Layout = "~/Views/Shared/_schLayout.cshtml";
+ }
+ @{
+     ViewBag.Title = "微博搜索 XX微博-随时随地分享身边的新鲜事儿";
+ }
+  @section  cssInsert{
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/srch_mbl.css" />
+}
+ @section  jsInsert{
+    <script src="/Scripts/DatePicker.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var schMange = {
+            curGetLink: null,
+            curAutoCompleteTxtBox: null,
+            curAutoCompleteCallBack: null,
+            OriKey: "",
+            autoIsKeyUp: false,
+            autoCompleteTimerEvent: function () {
+                if (!schMange.autoIsKeyUp)
+                    return;
+                if (!schMange.curGetLink)
+                    return;
+                if (!schMange.curAutoCompleteTxtBox)
+                    return;
+                if ($.trim(schMange.curAutoCompleteTxtBox.val()) == "")
+                    return;
+                if (schMange.curAutoCompleteTxtBox.val() == schMange.OriKey)
+                    return;
+                schMange.OriKey = schMange.curAutoCompleteTxtBox.val();
+                var layer = $("#myDropdown");
+                schMange.autoIsKeyUp = false;
+                $.ajax({
+                    dataType: "json",
+                    data: { key: schMange.OriKey },
+                    url: "/Ajax/" + schMange.curGetLink + "/",
+                    cache: false,
+                    type: "post",
+                    success: function (o) {
+                        if (o.Code == "A00017") {
+                            layer.hide();
+                            return;
+                        }
+                        if (o.Code == "A00001") {
+                            App.showLoginDial();
+                            return;
+                        }
+                        if (o.Code == "A00003") {
+                            App.alert(CodeList[o.Code]);
+                            return;
+                        }
+                        var str = "";
+                        for (var i = 0; i < o.Data.length; i++) {
+                            if (i == 0)
+                                str += "<tr id=\"" + o.Data[i].ID + "\" val='" + o.Data[i].NickName + "' class=\"cur\"><td>" + o.Data[i].Title.replace(new RegExp("(" + schMange.OriKey + ")", "gi"), "<b>$1</b>") + "</td><td class=\"gray9\">&nbsp;</td></tr>"
+                            else
+                                str += ("<tr id=\"" + o.Data[i].ID + "\" val='" + o.Data[i].NickName + "'><td>" + o.Data[i].Title.replace(new RegExp("(" + schMange.OriKey + ")", "gi"), "<b>$1</b>") + "</td><td class=\"gray9\">&nbsp;</td></tr>");
+                        }
+
+                        layer.show();
+                        var offset = schMange.curAutoCompleteTxtBox.offset();
+                        layer.css("left", offset.left).css("top", offset.top + schMange.curAutoCompleteTxtBox.height() + 5);
+
+                        layer.find("tbody").html(str).find("tr").hover(function () {
+                            layer.find("tr").removeClass("cur");
+                            $(this).addClass("cur");
+                        }).click(function () {
+                            layer.hide();
+                            schMange.OriKey = "";
+                            if (schMange.curAutoCompleteCallBack) {
+                                schMange.curAutoCompleteCallBack($(this).attr("id"), $(this).attr("val"));
+                            }
+                        });
+                    }
+                });
+            },
+            autoCompleteLayer: "<div class=\"srch_ass font_14\" id=\"myDropdown\" style=\"position: absolute; z-index: 1601; display: none;\"><table><tbody></tbody></table></div>",
+            autoComplete: function (ctrl, callBack) {
+                var layer = $("#myDropdown");
+                if (App.appendToBody(layer, this.autoCompleteLayer)) {
+                    layer = $("#myDropdown");
+                    layer.JQP_ClickOther(function () { layer.hide(); schMange.OriKey = ""; });
+                }
+                $(ctrl).keydown(function (e) {
+                    schMange.autoIsKeyUp = true;
+                    var curLi = layer.find(".cur");
+                    var index = layer.find("tr").index(curLi);
+                    var length = layer.find("tr").length;
+                    var lis = layer.find("tr").removeClass("cur");
+                    switch (e.which) {
+                        case 38:
+                            if (index == 0) {
+                                $(lis[length - 1]).addClass("cur");
+
+                            }
+                            else
+                                $(lis[index - 1]).addClass("cur");
+                            e.preventDefault();
+                            break;
+                        case 40:
+                            if (index == length - 1) {
+                                $(lis[0]).addClass("cur");
+
+                            }
+                            else
+                                $(lis[index + 1]).addClass("cur");
+                            e.preventDefault();
+                            break;
+                        case 13:
+                            schMange.OriKey = "";
+                            if (callBack) {
+                                if (curLi.attr("val"))
+                                callBack(curLi.attr("id"), curLi.attr("val"));
+                            }
+                            e.preventDefault();
+                            layer.hide();
+                            schMange.autoIsKeyUp = false;
+                            break;
+
+                    }
+                }).focus(function () {
+                    schMange.curAutoCompleteTxtBox = $(this);
+                    if (callBack)
+                        schMange.curAutoCompleteCallBack = callBack;
+                });
+            }
+
+        };
+        schMange.showCustom = function (id) {
+            App.E(id).style.display = "block";
+        }
+        schMange.initPage = function () {
+            $("#sInput").add($("#sInput_bottom")).keyup(function (e) {
+                if (e.which == 13) {
+                    window.location.href = "/k/" + encodeURIComponent(this.value)+("?"+window.location.href.split('?')[1])||"";
+                }
+            });
+            $("#search").click(function () {
+                window.location.href = "/k/" + encodeURIComponent($("#sInput").val())+("?"+window.location.href.split('?')[1])||"";
+            });
+            $("#search_bottom").click(function () {
+                window.location.href = "/k/" + encodeURIComponent($("#sInput_bottom").val())+("?"+window.location.href.split('?')[1])||"";
+            });
+            var province = $("#province");
+            var city = $("#city");
+            App.BindCityCtrl(province, "province", 1, function () {
+                App.BindCityCtrl(city, "City", province.val(), function () {
+                }, "/Ajax/GetCity/");
+                province.hide();
+                city.hide();
+                province.show();
+                city.show();
+            }, "/Ajax/GetCity/");
+            province.change(function () {
+                App.BindCityCtrl(city, "City", province.val(), null, "/Ajax/GetCity/");
+            }, "/Ajax/GetCity/");
+
+            $("#sTime").JQP_DatePicker({ curDate: new Date() });
+            $("#eTime").JQP_DatePicker({ curDate: new Date() });
+            $("#sear_timescope").click(function () {
+                var url = App.AddQueryToUrl(window.location.href, "timescope", "custom");
+                if ($("#sTime").val() != "点击选择日期" && $("#sTime").val() != "") {
+                    url = App.AddQueryToUrl(url, "StartTime", $("#sTime").val());
+                }
+                if ($("#eTime").val() != "点击选择日期" && $("#eTime").val() != "") {
+                    url = App.AddQueryToUrl(url, "EndTime", $("#eTime").val());
+                }
+                window.location.href = url;
+                return false;
+            });
+            $("#sear_userscope").click(function () {
+                if ($.trim($("#nickname").val())) {
+                    var url = App.RemoveQueryFromUrl(window.location.href, "IsMyself");
+                    url = App.RemoveQueryFromUrl(url, "IsMyFollow");
+                    window.location.href = App.AddQueryToUrl(url, "SomeOne", encodeURIComponent($.trim($("#nickname").val()))); ;
+                }
+                else {
+                    App.alert("请输入内容");
+                }
+                return false;
+            });
+            $("#sear_region").click(function () {
+                if (parseInt(province.val()) > 0 || parseInt(city.val()) > 0) {
+                    if (parseInt(city.val()) > 0)
+                        window.location.href = App.AddQueryToUrl(window.location.href, "Location", city.val());
+                    else
+                        window.location.href = App.AddQueryToUrl(window.location.href, "Location", province.val());
+                }
+                else {
+                    App.alert("请选择城市");
+                }
+                return false;
+            });
+            App.autoComplete($("#nickname"), function (id, name) { $("#nickname").val(name); });
+            schMange.autoComplete($("#sInput"), function (id, name) { $("#sInput").val(name); });
+            schMange.autoComplete($("#sInput_bottom"), function (id, name) { $("#sInput_bottom").val(name); });
+            App.curGetLink = "GetFollowListByKey";
+            schMange.curGetLink = "autoCompleteTopic";
+            App.TimerFunArray.push(App.autoCompleteTimerEvent);
+            App.TimerFunArray.push(schMange.autoCompleteTimerEvent);
+            App.TimerFunArray.push(App.ajaxAtWho);
+            App.StartTimer();
+            App.initMedia();
+            App.bindGoTop();
+            $("#addTopic").click(function () {
+                if ($(this).text() == "关注该话题") {
+                    schMange.addUserTopic("@Model.Key", this);
+                }
+                else {
+                    schMange.delUserTopic(@Model.CurUserTopicID, this);
+                }
+            });
+        };
+        schMange.addUserTopic = function (name, alink) {
+            if (alink.locked)
+                return;
+            else {
+                alink.locked = true;
+                App.AddUserTopic(name, function (o) { App.FullMiniTip(CodeList[o.Code], alink, 1000, 3); 
+                var newOne=$("<a href='javascript:void(0);'>取消关注该话题</a>");
+                newOne.insertAfter($(alink));
+                $(alink).remove();
+                newOne.click(function(){
+                   schMange.delUserTopic(o.Data.ID, this);
+                });
+                }, function () { alink.locked = false; });
+            }
+        };
+        schMange.delUserTopic = function (id, alink) {
+            if (alink.locked)
+                return;
+            else {
+                alink.locked = true;
+                App.DelUserTopic(id, function (s) { App.FullMiniTip(s, alink, 1000, 3); 
+                var newOne=$("<a href='javascript:void(0);'>关注该话题</a>");
+                newOne.insertAfter($(alink));
+                $(alink).remove();
+                newOne.click(function(){
+                   schMange.addUserTopic("@Model.Key", this);
+                });
+                }, function () { alink.locked = false; });
+            }
+        };
+        $(function () {
+            schMange.initPage();
+            App.initNameCard($("#feed_list"));
+        });
+    	window.onload = function () {
+    	    var voteItems = $("div[type='vote']");
+    	    for (var i = 0; i < voteItems.length; i++) {
+    	        var img = $(voteItems[i]).find("img")[0];
+    	        var img1 = $(voteItems[i]).find("img")[1];
+
+    	        $(img1).css("left", parseInt(($(img).width() - 33) / 2)).css("top", parseInt(($(img).height() - 33) / 2)).css("position", "absolute");
+    	        $(img1).show();
+    	    }
+    	};
+    </script>
+    }
+
+
+
+
+
+            <div class="MIB_blogbody">
+                <div class="MIB_column">
+                    <!--搜索-->
+                    <div class="srch_con">
+                        <div class="srch_kind">
+						    @{
+if(Model.IsHaveLink!=1&&Model.IsHaveMusic!=1&&Model.IsHavePic!=1&&Model.IsHaveVideo!=1&&Model.IsHaveVote!=1)
+{<strong>微博</strong> }
+else{<a href="/k/@Model.Key">微博</a> }
+<a href="/Search/User?key=@Model.Key">找人</a> 
+								if (Model.IsHavePic == 1)
+								{
+<strong>图片</strong> }
+								else
+								{<a href="/k/@Model.Key?IsHavePic=1">图片</a> }
+								if (Model.IsHaveVideo == 1)
+								{<strong>视频</strong> }
+								else
+								{<a href="/k/@Model.Key?IsHaveVideo=1">视频</a> 
+								}
+								if (Model.IsHaveMusic == 1)
+								{<strong>音乐</strong> 
+								}
+								else
+								{<a href="/k/@Model.Key?IsHaveMusic=1">音乐</a> 
+								}
+								if (Model.IsHaveLink == 1)
+								{<strong>短链</strong> 
+								}
+								else{<a href="/k/@Model.Key?IsHaveLink=1">短链</a> 
+								}
+								if (Model.IsHaveVote == 1)
+								{<strong>投票</strong> 
+								}
+                                else{
+							<a href="/k/@Model.Key?IsHaveVote=1">投票</a>}
+			                } 
+			           </div>
+                        <div class="srch_form lf">
+                            <div class="srch_form_r rt">
+                            </div>
+                            <div class="srch_form_l lf">
+                            </div>
+                            <div class="srch_form_c lf">
+                                <div class="srch_arrow">
+                                    <div class="srch_form_cr rt">
+                                    </div>
+                                    <div class="srch_form_cl lf">
+                                    </div>
+                                    <input id="sInput" class="font_14 txt_srch" value="@Model.Key" maxlength="40" autocomplete="off" type="text" />
+                                </div>
+                            </div>
+                            <a class="srch_btn lf" href="###" id="search">搜索</a>
+                        </div>
+                        <div class="srch_link">
+                            <p id="attMblog">
+                                <img src="/Content/Image/transparent.gif"
+                                    alt="" class="sech_icons gzght"><a href="javascript:void(0);" id="addTopic" title="“@Model.Key”" >@{@(Model.CurUserTopicID > 0 ? "取消关注该话题" : "关注该话题")}</a>
+                            </p>
+                            <p>
+                                <a href="#">
+                                    <img src="/Content/Image/transparent.gif" alt="" class="sech_icons cyght"></a><a href="javascript:void(0);" onclick="App.showPopMiniBlog('#@Model.Key#');return false;">参与该话题</a>
+                            </p>
+                        </div>
+                        <div class="srch_tag">
+                            <span id="errKeyword"></span>
+                            <p class="srch_rs_total">
+                                有@{@Model.RecordCount}条微博</p>
+                        </div>
+                    </div>
+                    <!--/搜索-->
+                    <div class="MIB_main_cont lf_vline">
+                        <div class="srch_bar_l lf">
+                            <div class="filter_hr">
+                            </div>
+                            <dl class="srch_filter">
+							    @{
+			                       if(Model.IsOri==-1){
+                                <dt>所有</dt>
+			                    }
+								else{
+								<dt><a href="@Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "IsOri")">所有</a></dt>
+								}
+                                if(Model.IsOri==1){
+                                <dd>原创</dd>
+								}
+								else
+								{
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "IsOri", "1")">原创</a></dd>
+								}
+			                     }
+                            </dl>
+                            <div class="filter_hr">
+                            </div>
+                            <dl class="srch_filter">
+							    @{
+                                  if(Model.Location<=0){
+                                <dt>所有地点</dt>
+								  }
+								  else
+								  {
+								<dt><a href="@Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "Location")">所有地点</a></dt>
+								  }
+                                  if(Model.Location>0){
+                                <dd>@Types.GetCityTypesFullName(Model.Location)</dd>
+								  }
+								  else
+								  {
+								<dd><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Location", Model.CurUser.Location.ToString())">@Types.GetCityTypesFullName(Model.CurUser.Location)</a></dd>
+								  }
+                                <dd>
+                                    <a href="javascript:void(0);" onclick="schMange.showCustom('region_custom');return false;">自定义</a>
+                                    <div id="region_custom" class="filter_def" style="display: none;">
+                                        <div>
+                                            <select id="province"  name="province">
+                                               
+                                            </select></div>
+                                        <div>
+                                            <select id="city" name="city">
+                                               
+                                            </select></div>
+                                        <a href="javascript:void(0);" class="btn_normal btnxs" id="sear_region"><em>
+                                            确定</em></a>
+                                    </div>
+                                </dd>
+			                  }
+                            </dl>
+                            <div class="filter_hr">
+                            </div>
+                            <dl class="srch_filter">
+							     @{
+									 if (string.IsNullOrEmpty(Model.timescope) ||Model.StartTime==null||Model.EndTime==null)
+									 {
+                                <dt>所有时间</dt>
+								 }
+								 else
+								 {
+								<dt><a href="@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "timescope"),"StartTime"),"EndTime")">所有时间</a></dt>
+								 }
+  if(!string.IsNullOrEmpty(Model.timescope)&&Model.timescope=="1hour"){
+
+                                <dd>1小时</dd>
+  }
+  else
+  {
+								<dd><a href="@Utils.AddQueryToUrl(@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "StartTime"), "EndTime"), "timescope", "1hour")">1小时</a></dd>
+  }
+  if (!string.IsNullOrEmpty(Model.timescope) && Model.timescope == "24hour")
+  {
+
+                                <dd>24小时</dd>
+  }
+  else
+  {
+								<dd><a href="@Utils.AddQueryToUrl(@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "StartTime"), "EndTime"), "timescope", "24hour")">24小时</a></dd>
+  }
+  if (!string.IsNullOrEmpty(Model.timescope) && Model.timescope == "1week")
+  {
+
+                                <dd>1周</dd>
+  }
+  else
+  {
+								<dd><a href="@Utils.AddQueryToUrl(@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "StartTime"), "EndTime"), "timescope", "1week")">1周</a></dd>
+  }
+  if (!string.IsNullOrEmpty(Model.timescope) && Model.timescope == "15days")
+  {
+
+                                <dd>15天</dd>
+  }
+  else
+  {
+								<dd><a href="@Utils.AddQueryToUrl(@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "StartTime"), "EndTime"), "timescope", "15days")">15天</a></dd>
+  }
+  if (!string.IsNullOrEmpty(Model.timescope) && Model.timescope == "1month")
+  {
+
+                                <dd>1个月</dd>
+  }
+  else
+  {
+								<dd><a href="@Utils.AddQueryToUrl(@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "StartTime"), "EndTime"), "timescope", "1month")">1个月</a></dd>
+  }
+
+
+                              
+                                <dd>
+                                    <a href="javascript:void(0);" onclick="schMange.showCustom('timescope_custom');">自定义</a>
+                                    <div id="timescope_custom" class="filter_def" style="display: @{@(string.IsNullOrEmpty(Model.timescope)?"none":(Model.timescope=="custom"?"block":"none"))};">
+                                        <div class="htDate">
+                                            <input id="sTime" value="@{@(string.IsNullOrEmpty(Model.timescope)?"点击选择日期":(Model.timescope=="custom"?Model.StartTime.Value.ToString("yyyy-MM-dd"):"点击选择日期"))}" style="width: 88px;" readonly="true" class="" type="text"></div>
+                                        <div class="htDate">
+                                            <input id="eTime" value="@{@(string.IsNullOrEmpty(Model.timescope)?DateTime.Now.ToString("yyyy-MM-dd"):(Model.timescope=="custom"?Model.EndTime.Value.ToString("yyyy-MM-dd"):DateTime.Now.ToString("yyyy-MM-dd")))}" style="width: 88px;" readonly="true" class=""
+                                                type="text"></div>
+                                        <a href="javascript:void(0);" class="btn_normal btnxs" id="sear_timescope"><em user_count="search_t_left_cust">
+                                            确定</em></a>
+                                    </div>
+                                </dd>
+				                }
+                            </dl>
+                            <div class="filter_hr">
+                            </div>
+                            <dl class="srch_filter">
+                               @{
+                                  if(Model.IsMyself!=1&&Model.IsMyFollow!=1&&string.IsNullOrEmpty(Model.SomeOne)){
+                                <dt>所有人的</dt>
+								  }
+								  else
+								  {
+								<dt><a href="@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "IsMyself"),"IsMyFollow"),"SomeOne")">所有人的</a></dt>
+								  }
+                                  if(Model.IsMyFollow==1){
+                                <dd>我关注的</dd>
+								  }
+								  else
+								  {
+								<dd><a href="@Utils.AddQueryToUrl(@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "IsMyself"),"SomeOne"),"IsMyFollow","1")">我关注的</a></dd>
+								  }
+                                 if(Model.IsMyself==1){
+                                <dd>我自己的</dd>
+								 }
+								 else
+								 {
+								<dd><a href="@Utils.AddQueryToUrl(@Utils.RemoveQueryFromUrl(Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "IsMyFollow"), "SomeOne"), "IsMyself", "1")">我自己的</a></dd>
+								 }
+								 if(!string.IsNullOrEmpty(Model.SomeOne)){
+                                <dd>@Model.SomeOne</dd>
+								 }
+                                <dd>
+                                    <a href="javascript:void(0);" onclick="schMange.showCustom('userscope_custom');">某个人</a>
+                                    <div id="userscope_custom" class="filter_def" style="display: none;">
+                                        <div>
+                                            <input id="nickname" style="width: 88px;" type="text"></div>
+                                        <a href="javascript:void(0);" class="btn_normal btnxs" id="sear_userscope"><em >
+                                            确定</em></a>
+                                    </div>
+                                </dd>
+								   }
+                            </dl>
+                           
+                        </div>
+                        <div class="srch_main_con lf">
+                            <div class="box_lbWrap">
+                               @{
+								   if (Model.MiniBlogs != null)
+								   {
+                                <!--list模块-->
+                                <ul class="tab_top_new">
+@{
+if(string.IsNullOrEmpty(Model.Sort)){                             
+<li class="current"><span>最新</span> </li>
+}
+else{
+ <li class=""><a href="@Utils.RemoveQueryFromUrl(ViewData["URL"].ToString(), "Sort")">最新</a></li>
+}
+if(Model.Sort=="QuoteCount"){
+                                   <li class="MIB_line_l">| </li>
+}
+if(Model.Sort=="CommentCount"){                             
+<li class="current"><span>评论最多</span> </li>
+}
+else{
+ <li class=""><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Sort","CommentCount")">评论最多</a></li>
+}
+if(string.IsNullOrEmpty(Model.Sort)){
+                                   <li class="MIB_line_l">| </li>
+}
+
+if(Model.Sort=="QuoteCount"){                             
+<li class="current"><span>转发最多</span> </li>
+}
+else{
+ <li class=""><a href="@Utils.AddQueryToUrl(ViewData["URL"].ToString(), "Sort","QuoteCount")">转发最多</a></li>
+}
+}
+                                </ul>
+                                <!--/list模块-->
+                               <ul id="feed_list" class="MIB_feed">
+                                    @{
+									   if (Model.MiniBlogs != null)
+									   {
+										   foreach (Weibo.Entity.MiniBlog m in Model.MiniBlogs)
+										   {
+											   if (m != null)
+											   {
+												   var dateSpan = DateSpan.Get(m.CreateTime);
+												   From from = Froms.GetFromByID(m.FromID);
+												   var user = Users.GetUserByID(m.UID);
+												   var content = MiniBlogs.BBCodeToHtml(m.RealContent);
+												   string[] media = m.MediaContent.Split(',');
+												   if (user != null)
+												   {
+                                        <li id="mid_@{@m.ID;}" class="MIB_linedot2">
+                                            <div class="head_pic">
+                                                <a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" >
+                                                    <img src="@{@user.MidAvartar;}" 
+                                                    title="@{@user.NickName;}" /></a>
+                                            </div>
+                                            <div class="MIB_feed_c">
+                                                <p  mid="@{@m.ID;}" class="sms"><a title="@{@user.NickName;}" href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true"  uname="@{@user.NickName;}">@{@user.NickName;}</a>：@{@MvcHtmlString.Create(HighLineHelper.HighLine(content,Model.Key));}
+                                                </p>
+                                                @{
+																																																														 if (m.IsOriginal == 1 && m.OriginalMID < 0)
+																																																														 {
+                                                    <div id="prev_@{@m.ID;}" class="feed_preview" style="">
+                                                        @{
+																		 if (media[0] != "-1")
+																		 {
+
+                                                            <div class="feed_img">
+                                                                <a href="javascript:;" onclick="App.scaleImg(this,'@{@m.ID;}');return false;">
+                                                                    <img  class="imgicon" src="@{@media[4];}" /></a>
+                                                                <img src="/Content/Image/loading.gif" style="position: absolute; background-color: transparent;
+                                                                    border: 0px none; width: 16px; height: 16px; z-index: 1001; display: none;" />
+                                                            </div>
+																		 }
+																		 if (media[1] != "-1")
+																		 {
+    
+                                                            <div class="feed_img" type="video" vid="@{@media[1];}" mid="@{@m.ID;}" style="width: 120px; height: 90px;">
+                                                                <a onclick="return false;" href="javascript:void(0);">
+                                                                    <img width="120" height="90" style="cursor: pointer;" class="imgicon"
+                                                                    src="@{@media[5];}" /></a><img src="/Content/Image/feedvideoplay.gif" onmouseover="App.mouseoverIco(this);" onmouseout="App.mouseoutIco(this);" style="cursor: pointer;
+                                                                        display: block; margin-top: -61.5px; margin-left: 43.5px; opacity: 0.5; filter: alpha(opacity=50);" /></div>
+                                                             
+																		 }
+																		 if (media[2] != "-1")
+																		 {
+                                                            <div class="feed_img" type="music" musicid="@{@media[2];}" mid="@{@m.ID;}" style="width: 135px; height: 33px;">
+                                                                <a onclick="return false;" href="javascript:void(0);">
+                                                                    <img style="cursor: pointer;" class="imgicon" src="/Content/Image/music_s.gif" /></a></div>
+																		 }
+																		 if (media[3] != "-1")
+																		 {
+																			 if (!string.IsNullOrEmpty(media[6]))
+																			 {
+                                                            <div class="feed_img" type="vote" voteid="@{@media[3];}" mid="@{@m.ID;}" >
+                                                                <a onclick="return false;" href="javascript:void(0);">
+                                                                    <img style="cursor: pointer;" class="imgicon" src="@{@media[6];}" /></a><img  onmouseover="App.mouseoverIco(this);" onmouseout="App.mouseoutIco(this);" src="/Content/Image/vote_picicon_01.gif"
+                                                                        style="cursor: pointer; display: none;
+                                                                        opacity: 0.5; filter: alpha(opacity=50);"></div>
+                                                        
+																			 }
+																			 else
+																			 {
+                                                            <div class="feed_img" type="vote" voteid="@{@media[3];}" mid="@{@m.ID;}" style="width: 120px; height: 90px;">
+                                                                <a onclick="return false;" href="javascript:void(0);">
+                                                                    <img style="cursor: pointer;" class="imgicon" src="/Content/Image/vote_pic_01.gif" /></a></div>
+																			 }
+																		 }
+                                                        }
+                                                        <div class="clear">
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: none;" id="disp_@{@m.ID;}" class="MIB_assign">
+                                                    </div>
+																																																														 }
+																																																														 else
+																																																														 {
+																																																															 MiniBlog oriMBlog = MiniBlogs.GetMiniBlogByID(m.OriginalMID);
+																																																															 if (oriMBlog != null)
+																																																															 {
+																																																																 var odateSpan = DateSpan.Get(oriMBlog.CreateTime);
+																																																																 From ofrom = Froms.GetFromByID(oriMBlog.FromID);
+
+																																																																 var ocontent = MiniBlogs.BBCodeToHtml(oriMBlog.RealContent);
+																																																																 string[] omedia = oriMBlog.MediaContent.Split(',');
+																																																																 User oriUser = Users.GetUserByID(oriMBlog.UID);
+																																																																 if (oriUser != null)
+																																																																 {
+                                                                                                     
+                                                    <div class="MIB_assign">
+                                                        <div class="MIB_asarrow_l">
+                                                        </div>
+                                                        <div class="MIB_assign_t">
+                                                        </div>
+                                                        <div class="MIB_assign_c MIB_txtbl">
+                                                            <p  mid="@{@m.ID;}" class="source"><a href="/@{@oriUser.ID;}" uid="@{@oriUser.ID;}" namecard="true" uname="@{@oriUser.NickName;}" >@@@{@oriUser.NickName;}</a>：@{@MvcHtmlString.Create(HighLineHelper.HighLine(ocontent,Model.Key));}</p>
+                                                            <div id="prev_@{@m.ID;}" class="feed_preview" mbind="1" style="">
+                                                                @{
+																				 if (omedia[0] != "-1")
+																				 {
+
+                                                                    <div class="feed_img">
+                                                                        <a href="javascript:;" onclick="App.scaleImg(this,'@{@m.ID;}');return false;">
+                                                                            <img vimg="1" class="imgicon" src="@{@omedia[4];}" /></a>
+                                                                        <img src="/Content/Image/loading.gif" style="position: absolute; background-color: transparent;
+                                                                            border: 0px none; width: 16px; height: 16px; z-index: 1001; display: none;" />
+                                                                    </div>
+																				 }
+																				 if (omedia[1] != "-1")
+																				 {
+                                                                    <div class="feed_img" type="video" vid="@{@omedia[1];}" mid="@{@m.ID;}" style="width: 120px; height: 90px;">
+                                                                        <a onclick="return false;" href="#">
+                                                                            <img width="120" height="90" style="cursor: pointer;" class="imgicon"
+                                                                    src="@{@omedia[5];}" /></a><img src="/Content/Image/feedvideoplay.gif" onmouseover="App.mouseoverIco(this);" onmouseout="App.mouseoutIco(this);"  style="cursor: pointer;
+                                                                        display: block; margin-top: -61.5px; margin-left: 43.5px; opacity: 0.5; filter: alpha(opacity=50);" /></div>
+																				 }
+																				 if (omedia[2] != "-1")
+																				 {
+                                                                    <div class="feed_img" type="music" musicid="@{@omedia[2];}" mid="@{@m.ID;}" style="width: 135px; height: 33px;">
+                                                                        <a onclick="return false;" href="#">
+                                                                            <img style="cursor: pointer;" class="imgicon" src="/Content/Image/music_s.gif" /></a></div>
+																				 }
+																				 if (omedia[3] != "-1")
+																				 {
+																					 if (!string.IsNullOrEmpty(omedia[6]))
+																					 {
+                                                                    <div class="feed_img" type="vote" voteid="@{@omedia[3];}" mid="@{@m.ID;}" >
+                                                                        <a onclick="return false;" href="#">
+                                                                            <img style="cursor: pointer;" class="imgicon" src="@{@omedia[6];}" /></a><img onmouseover="App.mouseoverIco(this);" onmouseout="App.mouseoutIco(this);"  src="/Content/Image/vote_picicon_01.gif"
+                                                                                style="cursor: pointer; display: none;
+                                                                                opacity: 0.5; filter: alpha(opacity=50);"></div>
+																					 }
+																					 else
+																					 {
+                                                                    <div class="feed_img" type="vote" voteid="@{@omedia[3];}" mid="@{@m.ID;}"  style="width: 120px; height: 90px;">
+                                                                        <a onclick="return false;" href="#">
+                                                                            <img style="cursor: pointer;" class="imgicon" src="/Content/Image/vote_pic_01.gif" /></a></div>
+																					 }
+																				 }
+                                                                }
+                                                                <div class="clear">
+                                                                </div>
+                                                            </div>
+                                                            <div style=" display: none;" id="disp_@{@m.ID;}" class="blogPicOri">
+                                                            </div>
+                                                            <div class="feed_att MIB_linkbl MIB_txtbl">
+                                                                <div class="lf">
+                                                                    <cite><a  href="/@{@oriUser.ID;}/@{@oriMBlog.IDCode;}"><strong>
+                                                                        @{@odateSpan;}
+                                                                    </strong></a></cite><strong>来自</strong><cite><a
+                                                                            target="_blank" href="@{@ofrom.FromUrl;}">@{@ofrom.FromName;}
+                                                                    </a></cite>
+                                                                </div>
+                                                                <div class="rt">
+                                                                    <a  href="/@{@oriUser.ID;}/@{@oriMBlog.IDCode;}">转发@{
+																												 if (oriMBlog.QuoteCount > 0)
+																												 {<strong type="rttCount">(@{@oriMBlog.QuoteCount;})</strong>
+																												 }
+                                                                        }
+                                                                    </a><span class="MIB_line_l">|</span> <a  href="/@{@oriUser.ID;}/@{@oriMBlog.IDCode;}">
+                                                                        评论@{
+																																					   if (oriMBlog.CommentCount > 0)
+																																					   {<strong type="commtCount" >(@{@oriMBlog.CommentCount;})</strong>
+																																					   }
+                                                                        }
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="MIB_assign_b">
+                                                        </div>
+                                                    </div>
+																																																																 }
+																																																															 }
+																																																															 else
+																																																															 {
+                                                    <div class="MIB_assign">
+                                                        <div class="MIB_asarrow_l">
+                                                        </div>
+                                                        <div class="MIB_assign_t">
+                                                        </div>
+                                                        <div class="MIB_assign_c MIB_txtbl">
+                                                            <p class="source">
+                                                                该微博已被删除</p>
+                                                        </div>
+                                                        <div class="MIB_assign_b">
+                                                        </div>
+                                                    </div>
+																																																															 }
+																																																														 }
+                                                }
+                                                <!-- 转发 -->
+                                                <!-- 转发 -->
+                                                <div class="feed_att MIB_linkbl MIB_txtbl">
+                                                    <div class="lf">
+                                                        <cite><a  href="/@{@user.ID;}/@{@m.IDCode;}"><strong>
+                                                            @{@dateSpan;}
+                                                        </strong></a></cite><strong>来自</strong><cite><a
+                                                                 target="_blank" href="@{@from.FromUrl;}">@{@from.FromName;}
+                                                        </a></cite>
+                                                    </div>
+                                                    <div class="rt">
+                                                        <!-- 转发 -->
+                                                        @{
+																														  if (user.ID == Model.CurUser.ID)
+																														  {
+                                                            <strong><a onclick="App.miniblogDel('@{@m.ID;}',this)" href="javascript:void(0);"><strong>
+                                                                删除</strong></a><span class="MIB_line_l">|</span></strong>
+																														  }
+                                                        }
+                                                        <a onclick="App.showFeedDiv('@{@m.ID;}',@{@m.IsOriginal;},'@{@m.OriginalMID;}');return false;"
+                                                            href="javascript:void(0);"><strong lang="CD0023">转发</strong>@{
+																																   if (m.QuoteCount > 0)
+																																   {<strong type="rttCount"id="num_@{@m.ID;}">(@{@m.QuoteCount;})</strong>
+																																   }
+                                                            }
+                                                        </a>
+                                                        <!-- 转发 -->
+                                                        <span class="MIB_line_l">|</span> <a onclick="App.AddFavorite(@{@Model.CurUser.ID},@{@m.ID;},this);return false;"
+                                                            href="javascript:void(0);"><strong lang="CL1003">收藏</strong></a>
+                                                        <!-- 评论 -->
+                                                        <span class="MIB_line_l">|</span> <a onclick="App.InsertCommentBox('@{@m.ID;}','@{@user.ID}')"
+                                                            href="javascript:void(0);" id="comment_count_@{@m.ID;}"><strong>评论</strong>@{
+																												if (m.CommentCount > 0)
+																												{<strong>(@{@m.CommentCount;})</strong>
+																												}
+                                                            }
+                                                        </a>
+                                                        <!-- 评论 -->
+                                                    </div>
+                                                </div>
+                                                <div id="comment_list_@{@m.ID;}">
+                                                </div>
+                                            </div>
+                                        </li>
+												   }
+											   }
+										   }
+									   }
+                                    }
+                                </ul>
+								   }
+								   else
+								   {
+                                       <div class="notFind_w">
+																<div class="sorry">
+																	抱歉没有找到<span class="error_color">“@Model.Key”</span>相关的结果
+								</div>
+								<ul class="sugst">
+									<li class="strong">建议：</li>
+									<li>请尽量输入常用词</li>
+									<li>请尽量使用简洁的关键词</li>
+									<li>可用空格将多个关键词分开</li>
+								</ul>
+																																							</div>
+								   }
+                                   }
+                                 @Html.Pager(Model.Page, Model.RecordCount, Model.PageSize)
+                            </div>
+                        </div>
+                        <div class="srch_bar_r rt ">
+							@{
+                            <dl class="top10 hotTipS">
+                                <dt>
+                                    <h4>
+                                        1小时话题榜</h4>
+                                </dt>
+                                <dd class="topCont">
+								@{
+                                    if(Model.statisticTopics!=null&&Model.statisticTopics.Count>0)
+{
+  for(int i=0;i<Model.statisticTopics.Count;i++)
+{
+  <div class="line">
+ <div class="width13">
+ @{
+if(i<3)
+{
+<em class="topNum@{@(i+1)}">@(i+1)</em>
+}
+else
+{
+@(i+1)
+}
+}
+</div>
+                                        <div class="topName" user_count="search_t_rgt_tpc">
+                                            <a href="/k/@Model.statisticTopics[i].TopicName">
+                                                @Model.statisticTopics[i].TopicName</a><em class="tipNums">(@Model.statisticTopics[i].RefCount)</em></div>
+                                        <div class="trend">
+                                            <em class="upicon"></em>
+                                        </div>
+                                    </div>
+}
+}}
+                                </dd>
+                            </dl>
+		   }
+                            <!-- 相关话题 -->
+                            <h4>
+                                相关话题</h4>
+                            <div class="related_topic">
+							@{
+              if(Model.RelatedTopics!=null)
+              {
+  foreach(Topic topic in Model.RelatedTopics)
+  {<a href="/k/@topic.Name" class="font_18">@topic.Name</a> 
+  }
+}
+}
+                            </div>
+                            <!--/ 相关话题 -->
+                            
+                        </div>
+                    </div>
+                    <div class="srch_con_b">
+                        <div class="srch_form_b">
+                            <div>
+                                <div class="srch_form_c lf">
+                                    <div class="srch_arrow">
+                                        <div class="srch_form_cr rt">
+                                        </div>
+                                        <div class="srch_form_cl lf">
+                                        </div>
+                                        <input id="sInput_bottom" class="font_14 txt_srch" value="@Model.Key" maxlength="40" autocomplete="off"
+                                           type="text">
+                                    </div>
+                                </div>
+                                <a class="srch_btn lf" href="###" id="search_bottom" user_count="search_t_bot_inpt_but">
+                                    搜索</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--返回顶部-->
+                    <div class="ftop">
+                        <a href="#">
+                            <img class="small_icon returntop" src="/Content/Image/transparent.gif"
+                                title="返回顶部">返回顶部</a>
+                    </div>
+                    <!--返回顶部-->
+                </div>
+            </div>
+

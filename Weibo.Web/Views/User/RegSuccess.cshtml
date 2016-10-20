@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>现在加入XX微博，随时随地一起分享新鲜事！</title>
+
+<link href="/Content/CSS/reguide_twice.css" type="text/css" rel="stylesheet" />
+        <!–[if IE 6]>  
+    <script type="text/javascript">
+        try {
+            document.execCommand("BackgroundImageCache", false, true);
+        } catch (err) { }        
+    </script>  
+    <![endif]–>
+        <script src="/Scripts/Common/jquery-1.10.2.min.js" language="javascript" type="text/javascript"></script>
+	<script src="/Scripts/JQP_ClickOther.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/JQP_EmailNote.js" language="javascript" type="text/javascript"></script>
+    <script src="/Scripts/App.js" language="javascript" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="cloud"></div>
+<div class="MIB_guide">
+    <a href="http://weibo.com/" class="guidelink"></a>
+    <div class="MIB_guide_t">
+        <span class="grneed">提示:如果您有微博账号可直接</span>
+        <a class="loginbg" href="#" onclick="App.showLoginDial(); return false;"><em>登录</em></a>
+      </div>
+    <div class="MIB_guideb">
+        <!--fuen 内容框-->
+        <div class="stepbg">
+        <div class="mail_sess">
+        <p><img src="/Content/Image/mail_sess.gif" height="25" width="255" /></p>
+        <p class="txt">确认邮件已经发送到你的邮箱@{@ViewData["email"].ToString()}<br>点击邮件里的确认链接即可登录微博</p>
+        <p><a class="mail_sess_but" href="http://mail.@{@ViewData["email"].ToString().Split('@')[1]}"></a></p>
+        </div>
+      </div>
+        <!--fuen 内容框  /-->
+
+        
+      </div>
+	<!--尾--> 
+	<div class="MIB_guide_bt">
+  <div class="MIB_guide_btb">
+        <div class="MIB_foot_new ">
+            <div class="lf">
+                    <p class="p1">QQ:542752480</p>
+                </div>        
+                <div class="rt">
+                    <p>dev by shaojunjie</p>
+                </div>
+            <div class="clearit"></div>
+            </div>
+    </div>
+</div>
+	<!--/尾-->
+	
+</div>
+</body></html>

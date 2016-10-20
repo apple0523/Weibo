@@ -1,0 +1,153 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÍÃ×Ó','[ÍÃ×Ó]',3004,'/Expression/gaoguai/rabbit_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÉñÂí','[ÉñÂí]',3004,'/Expression/gaoguai/horse2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¸¡ÔÆ','[¸¡ÔÆ]',3004,'/Expression/gaoguai/fuyun_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¸øÁ¦','[¸øÁ¦]',3004,'/Expression/gaoguai/geili_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÃÈ','[ÃÈ]',3004,'/Expression/gaoguai/kawayi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ñ¼Àæ','[Ñ¼Àæ]',3004,'/Expression/gaoguai/pear_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÐÜÃ¨','[ÐÜÃ¨]',3004,'/Expression/gaoguai/panda_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('»¥·Û','[»¥·Û]',3004,'/Expression/gaoguai/hufen_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ö¯','[Ö¯]',3004,'/Expression/gaoguai/zz2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Î§¹Û','[Î§¹Û]',3004,'/Expression/gaoguai/wg_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÈÓ¼¦µ°','[ÈÓ¼¦µ°]',3004,'/Expression/gaoguai/rjd_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('°ÂÌØÂü','[°ÂÌØÂü]',3004,'/Expression/gaoguai/otm_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÍþÎä','[ÍþÎä]',3004,'/Expression/gaoguai/vw_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÉËÐÄ','[ÉËÐÄ]',3004,'/Expression/gaoguai/unheart.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÈÈÎÇ','[ÈÈÎÇ]',3004,'/Expression/gaoguai/rw_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('‡å','[‡å]',3004,'/Expression/gaoguai/j_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('orz','[orz]',3004,'/Expression/gaoguai/orz1_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Õ¬','[Õ¬]',3004,'/Expression/gaoguai/z_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ð¡³ó','[Ð¡³ó]',3004,'/Expression/gaoguai/xc_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ë§','[Ë§]',3004,'/Expression/gaoguai/s2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÖíÍ·','[ÖíÍ·]',3004,'/Expression/gaoguai/pig.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÊµÏ°','[ÊµÏ°]',3004,'/Expression/gaoguai/sx_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('÷¼÷Ã','[÷¼÷Ã]',3004,'/Expression/gaoguai/kl2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('±ã±ã','[±ã±ã]',3004,'/Expression/gaoguai/s_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ñ©ÈË','[Ñ©ÈË]',3004,'/Expression/gaoguai/xx2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('»ÆÅÆ','[»ÆÅÆ]',3004,'/Expression/gaoguai/yellowcard.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ºìÅÆ','[ºìÅÆ]',3004,'/Expression/gaoguai/redcard.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÌøÎè»¨','[ÌøÎè»¨]',3004,'/Expression/gaoguai/twh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Àñ»¨','[Àñ»¨]',3004,'/Expression/gaoguai/bingo_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('´òÕë','[´òÕë]',3004,'/Expression/gaoguai/zt_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ì¾ºÅ','[Ì¾ºÅ]',3004,'/Expression/gaoguai/th_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÎÊºÅ','[ÎÊºÅ]',3004,'/Expression/gaoguai/wh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¾äºÅ','[¾äºÅ]',3004,'/Expression/gaoguai/jh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¶ººÅ','[¶ººÅ]',3004,'/Expression/gaoguai/dh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÉÁ','[ÉÁ]',3004,'/Expression/gaoguai/03_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('À²À²','[À²À²]',3004,'/Expression/gaoguai/04_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ºðºð','[ºðºð]',3004,'/Expression/gaoguai/05_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Çì×£','[Çì×£]',3004,'/Expression/gaoguai/06_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ºÙ','[ºÙ]',3004,'/Expression/gaoguai/01_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('z','[z]',3004,'/Expression/gaoguai/newz_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('y','[y]',3004,'/Expression/gaoguai/newy_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('x','[x]',3004,'/Expression/gaoguai/newx_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('v','[v]',3004,'/Expression/gaoguai/newv_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('u','[u]',3004,'/Expression/gaoguai/newu_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('t','[t]',3004,'/Expression/gaoguai/newt_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('s','[s]',3004,'/Expression/gaoguai/news_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('r','[r]',3004,'/Expression/gaoguai/newr_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('q','[q]',3004,'/Expression/gaoguai/newq_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('p','[p]',3004,'/Expression/gaoguai/newp_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('n','[n]',3004,'/Expression/gaoguai/newn_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('l','[l]',3004,'/Expression/gaoguai/newl_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('k','[k]',3004,'/Expression/gaoguai/newk_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('j','[j]',3004,'/Expression/gaoguai/newj_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('h','[h]',3004,'/Expression/gaoguai/newh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('g','[g]',3004,'/Expression/gaoguai/newg_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('f','[f]',3004,'/Expression/gaoguai/newf_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('newd','[newd]',3004,'/Expression/gaoguai/newd_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('w','[w]',3004,'/Expression/gaoguai/weibow_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('µã','[µã]',3004,'/Expression/gaoguai/weibop_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('0','[0]',3004,'/Expression/gaoguai/weiboo_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('m','[m]',3004,'/Expression/gaoguai/weibom_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('i','[i]',3004,'/Expression/gaoguai/weiboi_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('e','[e]',3004,'/Expression/gaoguai/weiboe_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('c','[c]',3004,'/Expression/gaoguai/weiboc_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('b','[b]',3004,'/Expression/gaoguai/weibob_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ê¡ÂÔºÅ','[Ê¡ÂÔºÅ]',3004,'/Expression/gaoguai/shengluehao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('kiss','[kiss]',3004,'/Expression/gaoguai/kiss2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ô²','[Ô²]',3004,'/Expression/gaoguai/yuan_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÍÅ','[ÍÅ]',3004,'/Expression/gaoguai/tuan_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÍÅÔ²ÔÂ±ý','[ÍÅÔ²ÔÂ±ý]',3004,'/Expression/gaoguai/tuanyuan_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Å®º¢¶ù','[Å®º¢¶ù]',3004,'/Expression/gaoguai/kissgirl_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÄÐº¢¶ù','[ÄÐº¢¶ù]',3004,'/Expression/gaoguai/kissboy_thumb.gif')
+
+update TExpression set OriUrl='/Expression/gaoguai/03_org.gif' where Name='ÉÁ'
+
+update TExpression set OriUrl='/Expression/gaoguai/04_org.gif' where Name='À²À²'
+
+update TExpression set OriUrl='/Expression/gaoguai/05_org.gif' where Name='ºðºð'
+
+update TExpression set OriUrl='/Expression/gaoguai/06_org.gif' where Name='Çì×£'
+
+update TExpression set OriUrl='/Expression/gaoguai/01_org.gif' where Name='ºÙ'

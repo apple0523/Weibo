@@ -1,0 +1,298 @@
+﻿@model Weibo.Web.Models.AtCmtModel
+                                 @{
+    var border = "";
+    if(Model.CurUserConfig.IsThemeDIY==1){
+        ThemeDIY diy = Themes.GetThemeDIYByUID(Model.CurUser.ID);
+        border = diy.BorderStyle+"Bg";
+    }
+    ViewData["curBorder"] = border;
+ }
+  @{
+     Layout = "~/Views/Shared/_Layout.cshtml";
+ }
+ @{
+     ViewBag.Title = "@我的评论 XX微博-随时随地分享身边的新鲜事儿";
+ }
+
+     @section  cssInsert{
+    <link rel="stylesheet" type="text/css" href="/Content/CSS/miniblog/com_manage.css" />
+    
+    <link rel="stylesheet" type="text/css" href="@Model.CurSkinCss" />
+    }
+  @section  jsInsert{
+    <script type="text/javascript">
+        var curBorder = "@border";
+    </script>
+    <script src="/Swfupload/swfupload.js" type="text/javascript"></script>
+    <script src="/Swfupload/swfupload.cookies.js" type="text/javascript"></script>
+    <script src="/Swfupload/swfupload.queue.js" type="text/javascript"></script>
+    <script src="/Swfupload/fileprogress.js" type="text/javascript" charset="GB2312"></script>
+    <script src="/Swfupload/handler.js" type="text/javascript" charset="GB2312"></script>
+    <script src="/Scripts/MiniBlog.js" type="text/javascript"></script>
+      <script src="/Scripts/DatePicker.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            App.initNameCard($(".commentsList"));
+        });
+    </script>
+}
+
+
+            <div class="MIB_blogbody">
+                <div class="MIB_mblogbgr @border">
+                    <div class="MIB_mblogbgl">
+                        <div class="mainR MIB_200 MIB_txtar MIB_linkar">
+                        @RenderPage("~/Views/Shared/_userInfo.cshtml")
+                             @RenderPage("~/Views/Shared/_rightNav.cshtml") 
+                        </div>
+                        <div id="indexMainL" class="mainL MIB_600 MIB_txtal MIB_linkal">
+                            <div class="MIB_mbloghead">
+                                <div class="MIB_mblogbox">
+                                    <div class="postWrap">
+                                        <div class="pngBg">
+                                            <div class="postOptionBg">
+                                            </div>
+                                            <div class="pngGuidBg">
+                                            </div>
+                                            <div class="pngAreaBg">
+                                            </div>
+                                        </div>
+                                        <div class="connBg">
+                                            <div id="publisher_info" class="wordNumBg">
+                                                你还可以输入<span class="pipsLim">140</span>字</div>
+                                            <div class="postOptionBg">
+                                                <div id="publisher_faces" class="OnTit">
+                                                    <img title="表情" class="small_icon faceicon" src="/Content/Image/transparent.gif">
+                                                    <a tabindex="2" href="javascript:void(0)">表情</a>
+                                                </div>
+                                                <div id="publisher_pic" class="OnPic">
+                                                    <span poptype="1" pop="true" id="publisher_image">
+                                                        <img title="图片" class="small_icon picnormal" src="/Content/Image/fbqimgclose.gif"><a
+                                                            tabindex="3" href="####">图片</a> </span>
+                                                </div>
+                                                <div id="publisher_video" class="OnTit">
+                                                    <img class="small_icon videoicon" title="视频" src="/Content/Image/transparent.gif"><a
+                                                        tabindex="4" href="javascript:void(0);">视频</a>
+                                                </div>
+                                                <div id="publisher_music" class="OnTit">
+                                                    <img class="small_icon musicico" title="音乐" src="/Content/Image/transparent.gif"><a
+                                                        tabindex="5" href="javascript:void(0);">音乐</a>
+                                                </div>
+                                                <div id="publisher_topic" class="OnTit">
+                                                    <img class="small_icon askico" title="话题" src="/Content/Image/transparent.gif"><a
+                                                        tabindex="6" href="javascript:void(0);">话题</a>
+                                                </div>
+                                                <div class="OnTit" id="publisher_vote">
+                                                    <img src="/Content/Image/transparent.gif" class="small_icon voteicon" title="投票"><a
+                                                        tabindex="7" href="javascript:void(0);">投票</a>
+                                                </div>
+                                            </div>
+                                            <div class="postBtnBg bgColorA_No">
+                                                <a title="" tabindex="8" id="publisher_submit" href="javascript:void(0);"></a>
+                                            </div>
+                                            <div style="display: block" class="inputarea">
+                                                <label style="display: none;" for="publish_editor">
+                                                    微博输入框</label>
+                                                <textarea title="" id="publish_editor" rows="" cols="" name="" accesskey="1" tabindex="1"
+                                                    style="font-family: Tahoma,宋体; border-style: solid; border-width: 0px; word-wrap: break-word;
+                                                    font-size: 14px; line-height: 18px; overflow-x: hidden;" range="0&0"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+							<div id="atme_filter" class="commendBox">
+							<div style="display: @(Model.IsFollow > 0 ||!string.IsNullOrEmpty(Model.Key) ? "block" : "none");" id="atmeFilter" class="atme_filter1">
+					      	<div class="atmef_con1 clearFix">
+					      	<ul class="lf">
+					      		<li><a href="/Miniblog/atme">@@提到我的微博</a></li>
+					      		<li class="cur"><b>@@提到我的评论</b></li>
+					      	</ul>
+					    
+					      	<div class="rt"><span><a href="/setup/notice">设置@提醒</a></span><span class="atmef_arr"><a act="unexp"href="@(Model.IsFollow > 0 || !string.IsNullOrEmpty(Model.Key) ? "/Comment/atmecmt" : "javascript:void(0);")" id="cancelFilter"><em>取消筛选</em><i>&lt;</i></a></span></div>
+					      	</div>
+					      	<div class="atmef_con2">
+					      	
+					      		<table>
+					      			<tbody><tr>
+					      				<th>按评论作者：</th>
+					      				<td><input type="radio" @(Model.IsFollow==0?"checked":"")  value="0" id="radio_filter0" name="filter"><label for="radio_filter0">所有内容</label></td>
+					      				<td><input type="radio" @(Model.IsFollow>0?"checked":"") value="1" id="radio_filter1" name="filter"><label for="radio_filter1">仅我关注的人</label></td>
+					      				<td></td>
+					      			</tr>
+                                     <tr>
+							      				<th>按关键字：</th>
+							      				<td> <input type="text" name="searchkeyword" id="searchkeyword" value="@(string.IsNullOrEmpty(Model.Key) ? "查找@我评论" : Model.Key)"style="color: rgb(153, 153, 153);"></td>
+							      				<td><a class="btn_normal" id="search_btn" href="javascript:void(0)"><em>筛选</em></a></td>
+							      				<td></td>
+							      			</tr>
+					      		</tbody></table>
+					      	
+					      	</div>
+					      	<div class="atmef_con4">
+					      		<p>共<span class="error_color">@{@Model.RecordCount}</span>条“@@提到我的评论”筛选结果：</p>
+					      	</div>
+					      </div>
+						    <div style="display:@(Model.IsFollow > 0 ||!string.IsNullOrEmpty(Model.Key) ? "none" : "block");" class="atme_filter1" id="atmeBar">
+					      	<div class="atmef_con1 clearFix">
+						      	<ul class="lf">
+						      		<li><a href="/Miniblog/atme">@@提到我的微博</a></li>
+						      		<li class="cur"><b>@@提到我的评论</b></li>
+						      	</ul>
+						      	<div class="rt"><span><a href="/setup/notice">设置@提醒</a></span><span class="atmef_arr"><a  id="startFilter"  href="javascript:void(0);"><em>信息筛选</em><i>&gt;</i></a></span></div>
+					      	</div>
+					      						      	<div class="atmef_con4">
+					      		<p class="more">共@{@Model.RecordCount}条</p>
+					      	</div>
+					      						      </div>
+                <script type="text/javascript">
+                var atmeSearch = function () {
+                var url = window.location.href;
+                if ($("#searchkeyword").val() != "查找@我评论" && $.trim($("#searchkeyword").val())) {
+                url = App.AddQueryToUrl(url, "Key", encodeURIComponent($.trim($("#searchkeyword").val())));
+                } else {
+                url = App.RemoveQueryFromUrl(url, "Key");
+                }
+            if ($("input[name='filter']:checked").val() == 1) {
+                url = App.AddQueryToUrl(url, "IsFollow", "1");
+                }
+                else {
+                url = App.RemoveQueryFromUrl(url, "IsFollow");
+                }
+                window.location.href = url;
+                }
+                $("#startFilter").click(function () {
+                $("#atmeFilter").fadeIn();
+                $("#atmeBar").hide();
+                });
+                $("#cancelFilter").click(function () {
+                $("#atmeFilter").fadeOut(function () { $("#atmeBar").show(); });
+
+                });
+            $("#searchkeyword").JQP_HighLineInput2({ nullCon: "查找@我评论" }).keyup(function (e) {
+                if (e.which == 13) {
+                atmeSearch();
+                }
+                });
+                $("#search_btn").click(function () {
+                atmeSearch();
+                });
+                </script>
+                            <div class="commentsmanage">
+							 <ul class="commentsList atme_comments">
+							 								  @{
+                                        if(Model.Comments!=null)
+                                        {
+									  foreach (Comment comment in Model.Comments)
+									  {
+										  MiniBlog miniblog=MiniBlogs.GetMiniBlogByID(comment.MID);
+										 <li class="commentsCell MIB_linedot_l" onmouseout="App.hideExtendBtn(this);return false" onmouseover="App.showExtendBtn(this);return false">
+										 <div class="commentsTxt">
+										 @{
+										  User user = Users.GetUserByID(comment.UID);
+										 <a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" title="@{@user.NickName;}" >
+                                                    <img class="picborder_l"  src="@{@user.MidAvartar;}" 
+                                                    title="@{@user.NickName;}" /></a>
+										  if (comment.MUID == Model.CurUser.ID||comment.UID==Model.CurUser.ID)
+										  {
+			                              <div class="icon_closel rt" extend="true" style="visibility: hidden;"  title="删除">x</div>
+			                              }
+			                              <div class="commentsContants">
+										 <p class="commentsParm MIB_txtal">
+										   <a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" title="@{@user.NickName;}" >@{@user.NickName;}</a> @{@MvcHtmlString.Create(!string.IsNullOrEmpty(Model.Key)?HighLineHelper.HighLine(Comments.TransformContent(comment.Content),Model.Key):Comments.TransformContent(comment.Content));} (@{@DateSpan.Get(comment.CreateTime);})
+										 </p>
+										 <div class="commentOption">
+										  <cite class="rt">
+										  <a class="reportBtn" extend="true" onclick="App.showReportBox(this,@user.ID,@TypeConfigs.GetComplaint_cm,@comment.ID);return false;" style="visibility: hidden;" href="javascript:;">举报</a><span class="MIB_line_l" extend="true"  style="visibility: hidden;">|</span>
+										  <a onclick="App.ReplyComment4Details('@{@comment.ID}','@{@comment.UID}','@{@user.NickName}','@{@miniblog.ID}')"  href="javascript:;"><img class="small_icon recall" src="/Content/Image/transparent.gif" title="">回复</a>
+										  </cite>
+										  <span class="from">
+                                           @{
+											if (comment.ReplyUID != -1)
+											{
+												if(comment.ReplyUID==Model.CurUser.ID)
+												{
+													<label class="MIB_txtbl">回复我的评论：</label><span>"</span><a  href="/@{@miniblog.UID}/@{@miniblog.IDCode}">
+											@{@MvcHtmlString.Create(Comments.TransformContent(comment.ReplyContent, true));}
+											</a><span>"</span>
+											
+												}
+												else
+												{
+												User replyUser=Users.GetUserByID(comment.ReplyUID);
+											<label class="MIB_txtbl">回复<a href="/@{@replyUser.ID;}" uid="@{@replyUser.ID;}" namecard="true" uname="@{@replyUser.NickName;}" title="@{@replyUser.NickName;}" >@{@replyUser.NickName;}</a>的评论：</label><span>"</span><a  href="/@{@miniblog.UID}}/@{@miniblog.IDCode}">
+											@{@MvcHtmlString.Create(Comments.TransformContent(comment.ReplyContent, true));}
+											</a><span>"</span>
+											
+											   }
+											}
+											else
+											{
+												if(comment.MUID==Model.CurUser.ID)
+												{
+													<label class="MIB_txtbl">评论我的微博
+											  ：</label><span>"</span>
+										    <a  href="/@{@miniblog.UID}/@{@miniblog.IDCode}">
+											@{@miniblog.OriginalContent}
+											</a>
+											<span>"</span>
+											
+												}
+												else
+												{
+												User miniblogUser=Users.GetUserByID(miniblog.UID);
+											<label class="MIB_txtbl">评论<a href="/@{@miniblogUser.ID;}" uid="@{@miniblogUser.ID;}" namecard="true" uname="@{@miniblogUser.NickName;}" title="@{@miniblogUser.NickName;}" >@{@miniblogUser.NickName;}</a>的微博
+											  ：</label><span>"</span>
+										    <a  href="/@{@miniblog.UID}/@{@miniblog.IDCode}">
+											@{@miniblog.OriginalContent}
+											</a>
+											<span>"</span>
+											
+											   }
+											}
+									        }
+										  </span>
+										 </div>
+										 <div class="clearit"></div>
+									     <div class="logininput">
+                                         <div id="comment_reply_@{@miniblog.ID}_@{@comment.ID}" class="MIB_assign" style="display:none;">
+                                                    <div class="MIB_asarrow_r"></div>
+                                                    <div class="MIB_assign_t"></div>
+                                                    <div class="MIB_assign_c">
+                                                        <div class="logininput">
+									                        <a id="comment_face_@{@miniblog.ID}_@{@comment.ID}" title="表情" href="javascript:void(0);" class="faceicon1"></a>
+                                                            <textarea range='0&0' class="lf" style="overflow: hidden; height: 22px;" id="comment_content_@{@miniblog.ID}_@{@comment.ID}"></textarea>
+                                                            <a href="javascript:void(0);" id="comment_post_@{@miniblog.ID}_@{@comment.ID}" class="btn_normal" onclick="App.bindAddCommentBtn(this,'@{@miniblog.ID}','@{@miniblog.UID}','comment_content_@{@miniblog.ID}_@{@comment.ID}','agree_@{@comment.ID}')"><em>评论</em></a>
+                                                            <div class="margin_b MIB_txtbl">
+                                                                <input type="checkbox" id="agree_@{@comment.ID}">
+                                                                <label class="MIB_txtbl" for="agree_@{@comment.ID}">同时转发到我的微博</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="MIB_assign_b"></div>
+                                                </div>
+                                                <!-- 评论回复框结束 -->
+                                            </div>
+										 </div>
+									      } 
+										 </div>
+										 <div class="clearit"></div>
+										 </li>
+									 }
+								  }
+                                                                    else
+                                  {
+                                         <li class= "commentsCell MIB_linedot_l">没有收到任何@你的评论</li>
+                                  }
+                                  }
+							 </ul>
+							</div>
+							<div class="MIB_bobar">@Html.Pager(Model.Page,Model.RecordCount,Model.PageSize)
+                            </div>
+
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+

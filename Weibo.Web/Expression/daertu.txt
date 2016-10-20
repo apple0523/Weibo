@@ -1,0 +1,19 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('â«Ëö','[â«Ëö]',3006,'/Expression/daertu/weisuo_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÌôÃ¼','[ÌôÃ¼]',3006,'/Expression/daertu/tiaomei_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ìô¶º','[Ìô¶º]',3006,'/Expression/daertu/tiaodou_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ç×¶ú¶ä','[Ç×¶ú¶ä]',3006,'/Expression/daertu/qinerduo_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÃÄÑÛ','[ÃÄÑÛ]',3006,'/Expression/daertu/meiyan_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ã°¸öÅÝ','[Ã°¸öÅÝ]',3006,'/Expression/daertu/maogepao_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('‡å¶ú¶ä','[‡å¶ú¶ä]',3006,'/Expression/daertu/jiongerduo_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¹íÁ³','[¹íÁ³]',3006,'/Expression/daertu/guilian_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('·Åµç','[·Åµç]',3006,'/Expression/daertu/fangdian_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('±¯¾ç','[±¯¾ç]',3006,'/Expression/daertu/beiju_thumb.gif')

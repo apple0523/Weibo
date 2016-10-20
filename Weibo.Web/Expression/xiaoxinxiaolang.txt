@@ -1,0 +1,20 @@
+insert into TExpression ([Name],[Code],[Type],[Url]) values('yeah','[yeah]',3010,'/Expression/xiaoxinxiaolang/yeah_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Ï²»¶','[Ï²»¶]',3010,'/Expression/xiaoxinxiaolang/xh_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÐÄ¶¯','[ÐÄ¶¯]',3010,'/Expression/xiaoxinxiaolang/xd_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÎÞÁÄ','[ÎÞÁÄ]',3010,'/Expression/xiaoxinxiaolang/wl_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('ÊÖÎè×ãµ¸','[ÊÖÎè×ãµ¸]',3010,'/Expression/xiaoxinxiaolang/gx_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('¸ãÐ¦','[¸ãÐ¦]',3010,'/Expression/xiaoxinxiaolang/gx2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('Í´¿Þ','[Í´¿Þ]',3010,'/Expression/xiaoxinxiaolang/gd_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('±¬·¢','[±¬·¢]',3010,'/Expression/xiaoxinxiaolang/fn2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('·¢·Ü','[·¢·Ü]',3010,'/Expression/xiaoxinxiaolang/d2_thumb.gif')
+
+insert into TExpression ([Name],[Code],[Type],[Url]) values('²»Ð¼','[²»Ð¼]',3010,'/Expression/xiaoxinxiaolang/bx_thumb.gif')
+

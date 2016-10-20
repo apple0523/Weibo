@@ -1,0 +1,70 @@
+﻿@model Weibo.Web.Models.DiyCssModel
+@@import url(/Content/skins/sky_diy/skin.css);
+body{
+background-color: @{@Model.Diy.BgColor;};
+@{
+    if(Model.Diy.IsUseBg==1)
+    {
+        Pic pic=Pics.GetPicByID(Model.Diy.BgImgPid);
+    if(pic!=null)
+    {
+     @:background-image:url('@pic.OriginalPicUrl');
+    }
+    }
+}
+background-repeat:@{@(Model.Diy.IsRepeatBg==1?"repeat":"no-repeat")};
+background-position:top @{@(Model.Diy.AlignStyleBg == 1 ? "left" : (Model.Diy.AlignStyleBg == 2?"center":"right"))};
+background-attachment:@{@(Model.Diy.IsLockBg==1?"fixed":"scroll")};
+}
+.MIB_txtal,
+.MIB_txtbl{color:@Model.Diy.MainTxtColor;}
+.MIB_linkal a:link,
+.MIB_linkal a:visited,
+.MIB_linkal a:hover,
+a.MIB_linkal:link,
+a.MIB_linkal:visited,
+a.MIB_linkal:hover,
+.MIB_linkbl a:link,
+.MIB_linkbl a:visited,
+.MIB_linkbl a:hover,
+a.MIB_linkbl:link,
+a.MIB_linkbl:visited,
+a.MIB_linkbl:hover{color:@Model.Diy.MainLinkColor;}
+.topSquLayer .arrows span,
+.topSquLayer .bgs{ background-color:@Model.Diy.ContentColor;}
+.MIB_txtar,
+.MIB_txtbr{color:@Model.Diy.SubTxtColor;}
+.MIB_linkar a:link,
+.MIB_linkar a:visited,
+.MIB_linkar a:hover,
+a.MIB_linkar:link,
+a.MIB_linkar:visited,
+a.MIB_linkar:hover,
+.MIB_linkbr a:link,
+.MIB_linkbr a:visited,
+.MIB_linkbr a:hover,
+a.MIB_linkbr:link,
+a.MIB_linkbr:visited,
+a.MIB_linkbr:hover,
+.MIB_linkcr a:link,
+.MIB_linkcr a:visited,
+.MIB_linkcr a:hover,
+a.MIB_linkcr:link,
+a.MIB_linkcr:visited,
+a.MIB_linkcr:hover,
+a.goTop,
+a.goTop:link,
+a.goTop:visited,
+a.goTop:hover
+{color: @Model.Diy.SubLinkColor;}
+.MIB_blogbody .mainL{background-color:@Model.Diy.ContentColor;}.MIB_blogbody .@{@Model.Diy.BorderStyle}Bg,.@{@Model.Diy.BorderStyle}Bg{ background-image:url(/Content/skins/sky_diy/@{@Model.Diy.BorderStyle}.png);}#profileHeadBg{
+background:@Model.Diy.ContentColor; /*非IE且不支持css3的浏览器不做透明处理，取色与下面取色相同*/
+@{
+    int R = System.Drawing.ColorTranslator.FromHtml(Model.Diy.ContentColor).R;
+    int G = System.Drawing.ColorTranslator.FromHtml(Model.Diy.ContentColor).G;
+    int B = System.Drawing.ColorTranslator.FromHtml(Model.Diy.ContentColor).B;
+    }
+background:none\9;filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#88@{@Model.Diy.ContentColor.Replace("#","");},endcolorstr=#ff@{@Model.Diy.ContentColor.Replace("#","");},gradientType=0);
+background: -moz-linear-gradient(top, rgba(@R, @G, @B,0.7), rgba(@R, @G, @B,1)); /*Mozila 浏览器*/
+background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(@R, @G, @B,0.7)), to(rgba(@R, @G, @B,1))); /*Webkit 浏览器*/
+}

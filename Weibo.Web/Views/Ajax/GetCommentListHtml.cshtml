@@ -1,0 +1,51 @@
+﻿ @model Weibo.Web.Models.AjaxGetCommentModel
+     <ul class="PL_list oddline">
+           @{
+               if(Model.comments!=null)
+               {
+               foreach(Comment comment in Model.comments)
+               {
+                   User user=Users.GetUserByID(comment.UID);
+                    if(user!=null)
+                   {
+                   <li onmouseout="App.hideExtendBtn(this);return false" onmouseover="App.showExtendBtn(this);return false" cacheid="8" class="MIB_linedot3">
+				<a href="/@{@user.ID;}" ><img uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}"  src="@{@user.SmallAvartar;}" title="@{@user.NickName;}" class="picborder_l lf" ></a>
+                    @{
+                        if(user.ID==Model.CurUser.ID||Model.CurUser.ID==Model.miniBlog.UID)
+                        {
+                            <div class="icon_closel rt" extend="true" onclick="App.DelCommentFromBox(this,@comment.ID,@Model.miniBlog.ID);"  title="删除" style="visibility: hidden;">x</div>
+                        }
+                      }
+								<div class="txt">
+				  <div class="txtinfo">
+										<a href="/@{@user.ID;}" uid="@{@user.ID;}" namecard="true" uname="@{@user.NickName;}" >@{@user.NickName;}</a> @{@MvcHtmlString.Create(Comments.TransformContent(comment.Content));}
+										<span class="MIB_txtbl">(@{@DateSpan.Get(comment.CreateTime)})</span>
+										</div>
+					<p class="MIB_more MIB_linkbl">
+                     @{
+                       if(user.ID!=Model.CurUser.ID)
+                       {
+					<a  style="visibility: hidden;" onclick="App.showReportBox(this,@user.ID,@TypeConfigs.GetComplaint_cm,@comment.ID);return false;" extend="true" class="reportBtn" href="javascript:;">举报</a><span extend="true" style="visibility: hidden;" class="MIB_line_l">|</span>
+                        }
+                    }
+                    <a onclick="App.ReplyComment(@{@comment.ID},@{@comment.UID},'@{@user.NickName}',@{@comment.MID;})" class="lose"  href="javascript:void(0);">回复</a>
+					</p>
+				</div>
+				<span class="clear"></span>
+			</li>
+               }
+               }
+               }
+               }
+        </ul>
+        @{
+            int count=Comments.GetCommentCountByMID(Model.miniBlog.ID);
+            if(count>10)
+            {
+                
+        <div class="list_head MIB_linedot3 moreheight">
+			后面还有<span>@{@(count-10);}</span>条评论，<a href="/@{@Model.miniBlog.UID;}/@{@Model.miniBlog.IDCode;}#a_comment">点击查看<em>&gt;&gt;</em>
+			</a>			
+		</div>
+            }
+            }
